@@ -22,7 +22,7 @@ const (
 )
 
 const (
-	MYLIBID = mel3program.LIB_DATES
+	MYLIBID = mel3program.LIB_M3DATES
 )
 
 // The Mel3 implementation

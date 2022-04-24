@@ -1,7 +1,3 @@
-//go:build GODEBUG
-// +build GODEBUG
-
-// This is the MEL3 implementation of the numbers
 package m3number
 
 import (

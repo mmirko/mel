@@ -1,6 +1,3 @@
-//go:build GODEBUG
-// +build GODEBUG
-
 package m3number
 
 import (

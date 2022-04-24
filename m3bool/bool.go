@@ -26,7 +26,7 @@ const (
 )
 
 const (
-	MYLIBID = mel3program.LIB_BOOL3
+	MYLIBID = mel3program.LIB_M3BOOL
 )
 
 // The Mel3 implementation
