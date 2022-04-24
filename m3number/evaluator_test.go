@@ -12,7 +12,7 @@ func TestM3numberEvaluator(t *testing.T) {
 
 	fmt.Println("---- Test: M3number evaluator ----")
 
-	a := new(M3number_me3li)
+	a := new(M3numberMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 

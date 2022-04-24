@@ -11,7 +11,7 @@ func TestM3numberImporter(t *testing.T) {
 
 	fmt.Println("---- Test: M3number importer ----")
 
-	a := new(M3number_me3li)
+	a := new(M3numberMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 

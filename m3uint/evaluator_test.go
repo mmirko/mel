@@ -12,7 +12,7 @@ func TestM3uintEvaluator(t *testing.T) {
 
 	fmt.Println("---- Test: M3uint evaluator ----")
 
-	a := new(M3uint_me3li)
+	a := new(M3uintMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 

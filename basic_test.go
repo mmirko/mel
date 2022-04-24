@@ -17,8 +17,8 @@ func TestBasic(t *testing.T) {
 	//	fmt.Printf("%d\n",testvar.Type_program)
 
 	/*
-		ciao2:=new(symbolic_math.Symbolic_math_me3li)
-		ciao3:=new(symbolic_math.Symbolic_math_me3li)
+		ciao2:=new(symbolic_math.Symbolic_mathMe3li)
+		ciao3:=new(symbolic_math.Symbolic_mathMe3li)
 		ciao2.Init()
 		ciao3.Init()
 		ciao3.Show_list()
@@ -31,7 +31,7 @@ func TestBasic(t *testing.T) {
 		if ok { fmt.Println(argsvar) }
 		fmt.Println(len(argsvar))
 
-		testprog:=new(symbolic_math.Symbolic_math_me3li)
+		testprog:=new(symbolic_math.Symbolic_mathMe3li)
 		testprog.Init()
 		testprog.Type_program=5
 		testprog.Dump_program()

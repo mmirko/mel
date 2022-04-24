@@ -13,7 +13,7 @@ func TestM3redmonEvaluator(t *testing.T) {
 
 	fmt.Println("---- Test: M3redmon evaluator ----")
 
-	a := new(M3redmon_me3li)
+	a := new(M3redmonMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 

@@ -33,14 +33,14 @@ var Implementation = mel3program.Mel3_implementation{
 }
 
 // The effective Me3li
-type M3redmon_me3li struct {
+type M3redmonMe3li struct {
 	mel3program.Mel3_object
 }
 
 // ********* Mel interface
 
-// The Mel entry point for M3redmon_me3li
-func (prog *M3redmon_me3li) MelInit(ep *mel.EvolutionParameters) {
+// The Mel entry point for M3redmonMe3li
+func (prog *M3redmonMe3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3_implementation)
 	impls[MYLIBID] = &Implementation
 	impls[m3bool.MYLIBID] = &m3bool.Implementation
@@ -50,7 +50,7 @@ func (prog *M3redmon_me3li) MelInit(ep *mel.EvolutionParameters) {
 	prog.Mel3_init(impls, ep)
 }
 
-func (prog *M3redmon_me3li) MelCopy() mel.Me3li {
+func (prog *M3redmonMe3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

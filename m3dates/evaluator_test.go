@@ -13,7 +13,7 @@ func TestM3datesEvaluator(t *testing.T) {
 
 	fmt.Println("---- Test: M3dates evaluator ----")
 
-	a := new(M3dates_me3li)
+	a := new(M3datesMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 

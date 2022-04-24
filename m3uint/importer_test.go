@@ -11,7 +11,7 @@ func TestM3uintImporter(t *testing.T) {
 
 	fmt.Println("---- Test: M3uint importer ----")
 
-	a := new(M3uint_me3li)
+	a := new(M3uintMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 

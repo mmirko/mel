@@ -13,7 +13,7 @@ func TestM3uintcmpEvaluator(t *testing.T) {
 
 	fmt.Println("---- Test: M3uintcmp evaluator ----")
 
-	a := new(M3uintcmp_me3li)
+	a := new(M3uintcmpMe3li)
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 
