@@ -5,7 +5,7 @@ import (
 )
 
 // Mel dump, it prints out the object
-func (prog *Mel3_object) Mel_dump() {
+func (prog *Mel3_object) MelDump() {
 
 	if prog != nil {
 		impl := prog.Implementation

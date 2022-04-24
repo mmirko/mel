@@ -4,8 +4,8 @@ import (
 	//"math/rand"
 	//"fmt"
 	mel "github.com/mmirko/mel"
-	bool3 "github.com/mmirko/mel/bool3"
-	dates "github.com/mmirko/mel/dates"
+	m3bool "github.com/mmirko/mel/m3bool"
+	m3dates "github.com/mmirko/mel/m3dates"
 	m3uint "github.com/mmirko/mel/m3uint"
 	m3uintcmp "github.com/mmirko/mel/m3uintcmp"
 	mel3program "github.com/mmirko/mel/mel3program"
@@ -40,17 +40,17 @@ type M3redmon_me3li struct {
 // ********* Mel interface
 
 // The Mel entry point for M3redmon_me3li
-func (prog *M3redmon_me3li) Mel_init(ep *mel.Evolution_parameters) {
+func (prog *M3redmon_me3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3_implementation)
 	impls[MYLIBID] = &Implementation
-	impls[bool3.MYLIBID] = &bool3.Implementation
-	impls[dates.MYLIBID] = &dates.Implementation
+	impls[m3bool.MYLIBID] = &m3bool.Implementation
+	impls[m3dates.MYLIBID] = &m3dates.Implementation
 	impls[m3uint.MYLIBID] = &m3uint.Implementation
 	impls[m3uintcmp.MYLIBID] = &m3uintcmp.Implementation
 	prog.Mel3_init(impls, ep)
 }
 
-func (prog *M3redmon_me3li) Mel_copy() mel.Me3li {
+func (prog *M3redmon_me3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

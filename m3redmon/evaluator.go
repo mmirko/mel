@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"strconv"
 
-	bool3 "github.com/mmirko/mel/bool3"
-	dates "github.com/mmirko/mel/dates"
+	m3bool "github.com/mmirko/mel/m3bool"
+	m3dates "github.com/mmirko/mel/m3dates"
 	m3uint "github.com/mmirko/mel/m3uint"
 	m3uintcmp "github.com/mmirko/mel/m3uintcmp"
 	mel3program "github.com/mmirko/mel/mel3program"
@@ -39,15 +39,15 @@ func M3redmonmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3p
 		return newev
 	}
 
-	if libraryid == dates.MYLIBID {
-		newev := new(dates.Evaluator)
+	if libraryid == m3dates.MYLIBID {
+		newev := new(m3dates.Evaluator)
 		newev.Impl = v.Get_Implementations()
 		newev.Mux = v.GetMux()
 		return newev
 	}
 
-	if libraryid == bool3.MYLIBID {
-		newev := new(bool3.Evaluator)
+	if libraryid == m3bool.MYLIBID {
+		newev := new(m3bool.Evaluator)
 		newev.Impl = v.Get_Implementations()
 		newev.Mux = v.GetMux()
 		return newev

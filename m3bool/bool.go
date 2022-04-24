@@ -1,4 +1,4 @@
-package bool3
+package m3bool
 
 import (
 	//"math/rand"
@@ -32,8 +32,8 @@ const (
 // The Mel3 implementation
 var Implementation = mel3program.Mel3_implementation{
 	ProgramNames: map[uint16]string{
-		CONST: "bool3const",
-		VAR:   "bool3var",
+		CONST: "m3boolconst",
+		VAR:   "m3boolvar",
 		NOT:   "not",
 		AND:   "and",
 		OR:    "or",
@@ -89,24 +89,24 @@ var Implementation = mel3program.Mel3_implementation{
 		NOR:   mel3program.ArgType{},
 		XNOR:  mel3program.ArgType{},
 	},
-	Implname: "bool3",
+	Implname: "m3bool",
 }
 
 // The effective Me3li
-type Bool3_me3li struct {
+type M3bool_me3li struct {
 	mel3program.Mel3_object
 }
 
 // ********* Mel interface
 
-// The Mel entry point for Bool3_me3li
-func (prog *Bool3_me3li) Mel_init(ep *mel.Evolution_parameters) {
+// The Mel entry point for M3bool_me3li
+func (prog *M3bool_me3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3_implementation)
 	impls[MYLIBID] = &Implementation
 	prog.Mel3_init(impls, ep)
 }
 
-func (prog *Bool3_me3li) Mel_copy() mel.Me3li {
+func (prog *M3bool_me3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
-	bool3 "github.com/mmirko/mel/bool3"
+	m3bool "github.com/mmirko/mel/m3bool"
 	m3uint "github.com/mmirko/mel/m3uint"
 	mel3program "github.com/mmirko/mel/mel3program"
 )
@@ -30,8 +30,8 @@ func M3uintcmpmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3
 		return newev
 	}
 
-	if libraryid == bool3.MYLIBID {
-		newev := new(bool3.Evaluator)
+	if libraryid == m3bool.MYLIBID {
+		newev := new(m3bool.Evaluator)
 		newev.Impl = v.Get_Implementations()
 		newev.Mux = v.GetMux()
 		return newev
@@ -161,8 +161,8 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 					}
 
 					result := new(mel3program.Mel3_program)
-					result.LibraryID = bool3.MYLIBID
-					result.ProgramID = bool3.CONST
+					result.LibraryID = m3bool.MYLIBID
+					result.ProgramID = m3bool.CONST
 					result.ProgramValue = op_results
 					result.NextPrograms = nil
 					ev.Result = result

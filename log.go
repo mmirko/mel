@@ -13,7 +13,7 @@ type log_entry struct {
 	message_prio int
 }
 
-func logger(logger_id int, ep *Evolution_parameters, logchan <-chan log_entry) {
+func logger(logger_id int, ep *EvolutionParameters, logchan <-chan log_entry) {
 
 	log_targets, _ := ep.Get_matching_list("log_target:")
 

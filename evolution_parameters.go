@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-type Evolution_parameters struct {
+type EvolutionParameters struct {
 	Pars map[string]string
 }
 
-func (ep *Evolution_parameters) Get_matching_list(match string) (map[string]string, bool) {
+func (ep *EvolutionParameters) Get_matching_list(match string) (map[string]string, bool) {
 
 	result := make(map[string]string)
 
@@ -26,7 +26,7 @@ func (ep *Evolution_parameters) Get_matching_list(match string) (map[string]stri
 	return result, false
 }
 
-func (ep *Evolution_parameters) Get_value(param string) (string, bool) {
+func (ep *EvolutionParameters) Get_value(param string) (string, bool) {
 	if result, ok := ep.Pars[param]; ok {
 		return result, true
 	}

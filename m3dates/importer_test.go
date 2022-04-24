@@ -1,4 +1,4 @@
-package dates
+package m3dates
 
 import (
 	"fmt"
@@ -7,13 +7,13 @@ import (
 	mel "github.com/mmirko/mel"
 )
 
-func TestDatesImporter(t *testing.T) {
+func TestM3datesImporter(t *testing.T) {
 
-	fmt.Println("---- Test: Dates importer ----")
+	fmt.Println("---- Test: M3dates importer ----")
 
-	a := new(Dates_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	a := new(M3dates_me3li)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{`dateconst(2014)`, `timestampconst(34242342)`, `
 add(
@@ -26,11 +26,11 @@ add(
 `}
 	for i := 0; i < len(istrings); i++ {
 		fmt.Println("Importing: " + istrings[i])
-		err := a.Mel_string_import(istrings[i])
+		err := a.MelStringImport(istrings[i])
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			a.Mel_dump()
+			a.MelDump()
 		}
 		fmt.Println("---")
 	}

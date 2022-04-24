@@ -1,4 +1,4 @@
-package dates
+package m3dates
 
 import (
 	//"math/rand"
@@ -56,25 +56,25 @@ var Implementation = mel3program.Mel3_implementation{
 		TIMESTAMPCONST: mel3program.ArgType{},
 		DIFFDAYS:       mel3program.ArgType{},
 	},
-	Implname: "dates",
+	Implname: "m3dates",
 }
 
 // The effective Me3li
-type Dates_me3li struct {
+type M3dates_me3li struct {
 	mel3program.Mel3_object
 }
 
 // ********* Mel interface
 
-// The Mel entry point for Dates_me3li
-func (prog *Dates_me3li) Mel_init(ep *mel.Evolution_parameters) {
+// The Mel entry point for M3dates_me3li
+func (prog *M3dates_me3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3_implementation)
 	impls[MYLIBID] = &Implementation
 	impls[m3uint.MYLIBID] = &m3uint.Implementation
 	prog.Mel3_init(impls, ep)
 }
 
-func (prog *Dates_me3li) Mel_copy() mel.Me3li {
+func (prog *M3dates_me3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

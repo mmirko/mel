@@ -1,15 +1,16 @@
-//go:build DEBUG
-// +build DEBUG
+//go:build !DEBUG
+// +build !DEBUG
 
-package dates
+package m3dates
 
 import (
 	"errors"
 	"fmt"
-	m3uint "github.com/mmirko/mel/m3uint"
-	mel3program "github.com/mmirko/mel/mel3program"
 	"strconv"
 	"time"
+
+	m3uint "github.com/mmirko/mel/m3uint"
+	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 type Evaluator struct {
@@ -19,7 +20,7 @@ type Evaluator struct {
 	Result *mel3program.Mel3_program
 }
 
-func Datesmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func M3datesmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
 	libraryid := in_prog.LibraryID
 
 	if libraryid == m3uint.MYLIBID {
@@ -36,7 +37,7 @@ func Datesmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3prog
 }
 
 func (ev *Evaluator) GetName() string {
-	return "dates"
+	return "m3dates"
 }
 
 func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3_implementation {
@@ -77,7 +78,6 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 	programid := in_prog.ProgramID
 	libraryid := in_prog.LibraryID
 
-	fmt.Println("Entering dates - LibraryID:", libraryid, "- ProgramID:", programid)
 	// DEBUG CODE PLACEHOLDER
 
 	implementation := ev.Impl[libraryid]

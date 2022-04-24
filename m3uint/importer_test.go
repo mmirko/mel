@@ -12,8 +12,8 @@ func TestM3uintImporter(t *testing.T) {
 	fmt.Println("---- Test: M3uint importer ----")
 
 	a := new(M3uint_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{
 		`
@@ -31,12 +31,12 @@ add(
 	for i := 0; i < len(istrings); i++ {
 		fmt.Println(">>>")
 		fmt.Println(istrings[i])
-		err := a.Mel_string_import(istrings[i])
+		err := a.MelStringImport(istrings[i])
 		fmt.Println("---")
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			a.Mel_dump()
+			a.MelDump()
 		}
 		fmt.Println("<<<")
 	}

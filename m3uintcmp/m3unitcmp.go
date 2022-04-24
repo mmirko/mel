@@ -4,7 +4,7 @@ import (
 	//"math/rand"
 	//"fmt"
 	mel "github.com/mmirko/mel"
-	bool3 "github.com/mmirko/mel/bool3"
+	m3bool "github.com/mmirko/mel/m3bool"
 	m3uint "github.com/mmirko/mel/m3uint"
 	mel3program "github.com/mmirko/mel/mel3program"
 )
@@ -38,12 +38,12 @@ var Implementation = mel3program.Mel3_implementation{
 	},
 	TypeNames: map[uint16]string{},
 	ProgramTypes: map[uint16]mel3program.ArgumentsTypes{
-		EQ: mel3program.ArgumentsTypes{mel3program.ArgType{bool3.MYLIBID, bool3.BOOL, []uint64{}}},
-		NE: mel3program.ArgumentsTypes{mel3program.ArgType{bool3.MYLIBID, bool3.BOOL, []uint64{}}},
-		LT: mel3program.ArgumentsTypes{mel3program.ArgType{bool3.MYLIBID, bool3.BOOL, []uint64{}}},
-		LE: mel3program.ArgumentsTypes{mel3program.ArgType{bool3.MYLIBID, bool3.BOOL, []uint64{}}},
-		GT: mel3program.ArgumentsTypes{mel3program.ArgType{bool3.MYLIBID, bool3.BOOL, []uint64{}}},
-		GE: mel3program.ArgumentsTypes{mel3program.ArgType{bool3.MYLIBID, bool3.BOOL, []uint64{}}},
+		EQ: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		NE: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		LT: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		LE: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		GT: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		GE: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
 	},
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{
 		EQ: mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}, mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
@@ -80,15 +80,15 @@ type M3uintcmp_me3li struct {
 // ********* Mel interface
 
 // The Mel entry point for M3uintcmp_me3li
-func (prog *M3uintcmp_me3li) Mel_init(ep *mel.Evolution_parameters) {
+func (prog *M3uintcmp_me3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3_implementation)
 	impls[MYLIBID] = &Implementation
 	impls[m3uint.MYLIBID] = &m3uint.Implementation
-	impls[bool3.MYLIBID] = &bool3.Implementation
+	impls[m3bool.MYLIBID] = &m3bool.Implementation
 	prog.Mel3_init(impls, ep)
 }
 
-func (prog *M3uintcmp_me3li) Mel_copy() mel.Me3li {
+func (prog *M3uintcmp_me3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

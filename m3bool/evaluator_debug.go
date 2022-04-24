@@ -1,12 +1,11 @@
-//go:build !DEBUG
-// +build !DEBUG
+//go:build DEBUG
+// +build DEBUG
 
-package bool3
+package m3bool
 
 import (
 	"errors"
 	"fmt"
-
 	mel3program "github.com/mmirko/mel/mel3program"
 )
 
@@ -17,7 +16,7 @@ type Evaluator struct {
 	Result *mel3program.Mel3_program
 }
 
-func Bool3mux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func M3boolmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
 	result := new(Evaluator)
 	result.Impl = v.Get_Implementations()
 	result.Mux = v.GetMux()
@@ -29,7 +28,7 @@ func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3_implemen
 }
 
 func (ev *Evaluator) GetName() string {
-	return "bool3"
+	return "m3bool"
 }
 
 func (ev *Evaluator) GetError() error {
@@ -59,6 +58,8 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 
 	programid := in_prog.ProgramID
 	libraryid := in_prog.LibraryID
+
+	fmt.Println("Enter uint ", libraryid, programid)
 
 	implementation := ev.Impl[libraryid]
 

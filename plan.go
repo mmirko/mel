@@ -90,9 +90,9 @@ type command_response struct {
 	indivs        []*individual
 }
 
-type g0 func(*Evolution_parameters) Me3li
-type g1 func(Me3li, *Evolution_parameters) Me3li
-type g2 func(Me3li, Me3li, *Evolution_parameters) Me3li
+type g0 func(*EvolutionParameters) Me3li
+type g1 func(Me3li, *EvolutionParameters) Me3li
+type g2 func(Me3li, Me3li, *EvolutionParameters) Me3li
 
 // genop_carrier struct, it holds the available genetic operators. It is used to pass function pointers to events goroutines
 type genop_carrier struct {
@@ -122,7 +122,7 @@ type command_responses []command_response
 
 type states []bool
 
-func life(id int, popid int, pop_head **individual, running_data *population_rundata, gen *genop_carrier, ep *Evolution_parameters, comm <-chan event_issued, resp chan<- command_response) {
+func life(id int, popid int, pop_head **individual, running_data *population_rundata, gen *genop_carrier, ep *EvolutionParameters, comm <-chan event_issued, resp chan<- command_response) {
 	//fmt.Println("Starting life thread ", id, " on population ", popid)
 	running := true
 	pop_target := float32(1000.0)
@@ -212,7 +212,7 @@ func life(id int, popid int, pop_head **individual, running_data *population_run
 	}
 }
 
-func event(id int, popid int, gen *genop_carrier, ep *Evolution_parameters, comm <-chan event_issued, resp chan<- command_response) {
+func event(id int, popid int, gen *genop_carrier, ep *EvolutionParameters, comm <-chan event_issued, resp chan<- command_response) {
 	//fmt.Println("Starting event thread ", id, " on population ", popid)
 	for {
 		received_command := <-comm
@@ -240,7 +240,7 @@ func event(id int, popid int, gen *genop_carrier, ep *Evolution_parameters, comm
 	}
 }
 
-func fittcomp(id int, fitid int, fitness func([]Me3li) (float32, bool), ep *Evolution_parameters, comm <-chan fitness_issued, resp chan<- command_response) {
+func fittcomp(id int, fitid int, fitness func([]Me3li) (float32, bool), ep *EvolutionParameters, comm <-chan fitness_issued, resp chan<- command_response) {
 	//fmt.Println("Starting fitness thread ", id, " on fitness ", fitid)
 	for {
 		received_command := <-comm
@@ -255,7 +255,7 @@ func fittcomp(id int, fitid int, fitness func([]Me3li) (float32, bool), ep *Evol
 }
 
 // Use Dynamic Evolving populations
-func (plan *Plan) Execute_dep(ep *Evolution_parameters) {
+func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 
 	// Evoulution variables
 	stopiter := plan.Exitat
@@ -304,17 +304,17 @@ func (plan *Plan) Execute_dep(ep *Evolution_parameters) {
 		gen[pop_i].wdeath = plan.Populations[pop_i].Weight_death
 
 		for genop_i := 0; genop_i < len(plan.Populations[pop_i].Genetic_generators); genop_i++ {
-			gen[pop_i].g0slice[genop_i] = plan.Populations[pop_i].Genetic_generators[genop_i].(func(*Evolution_parameters) Me3li)
+			gen[pop_i].g0slice[genop_i] = plan.Populations[pop_i].Genetic_generators[genop_i].(func(*EvolutionParameters) Me3li)
 			gen[pop_i].w0slice[genop_i] = plan.Populations[pop_i].Weight_generators[genop_i]
 		}
 
 		for genop_i := 0; genop_i < len(plan.Populations[pop_i].Genetic_unary); genop_i++ {
-			gen[pop_i].g1slice[genop_i] = plan.Populations[pop_i].Genetic_unary[genop_i].(func(Me3li, *Evolution_parameters) Me3li)
+			gen[pop_i].g1slice[genop_i] = plan.Populations[pop_i].Genetic_unary[genop_i].(func(Me3li, *EvolutionParameters) Me3li)
 			gen[pop_i].w1slice[genop_i] = plan.Populations[pop_i].Weight_unary[genop_i]
 		}
 
 		for genop_i := 0; genop_i < len(plan.Populations[pop_i].Genetic_binary); genop_i++ {
-			gen[pop_i].g2slice[genop_i] = plan.Populations[pop_i].Genetic_binary[genop_i].(func(Me3li, Me3li, *Evolution_parameters) Me3li)
+			gen[pop_i].g2slice[genop_i] = plan.Populations[pop_i].Genetic_binary[genop_i].(func(Me3li, Me3li, *EvolutionParameters) Me3li)
 			gen[pop_i].w2slice[genop_i] = plan.Populations[pop_i].Weight_binary[genop_i]
 		}
 	}
@@ -555,7 +555,7 @@ func ordered_place(queue_head **individual, newindiv *individual) {
 }
 
 // Use Simple Genetic evolution
-func (plan *Plan_simple) Execute_simple(ep *Evolution_parameters) {
+func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 
 	var head *individual
 
@@ -587,7 +587,7 @@ func (plan *Plan_simple) Execute_simple(ep *Evolution_parameters) {
 	generator_weight_sum := float32(0.0)
 
 	for i := 0; i < generators_num; i++ {
-		generators[i] = plan.Populations[0].Genetic_generators[i].(func(*Evolution_parameters) Me3li)
+		generators[i] = plan.Populations[0].Genetic_generators[i].(func(*EvolutionParameters) Me3li)
 		generator_weight_sum += plan.Populations[0].Weight_generators[i]
 	}
 
@@ -606,7 +606,7 @@ func (plan *Plan_simple) Execute_simple(ep *Evolution_parameters) {
 	unary_weight_sum := float32(0.0)
 
 	for i := 0; i < unary_num; i++ {
-		unary[i] = plan.Populations[0].Genetic_unary[i].(func(Me3li, *Evolution_parameters) Me3li)
+		unary[i] = plan.Populations[0].Genetic_unary[i].(func(Me3li, *EvolutionParameters) Me3li)
 		unary_weight_sum += plan.Populations[0].Weight_unary[i]
 	}
 
@@ -625,7 +625,7 @@ func (plan *Plan_simple) Execute_simple(ep *Evolution_parameters) {
 	binary_weight_sum := float32(0.0)
 
 	for i := 0; i < binary_num; i++ {
-		binary[i] = plan.Populations[0].Genetic_binary[i].(func(Me3li, Me3li, *Evolution_parameters) Me3li)
+		binary[i] = plan.Populations[0].Genetic_binary[i].(func(Me3li, Me3li, *EvolutionParameters) Me3li)
 		binary_weight_sum += plan.Populations[0].Weight_binary[i]
 	}
 

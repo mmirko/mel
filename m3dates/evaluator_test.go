@@ -1,4 +1,4 @@
-package dates
+package m3dates
 
 import (
 	"fmt"
@@ -9,13 +9,13 @@ import (
 	mel3program "github.com/mmirko/mel/mel3program"
 )
 
-func TestDatesEvaluator(t *testing.T) {
+func TestM3datesEvaluator(t *testing.T) {
 
-	fmt.Println("---- Test: Dates evaluator ----")
+	fmt.Println("---- Test: M3dates evaluator ----")
 
-	a := new(Dates_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	a := new(M3dates_me3li)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{`
 add(
@@ -32,7 +32,7 @@ add(
 		fmt.Println(">>>")
 
 		fmt.Println("\tImporting: " + istring)
-		a.Mel_string_import(istring)
+		a.MelStringImport(istring)
 
 		fmt.Println("\tEvaluating: " + istring)
 
@@ -42,7 +42,7 @@ add(
 		//		case MYLIBID:
 		v := new(Evaluator)
 		v.Impl = a.Implementation
-		v.Mux = Datesmux
+		v.Mux = M3datesmux
 		//	v.Result = new(mel3program.Mel3_program)
 		ev := v
 		//		case m3uint.MYLIBID:

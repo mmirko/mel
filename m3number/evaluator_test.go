@@ -13,8 +13,8 @@ func TestM3numberEvaluator(t *testing.T) {
 	fmt.Println("---- Test: M3number evaluator ----")
 
 	a := new(M3number_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{
 		`
@@ -65,7 +65,7 @@ mult(
 		fmt.Println(">>>")
 
 		fmt.Println("\tImporting: " + istring)
-		a.Mel_string_import(istring)
+		a.MelStringImport(istring)
 
 		fmt.Println("\tEvaluating: " + istring)
 

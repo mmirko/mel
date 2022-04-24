@@ -10,7 +10,7 @@ import (
 )
 
 // Mel string import: Call the Mel3 engine to get a program from a string
-func (prog *Mel3_object) Mel_string_import(input_string string) error {
+func (prog *Mel3_object) MelStringImport(input_string string) error {
 
 	if prog == nil {
 		return errors.New("Uninitializated Program Object.")

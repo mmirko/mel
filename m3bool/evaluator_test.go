@@ -1,4 +1,4 @@
-package bool3
+package m3bool
 
 import (
 	"fmt"
@@ -12,13 +12,13 @@ func TestM3uintEvaluator(t *testing.T) {
 
 	fmt.Println("---- Test: M3uint evaluator ----")
 
-	a := new(Bool3_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	a := new(M3bool_me3li)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{
 		`
-and(bool3const(true),bool3const(true))
+and(m3boolconst(true),m3boolconst(true))
 
 `}
 
@@ -27,13 +27,13 @@ and(bool3const(true),bool3const(true))
 		fmt.Println(">>>")
 
 		fmt.Println("\tImporting: " + istring)
-		a.Mel_string_import(istring)
+		a.MelStringImport(istring)
 
 		fmt.Println("\tEvaluating: " + istring)
 
 		ev := new(Evaluator)
 		ev.Impl = a.Implementation
-		ev.Mux = Bool3mux
+		ev.Mux = M3boolmux
 		ev.Result = new(mel3program.Mel3_program)
 
 		mel3program.Walk(ev, a.StartProgram)

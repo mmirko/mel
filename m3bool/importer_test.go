@@ -1,4 +1,4 @@
-package bool3
+package m3bool
 
 import (
 	"fmt"
@@ -7,25 +7,25 @@ import (
 	mel "github.com/mmirko/mel"
 )
 
-func TestBool3Importer(t *testing.T) {
+func TestM3boolImporter(t *testing.T) {
 
-	fmt.Println("---- Test: Bool3 importer ----")
+	fmt.Println("---- Test: M3bool importer ----")
 
-	a := new(Bool3_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	a := new(M3bool_me3li)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{`
-	bool3const(true)
+	m3boolconst(true)
 `}
 
 	for i := 0; i < len(istrings); i++ {
 		fmt.Println("Importing: " + istrings[i])
-		err := a.Mel_string_import(istrings[i])
+		err := a.MelStringImport(istrings[i])
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			a.Mel_dump()
+			a.MelDump()
 		}
 		fmt.Println("---")
 	}

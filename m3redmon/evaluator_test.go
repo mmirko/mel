@@ -14,8 +14,8 @@ func TestM3redmonEvaluator(t *testing.T) {
 	fmt.Println("---- Test: M3redmon evaluator ----")
 
 	a := new(M3redmon_me3li)
-	var ep *mel.Evolution_parameters
-	a.Mel_init(ep)
+	var ep *mel.EvolutionParameters
+	a.MelInit(ep)
 
 	istrings := []string{`
 eq(
@@ -34,7 +34,7 @@ eq(
 		fmt.Println(">>>")
 
 		fmt.Println("\tImporting: " + istring)
-		a.Mel_string_import(istring)
+		a.MelStringImport(istring)
 
 		fmt.Println("\tEvaluating: " + istring)
 
