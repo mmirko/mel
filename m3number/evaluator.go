@@ -3,12 +3,13 @@ package m3number
 import (
 	"errors"
 	"fmt"
-	mel3program "github.com/mmirko/mel/mel3program"
 	"strconv"
+
+	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 type Evaluator struct {
-	Impl map[uint16]*mel3program.Mel3_implementation
+	Impl map[uint16]*mel3program.Mel3Implementation
 	Mux  mel3program.Mux
 	error
 	Result *mel3program.Mel3_program
@@ -21,7 +22,7 @@ func M3numbermux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3p
 	return result
 }
 
-func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3_implementation {
+func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3Implementation {
 	return ev.Impl
 }
 

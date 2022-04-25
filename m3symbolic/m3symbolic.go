@@ -25,7 +25,7 @@ const (
 )
 
 // The Mel3 implementation
-var Implementation = mel3program.Mel3_implementation{
+var Implementation = mel3program.Mel3Implementation{
 	ProgramNames: map[uint16]string{
 		CONST: "const",
 		VAR:   "var",
@@ -71,7 +71,7 @@ type Symbolic_math3_me3li struct {
 
 // The Mel entry point for Symbolic_math_me3li
 func (prog *Symbolic_math3_me3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3_implementation)
+	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
 	prog.Mel3_init(impls, ep)
 }

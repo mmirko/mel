@@ -1,9 +1,7 @@
 package mel3program
 
-import ()
-
 // Get the program id from its name whitin the implementation
-func ids_from_name(implementation map[uint16]*Mel3_implementation, input_name string) ([]uint16, []uint16, bool) {
+func ids_from_name(implementation map[uint16]*Mel3Implementation, input_name string) ([]uint16, []uint16, bool) {
 	if implementation == nil {
 		return []uint16{}, []uint16{}, false
 	}
@@ -31,7 +29,7 @@ func ids_from_name(implementation map[uint16]*Mel3_implementation, input_name st
 }
 
 // Get the program id from its name whitin the implementation
-func id_from_name(implementation *Mel3_implementation, input_name string) (uint16, bool) {
+func id_from_name(implementation *Mel3Implementation, input_name string) (uint16, bool) {
 	if implementation == nil {
 		return 0, false
 	}

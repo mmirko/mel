@@ -43,9 +43,9 @@ type Population struct {
 }
 
 type Fitness struct {
-	Fitness_name     string
-	Fitness_function func([]Me3li) (float32, bool)
-	Threads          int
+	Fitness_name    string
+	FitnessFunction func([]Me3li) (float32, bool)
+	Threads         int
 }
 
 type Plan struct {
@@ -383,7 +383,7 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 	// Spawn the fittnes calcutors goroutines
 	for i := 0; i < fitness_num; i++ {
 		for j := 0; j < plan.Fitnesses[i].Threads; j++ {
-			go fittcomp(j, i, plan.Fitnesses[i].Fitness_function, ep, fitness_thread_comchan[i][j], responses_channel)
+			go fittcomp(j, i, plan.Fitnesses[i].FitnessFunction, ep, fitness_thread_comchan[i][j], responses_channel)
 		}
 	}
 
@@ -636,7 +636,7 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 	}
 
 	// Fitness
-	fitness := plan.Fitnesses[0].Fitness_function
+	fitness := plan.Fitnesses[0].FitnessFunction
 
 	// Reading variables
 	deaths_perc := plan.Deaths_perc

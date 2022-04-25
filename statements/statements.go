@@ -23,7 +23,7 @@ const (
 )
 
 // The Mel3 implementation
-var Implementation = mel3program.Mel3_implementation{
+var Implementation = mel3program.Mel3Implementation{
 	ProgramNames: map[uint16]string{
 		MULTISTMT: "multistmt", // Multiline statement
 		NOP:       "nop",       // void instruction
@@ -51,20 +51,20 @@ var Implementation = mel3program.Mel3_implementation{
 }
 
 // The effective Me3li
-type Statements_me3li struct {
+type StatementsMe3li struct {
 	mel3program.Mel3_object
 }
 
 // ********* Mel interface
 
 // The Mel entry point for Symbolic_math_me3li
-func (prog *Statements_me3li) Mel_init(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3_implementation)
+func (prog *StatementsMe3li) MelInit(ep *mel.EvolutionParameters) {
+	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
 	prog.Mel3_init(impls, ep)
 }
 
-func (prog *Statements_me3li) Mel_copy() mel.Me3li {
+func (prog *StatementsMe3li) Mel_copy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

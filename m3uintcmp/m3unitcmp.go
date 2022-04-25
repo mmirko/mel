@@ -27,7 +27,7 @@ const (
 )
 
 // The Mel3 implementation
-var Implementation = mel3program.Mel3_implementation{
+var Implementation = mel3program.Mel3Implementation{
 	ProgramNames: map[uint16]string{
 		EQ: "eq",
 		NE: "ne",
@@ -81,7 +81,7 @@ type M3uintcmpMe3li struct {
 
 // The Mel entry point for M3uintcmpMe3li
 func (prog *M3uintcmpMe3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3_implementation)
+	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
 	impls[m3uint.MYLIBID] = &m3uint.Implementation
 	impls[m3bool.MYLIBID] = &m3bool.Implementation

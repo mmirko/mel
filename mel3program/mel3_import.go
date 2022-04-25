@@ -34,16 +34,16 @@ func (prog *Mel3_object) MelStringImport(input_string string) error {
 }
 
 // String importer engine: it parse a string and create a program recursively
-func import_engine(implementation map[uint16]*Mel3_implementation, input_string string) (*Mel3_program, *ArgumentsTypes, error) {
+func import_engine(implementation map[uint16]*Mel3Implementation, input_string string) (*Mel3_program, *ArgumentsTypes, error) {
 	var result Mel3_program
 
 	// Get the program name
-	programname, err := mel3parser.Functval(input_string)
+	programname, err := mel3parser.FunctionalValue(input_string)
 	if err != nil {
 		return nil, nil, errors.New("Failed to find identifier on " + input_string)
 	}
 
-	args, err := mel3parser.Parparser(input_string)
+	args, err := mel3parser.ParParser(input_string)
 	if err != nil {
 		return nil, nil, errors.New("Failed to find arguments on " + input_string)
 	}

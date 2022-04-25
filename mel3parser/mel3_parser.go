@@ -6,7 +6,7 @@ import (
 )
 
 // It returns the functional value of an expression of comma fail if none
-func Functval(instr string) (string, error) {
+func FunctionalValue(instr string) (string, error) {
 
 	instr = strings.TrimSpace(instr)
 
@@ -20,7 +20,7 @@ func Functval(instr string) (string, error) {
 }
 
 // It returns a string slice of the comma separated arguments (it take note of parentesis)
-func Parparser(instr string) ([]string, error) {
+func ParParser(instr string) ([]string, error) {
 
 	// Up to 10 arguments
 	var result = make([]string, 0)

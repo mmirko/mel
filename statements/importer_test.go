@@ -11,9 +11,9 @@ func TestSymbolicMathImporter(t *testing.T) {
 
 	fmt.Println("---- Test: Statements importer ----")
 
-	a := new(Statements_me3li)
+	a := new(StatementsMe3li)
 	var ep *mel.EvolutionParameters
-	a.Mel_init(ep)
+	a.MelInit(ep)
 
 	istrings := []string{`
 multistmt(

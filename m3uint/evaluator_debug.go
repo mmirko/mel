@@ -11,7 +11,7 @@ import (
 )
 
 type Evaluator struct {
-	Impl map[uint16]*mel3program.Mel3_implementation
+	Impl map[uint16]*mel3program.Mel3Implementation
 	Mux  mel3program.Mux
 	error
 	Result *mel3program.Mel3_program
@@ -24,7 +24,7 @@ func M3uintmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3pro
 	return result
 }
 
-func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3_implementation {
+func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3Implementation {
 	return ev.Impl
 }
 

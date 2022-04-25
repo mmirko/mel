@@ -11,11 +11,11 @@ type Me3li interface {
 	MelCopy() Me3li
 }
 
-type Me3li_string_import interface {
+type Me3liStringImport interface {
 	MelStringImport(string) error
 }
 
-type Me3li_dump interface {
+type Me3liDump interface {
 	MelDump()
 }
 

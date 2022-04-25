@@ -9,7 +9,7 @@ import (
 )
 
 // The Mel3 registration program every new data struct has to do it (This is not an entry point !! Not MelInit !! )
-func (obj *Mel3_object) Mel3_init(implementation map[uint16]*Mel3_implementation, ep *mel.EvolutionParameters) {
+func (obj *Mel3_object) Mel3_init(implementation map[uint16]*Mel3Implementation, ep *mel.EvolutionParameters) {
 	obj.Implementation = implementation
 
 	for _, impl := range implementation {

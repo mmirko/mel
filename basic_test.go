@@ -25,9 +25,9 @@ func TestBasic(t *testing.T) {
 
 		instr :="sin(1,cos(x),sib(cos(gh)))"
 
-		functvalvar,ok:=mel1_parser.Functval(instr)
+		functvalvar,ok:=mel1_parser.FunctionalValue(instr)
 		if ok { fmt.Println(functvalvar) }
-		argsvar,ok:=mel1_parser.Parparser(instr)
+		argsvar,ok:=mel1_parser.ParParser(instr)
 		if ok { fmt.Println(argsvar) }
 		fmt.Println(len(argsvar))
 

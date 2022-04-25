@@ -13,7 +13,7 @@ import (
 )
 
 type Evaluator struct {
-	Impl map[uint16]*mel3program.Mel3_implementation
+	Impl map[uint16]*mel3program.Mel3Implementation
 	Mux  mel3program.Mux
 	error
 	Result *mel3program.Mel3_program
@@ -39,7 +39,7 @@ func (ev *Evaluator) GetName() string {
 	return "m3dates"
 }
 
-func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3_implementation {
+func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3Implementation {
 	return ev.Impl
 }
 

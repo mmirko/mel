@@ -32,12 +32,12 @@ func (prog *Mel3_object) String() string {
 	return result
 }
 
-func ProgDump(implementation map[uint16]*Mel3_implementation, program *Mel3_program) (string, error) {
+func ProgDump(implementation map[uint16]*Mel3Implementation, program *Mel3_program) (string, error) {
 	return export_engine(implementation, program)
 }
 
 // Export engine: it recurse over the program and show it
-func export_engine(implementation map[uint16]*Mel3_implementation, program *Mel3_program) (string, error) {
+func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_program) (string, error) {
 
 	result := ""
 

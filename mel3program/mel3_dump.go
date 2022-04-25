@@ -29,7 +29,7 @@ func (prog *Mel3_object) MelDump() {
 }
 
 // Dump engine: it recurse over the program and show it
-func dump_engine(implementation map[uint16]*Mel3_implementation, program *Mel3_program, level int) error {
+func dump_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_program, level int) error {
 
 	programid := program.ProgramID
 	libraryid := program.LibraryID

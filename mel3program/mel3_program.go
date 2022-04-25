@@ -23,7 +23,7 @@ type ArgType struct {
 type ArgumentsTypes []ArgType
 
 // This is the language implementation.
-type Mel3_implementation struct {
+type Mel3Implementation struct {
 	ProgramNames    map[uint16]string
 	TypeNames       map[uint16]string
 	ProgramTypes    map[uint16]ArgumentsTypes
@@ -43,15 +43,15 @@ type Mel3_program struct {
 
 type Mel3_object struct {
 	StartProgram   *Mel3_program
-	Implementation map[uint16]*Mel3_implementation
+	Implementation map[uint16]*Mel3Implementation
 	Environment    interface{}
 }
 
-func (a ArgType) String(impl *Mel3_implementation) string {
+func (a ArgType) String(impl *Mel3Implementation) string {
 	return impl.TypeNames[a.TypeID]
 }
 
-func (as ArgumentsTypes) String(impl *Mel3_implementation) string {
+func (as ArgumentsTypes) String(impl *Mel3Implementation) string {
 	result := ""
 	for i, arg := range as {
 		if i != 0 {
@@ -86,7 +86,7 @@ type VisitFunction func(Visitor, *Mel3_program) Visitor
 type Visitor interface {
 	GetName() string
 	Visit(*Mel3_program) Visitor
-	Get_Implementations() map[uint16]*Mel3_implementation
+	Get_Implementations() map[uint16]*Mel3Implementation
 	GetMux() Mux
 	SetMux(Mux)
 	GetError() error
