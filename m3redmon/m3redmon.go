@@ -29,12 +29,12 @@ var Implementation = mel3program.Mel3Implementation{
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{},
 	IsVariadic:      map[uint16]bool{},
 	VariadicType:    map[uint16]mel3program.ArgType{},
-	Implname:        "m3redmon",
+	ImplName:        "m3redmon",
 }
 
 // The effective Me3li
 type M3redmonMe3li struct {
-	mel3program.Mel3_object
+	mel3program.Mel3Object
 }
 
 // ********* Mel interface
@@ -47,7 +47,7 @@ func (prog *M3redmonMe3li) MelInit(ep *mel.EvolutionParameters) {
 	impls[m3dates.MYLIBID] = &m3dates.Implementation
 	impls[m3uint.MYLIBID] = &m3uint.Implementation
 	impls[m3uintcmp.MYLIBID] = &m3uintcmp.Implementation
-	prog.Mel3_init(impls, ep)
+	prog.Mel3Init(impls, ep)
 }
 
 func (prog *M3redmonMe3li) MelCopy() mel.Me3li {

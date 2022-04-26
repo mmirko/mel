@@ -12,10 +12,10 @@ type Evaluator struct {
 	Impl map[uint16]*mel3program.Mel3Implementation
 	Mux  mel3program.Mux
 	error
-	Result *mel3program.Mel3_program
+	Result *mel3program.Mel3Program
 }
 
-func M3numbermux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func M3numbermux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
 	result := new(Evaluator)
 	result.Impl = v.Get_Implementations()
 	result.Mux = v.GetMux()
@@ -42,11 +42,11 @@ func (ev *Evaluator) SetMux(in_mux mel3program.Mux) {
 	ev.Mux = in_mux
 }
 
-func (ev *Evaluator) GetResult() *mel3program.Mel3_program {
+func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
 
 	mymux := ev.GetMux()
 	checkev := mymux(ev, in_prog)
@@ -130,7 +130,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 						return nil
 					}
 
-					result := new(mel3program.Mel3_program)
+					result := new(mel3program.Mel3Program)
 					result.LibraryID = libraryid
 					result.ProgramID = M3NUMBERCONST
 					result.ProgramValue = op_result
@@ -154,7 +154,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 			case M3NUMBERCONST:
 				switch in_prog.ProgramValue {
 				default:
-					result := new(mel3program.Mel3_program)
+					result := new(mel3program.Mel3Program)
 					result.LibraryID = libraryid
 					result.ProgramID = programid
 					result.ProgramValue = in_prog.ProgramValue

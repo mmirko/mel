@@ -43,7 +43,7 @@ func id_from_name(implementation *Mel3Implementation, input_name string) (uint16
 	return 0, false
 }
 
-func count_program(program *Mel3_program) int {
+func count_program(program *Mel3Program) int {
 	result := 1
 
 	for i := range program.NextPrograms {
@@ -53,8 +53,8 @@ func count_program(program *Mel3_program) int {
 	return result
 }
 
-func node_find(inprogr *Mel3_program, starting_node int, searched_node int) *Mel3_program {
-	var result *Mel3_program
+func node_find(inprogr *Mel3Program, starting_node int, searched_node int) *Mel3Program {
+	var result *Mel3Program
 	if starting_node == searched_node {
 		return inprogr
 	} else {
@@ -74,15 +74,15 @@ func node_find(inprogr *Mel3_program, starting_node int, searched_node int) *Mel
 	return result
 }
 
-func copy_program(inprogr *Mel3_program) *Mel3_program {
+func copy_program(inprogr *Mel3Program) *Mel3Program {
 
-	outprogr := new(Mel3_program)
+	outprogr := new(Mel3Program)
 
 	if inprogr != nil {
 
 		outprogr.ProgramID = inprogr.ProgramID
 		outprogr.ProgramValue = inprogr.ProgramValue
-		outprogr.NextPrograms = make([]*Mel3_program, len(inprogr.NextPrograms))
+		outprogr.NextPrograms = make([]*Mel3Program, len(inprogr.NextPrograms))
 
 		for i, prog := range inprogr.NextPrograms {
 			outprogr.NextPrograms[i] = copy_program(prog)

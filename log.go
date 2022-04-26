@@ -15,18 +15,18 @@ type log_entry struct {
 
 func logger(logger_id int, ep *EvolutionParameters, logchan <-chan log_entry) {
 
-	log_targets, _ := ep.Get_matching_list("log_target:")
+	log_targets, _ := ep.GetMatchingList("log_target:")
 
 	target := "stdout"
 	w := bufio.NewWriter(os.Stdout)
 
 	for log_values, _ := range log_targets {
-		if log_target_id_str, ok := Get_nth_params_string(log_values, 0); ok {
-			if log_target_verbosity, ok := Get_nth_params_string(log_values, 1); ok {
+		if log_target_id_str, ok := GetNthParamsString(log_values, 0); ok {
+			if log_target_verbosity, ok := GetNthParamsString(log_values, 1); ok {
 				log_target_id, _ := strconv.Atoi(log_target_id_str)
 				if log_target_id == logger_id {
 
-					if targett, ok := ep.Get_value("log_target:" + log_target_id_str + ":" + log_target_verbosity); ok {
+					if targett, ok := ep.GetValue("log_target:" + log_target_id_str + ":" + log_target_verbosity); ok {
 
 						if targett != "stdout" {
 

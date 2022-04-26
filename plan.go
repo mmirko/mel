@@ -267,15 +267,15 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 	var logchans []chan log_entry
 	var logverb []int
 
-	log_targets, logging := ep.Get_matching_list("log_target:")
+	log_targets, logging := ep.GetMatchingList("log_target:")
 
 	// Eventually prepare the logging channels and spawn the loggers gothreads
 	if logging {
 		logchans = make([]chan log_entry, len(log_targets))
 		logverb = make([]int, len(log_targets))
 		for log_values, _ := range log_targets {
-			if log_target_id, ok := Get_nth_params_int(log_values, 0); ok {
-				if log_target_verbosity, ok := Get_nth_params_int(log_values, 1); ok {
+			if log_target_id, ok := GetNthParamsInt(log_values, 0); ok {
+				if log_target_verbosity, ok := GetNthParamsInt(log_values, 1); ok {
 					logchans[log_target_id] = make(chan log_entry)
 					logverb[log_target_id] = log_target_verbosity
 					go logger(log_target_id, ep, logchans[log_target_id])

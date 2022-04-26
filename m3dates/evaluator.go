@@ -17,10 +17,10 @@ type Evaluator struct {
 	Impl map[uint16]*mel3program.Mel3Implementation
 	Mux  mel3program.Mux
 	error
-	Result *mel3program.Mel3_program
+	Result *mel3program.Mel3Program
 }
 
-func M3datesmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func M3datesmux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
 	libraryid := in_prog.LibraryID
 
 	if libraryid == m3uint.MYLIBID {
@@ -56,11 +56,11 @@ func (ev *Evaluator) SetMux(in_mux mel3program.Mux) {
 	ev.Mux = in_mux
 }
 
-func (ev *Evaluator) GetResult() *mel3program.Mel3_program {
+func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
 
 	mymux := ev.GetMux()
 	checkev := mymux(ev, in_prog)
@@ -163,7 +163,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 
 					op_result := strconv.Itoa(op_resultn)
 
-					result := new(mel3program.Mel3_program)
+					result := new(mel3program.Mel3Program)
 					result.LibraryID = m3uint.MYLIBID
 					result.ProgramID = m3uint.M3UINTCONST
 					result.ProgramValue = op_result
@@ -188,7 +188,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 				baselayout := "2006-01-02"
 				switch in_prog.ProgramValue {
 				case "today":
-					result := new(mel3program.Mel3_program)
+					result := new(mel3program.Mel3Program)
 					result.LibraryID = libraryid
 					result.ProgramID = programid
 					result.ProgramValue = time.Now().Format(baselayout)
@@ -199,7 +199,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 					oneok := false
 					for _, layout := range layouts {
 						if t, err := time.Parse(layout, in_prog.ProgramValue); err == nil {
-							result := new(mel3program.Mel3_program)
+							result := new(mel3program.Mel3Program)
 							result.LibraryID = libraryid
 							result.ProgramID = programid
 							result.ProgramValue = t.Format(baselayout)

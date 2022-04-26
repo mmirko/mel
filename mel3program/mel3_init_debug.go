@@ -9,7 +9,7 @@ import (
 )
 
 // The Mel3 registration program every new data struct has to do it (This is not an entry point !! Not MelInit !! )
-func (obj *Mel3_object) Mel3_init(implementation map[uint16]*Mel3Implementation, ep *mel.EvolutionParameters) {
+func (obj *Mel3Object) Mel3Init(implementation map[uint16]*Mel3Implementation, ep *mel.EvolutionParameters) {
 	obj.Implementation = implementation
 
 	for _, impl := range implementation {
@@ -26,7 +26,7 @@ func (obj *Mel3_object) Mel3_init(implementation map[uint16]*Mel3Implementation,
 				if i != 0 {
 					signature += ","
 				}
-				signature += implementation[arg.LibraryID].Implname + "." + implementation[arg.LibraryID].TypeNames[arg.TypeID]
+				signature += implementation[arg.LibraryID].ImplName + "." + implementation[arg.LibraryID].TypeNames[arg.TypeID]
 			}
 
 			if impl.IsVariadic[programid] {
@@ -34,7 +34,7 @@ func (obj *Mel3_object) Mel3_init(implementation map[uint16]*Mel3Implementation,
 					signature += ","
 				}
 				// TODO check
-				signature += implementation[impl.VariadicType[programid].LibraryID].Implname + "." + impl.TypeNames[impl.VariadicType[programid].TypeID] + ",..."
+				signature += implementation[impl.VariadicType[programid].LibraryID].ImplName + "." + impl.TypeNames[impl.VariadicType[programid].TypeID] + ",..."
 			}
 
 			signature += ")("
@@ -42,7 +42,7 @@ func (obj *Mel3_object) Mel3_init(implementation map[uint16]*Mel3Implementation,
 				if i != 0 {
 					signature += ","
 				}
-				signature += implementation[arg.LibraryID].Implname + "." + implementation[arg.LibraryID].TypeNames[arg.TypeID]
+				signature += implementation[arg.LibraryID].ImplName + "." + implementation[arg.LibraryID].TypeNames[arg.TypeID]
 			}
 
 			signature += ")"

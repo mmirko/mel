@@ -16,7 +16,7 @@ func isBuiltin(programname string) bool {
 	return false
 }
 
-func processBuiltin(programname string, args []string) (*Mel3_program, *ArgumentsTypes, error) {
+func processBuiltin(programname string, args []string) (*Mel3Program, *ArgumentsTypes, error) {
 
 	switch programname {
 	case "decl":

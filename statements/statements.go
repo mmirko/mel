@@ -47,12 +47,12 @@ var Implementation = mel3program.Mel3Implementation{
 		MULTISTMT: mel3program.ArgType{MYLIBID, STMT, []uint64{}},
 		NOP:       mel3program.ArgType{},
 	},
-	Implname: "statements",
+	ImplName: "statements",
 }
 
 // The effective Me3li
 type StatementsMe3li struct {
-	mel3program.Mel3_object
+	mel3program.Mel3Object
 }
 
 // ********* Mel interface
@@ -61,7 +61,7 @@ type StatementsMe3li struct {
 func (prog *StatementsMe3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
-	prog.Mel3_init(impls, ep)
+	prog.Mel3Init(impls, ep)
 }
 
 func (prog *StatementsMe3li) Mel_copy() mel.Me3li {

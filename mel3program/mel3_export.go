@@ -5,7 +5,7 @@ import (
 )
 
 // Mel dump, it prints out the object
-func (prog *Mel3_object) String() string {
+func (prog *Mel3Object) String() string {
 
 	result := ""
 
@@ -14,8 +14,8 @@ func (prog *Mel3_object) String() string {
 		if impl != nil {
 			startprog := prog.StartProgram
 			if startprog != nil {
-				if tmpresult, err := export_engine(impl, startprog); err == nil {
-					result = tmpresult
+				if tmpResult, err := export_engine(impl, startprog); err == nil {
+					result = tmpResult
 				} else {
 					return result
 				}
@@ -32,12 +32,12 @@ func (prog *Mel3_object) String() string {
 	return result
 }
 
-func ProgDump(implementation map[uint16]*Mel3Implementation, program *Mel3_program) (string, error) {
+func ProgDump(implementation map[uint16]*Mel3Implementation, program *Mel3Program) (string, error) {
 	return export_engine(implementation, program)
 }
 
 // Export engine: it recurse over the program and show it
-func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_program) (string, error) {
+func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3Program) (string, error) {
 
 	result := ""
 
@@ -45,22 +45,22 @@ func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_
 		return result, errors.New("Empty program failed to export")
 	} else {
 
-		libraryid := program.LibraryID
-		programid := program.ProgramID
+		libraryID := program.LibraryID
+		programID := program.ProgramID
 
-		impl := implementation[libraryid]
+		impl := implementation[libraryID]
 
-		isfunctional := true
+		isFunctional := true
 
-		if len(impl.NonVariadicArgs[programid]) == 0 && !impl.IsVariadic[programid] {
-			isfunctional = false
+		if len(impl.NonVariadicArgs[programID]) == 0 && !impl.IsVariadic[programID] {
+			isFunctional = false
 		}
 
-		if isfunctional {
-			result = result + impl.ProgramNames[programid] + "("
+		if isFunctional {
+			result = result + impl.ProgramNames[programID] + "("
 			for i := range program.NextPrograms {
-				if tmpresult, err := export_engine(implementation, program.NextPrograms[i]); err == nil {
-					result = result + tmpresult
+				if tmpResult, err := export_engine(implementation, program.NextPrograms[i]); err == nil {
+					result = result + tmpResult
 					if i != len(program.NextPrograms)-1 {
 						result = result + ","
 					}
@@ -70,7 +70,7 @@ func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_
 			}
 			result = result + ")"
 		} else {
-			result = result + impl.ProgramNames[programid] + "(" + program.ProgramValue + ")"
+			result = result + impl.ProgramNames[programID] + "(" + program.ProgramValue + ")"
 		}
 	}
 

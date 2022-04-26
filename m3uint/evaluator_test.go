@@ -72,7 +72,7 @@ mult(
 		ev := new(Evaluator)
 		ev.Impl = a.Implementation
 		ev.Mux = M3uintmux
-		ev.Result = new(mel3program.Mel3_program)
+		ev.Result = new(mel3program.Mel3Program)
 
 		mel3program.Walk(ev, a.StartProgram)
 

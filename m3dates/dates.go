@@ -56,12 +56,12 @@ var Implementation = mel3program.Mel3Implementation{
 		TIMESTAMPCONST: mel3program.ArgType{},
 		DIFFDAYS:       mel3program.ArgType{},
 	},
-	Implname: "m3dates",
+	ImplName: "m3dates",
 }
 
 // The effective Me3li
 type M3datesMe3li struct {
-	mel3program.Mel3_object
+	mel3program.Mel3Object
 }
 
 // ********* Mel interface
@@ -71,7 +71,7 @@ func (prog *M3datesMe3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
 	impls[m3uint.MYLIBID] = &m3uint.Implementation
-	prog.Mel3_init(impls, ep)
+	prog.Mel3Init(impls, ep)
 }
 
 func (prog *M3datesMe3li) MelCopy() mel.Me3li {

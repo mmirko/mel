@@ -9,7 +9,7 @@ type EvolutionParameters struct {
 	Pars map[string]string
 }
 
-func (ep *EvolutionParameters) Get_matching_list(match string) (map[string]string, bool) {
+func (ep *EvolutionParameters) GetMatchingList(match string) (map[string]string, bool) {
 
 	result := make(map[string]string)
 
@@ -26,14 +26,14 @@ func (ep *EvolutionParameters) Get_matching_list(match string) (map[string]strin
 	return result, false
 }
 
-func (ep *EvolutionParameters) Get_value(param string) (string, bool) {
+func (ep *EvolutionParameters) GetValue(param string) (string, bool) {
 	if result, ok := ep.Pars[param]; ok {
 		return result, true
 	}
 	return "", false
 }
 
-func Get_nth_params_int(param string, n int) (int, bool) {
+func GetNthParamsInt(param string, n int) (int, bool) {
 	splitted := strings.Split(param, ":")
 	if n < len(splitted) {
 		result_str := splitted[n]
@@ -44,7 +44,7 @@ func Get_nth_params_int(param string, n int) (int, bool) {
 	return 0, false
 }
 
-func Get_nth_params_string(param string, n int) (string, bool) {
+func GetNthParamsString(param string, n int) (string, bool) {
 	splitted := strings.Split(param, ":")
 	if n < len(splitted) {
 		result_str := splitted[n]

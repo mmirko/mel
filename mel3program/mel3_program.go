@@ -1,7 +1,5 @@
 package mel3program
 
-// ********** Data structures
-
 const (
 	BUILTINS = uint16(0) + iota
 	LIB_STATEMENTS
@@ -29,20 +27,20 @@ type Mel3Implementation struct {
 	ProgramTypes    map[uint16]ArgumentsTypes
 	NonVariadicArgs map[uint16]ArgumentsTypes // Non variadic arguments
 	IsVariadic      map[uint16]bool
-	VariadicType    map[uint16]ArgType // The type of the variadic argument (eventyally)
-	Implname        string
+	VariadicType    map[uint16]ArgType // The type of the variadic argument (eventually)
+	ImplName        string
 	Signatures      map[uint16]string
 }
 
-type Mel3_program struct {
+type Mel3Program struct {
 	LibraryID    uint16
 	ProgramID    uint16
-	NextPrograms []*Mel3_program
+	NextPrograms []*Mel3Program
 	ProgramValue string
 }
 
-type Mel3_object struct {
-	StartProgram   *Mel3_program
+type Mel3Object struct {
+	StartProgram   *Mel3Program
 	Implementation map[uint16]*Mel3Implementation
 	Environment    interface{}
 }
@@ -71,7 +69,7 @@ func SameType(t1 ArgType, t2 ArgType) bool {
 	case len(t1.TensorRapr) != len(t2.TensorRapr):
 		return false
 	default:
-		// TODO Not necessarly correct, check it when the time comes
+		// TODO Not necessarily correct, check it when the time comes
 		for i, j := range t1.TensorRapr {
 			if j != t2.TensorRapr[i] {
 				return false
@@ -81,44 +79,44 @@ func SameType(t1 ArgType, t2 ArgType) bool {
 	return true
 }
 
-type VisitFunction func(Visitor, *Mel3_program) Visitor
+type VisitFunction func(Visitor, *Mel3Program) Visitor
 
 type Visitor interface {
 	GetName() string
-	Visit(*Mel3_program) Visitor
+	Visit(*Mel3Program) Visitor
 	Get_Implementations() map[uint16]*Mel3Implementation
 	GetMux() Mux
 	SetMux(Mux)
 	GetError() error
-	GetResult() *Mel3_program
+	GetResult() *Mel3Program
 	Inspect() string
 }
 
-type Mux func(Visitor, *Mel3_program) Visitor
+type Mux func(Visitor, *Mel3Program) Visitor
 
 // Walk
-func Walk(v Visitor, in_prog *Mel3_program) {
+func Walk(v Visitor, in_prog *Mel3Program) {
 	implementations := v.Get_Implementations()
-	programid := in_prog.ProgramID
-	libraryid := in_prog.LibraryID
+	programID := in_prog.ProgramID
+	libraryID := in_prog.LibraryID
 
-	implementation := implementations[libraryid]
-	mymux := v.GetMux()
+	implementation := implementations[libraryID]
+	myMux := v.GetMux()
 
 	if v = v.Visit(in_prog); v == nil {
 		return
 	}
 
-	isfunctional := true
+	isFunctional := true
 
-	if len(implementation.NonVariadicArgs[programid]) == 0 && !implementation.IsVariadic[programid] {
-		isfunctional = false
+	if len(implementation.NonVariadicArgs[programID]) == 0 && !implementation.IsVariadic[programID] {
+		isFunctional = false
 	}
 
-	if isfunctional {
-		for _, nextprog := range in_prog.NextPrograms {
-			evaluator := mymux(v, nextprog)
-			evaluator.Visit(nextprog)
+	if isFunctional {
+		for _, nextProg := range in_prog.NextPrograms {
+			evaluator := myMux(v, nextProg)
+			evaluator.Visit(nextProg)
 		}
 	}
 }

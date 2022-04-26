@@ -43,12 +43,12 @@ add(
 		v := new(Evaluator)
 		v.Impl = a.Implementation
 		v.Mux = M3datesmux
-		//	v.Result = new(mel3program.Mel3_program)
+		//	v.Result = new(mel3program.Mel3Program)
 		ev := v
 		//		case m3uint.MYLIBID:
 		//			v := new(m3uint.Evaluator)
 		//			v.Impl = a.Implementation
-		//			v.Result = new(mel3program.Mel3_program)
+		//			v.Result = new(mel3program.Mel3Program)
 		//			ev = v
 		//		}
 

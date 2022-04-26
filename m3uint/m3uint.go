@@ -66,12 +66,12 @@ var Implementation = mel3program.Mel3Implementation{
 		MULT:        mel3program.ArgType{},
 		DIV:         mel3program.ArgType{},
 	},
-	Implname: "m3uint",
+	ImplName: "m3uint",
 }
 
 // The effective Me3li
 type M3uintMe3li struct {
-	mel3program.Mel3_object
+	mel3program.Mel3Object
 }
 
 // ********* Mel interface
@@ -80,7 +80,7 @@ type M3uintMe3li struct {
 func (prog *M3uintMe3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
-	prog.Mel3_init(impls, ep)
+	prog.Mel3Init(impls, ep)
 }
 
 func (prog *M3uintMe3li) MelCopy() mel.Me3li {

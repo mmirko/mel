@@ -59,12 +59,12 @@ var Implementation = mel3program.Mel3Implementation{
 		SUM:   mel3program.ArgType{},
 		MUL:   mel3program.ArgType{},
 	},
-	Implname: "m3symbolic",
+	ImplName: "m3symbolic",
 }
 
 // The effective Me3li
 type Symbolic_math3_me3li struct {
-	mel3program.Mel3_object
+	mel3program.Mel3Object
 }
 
 // ********* Mel interface
@@ -73,7 +73,7 @@ type Symbolic_math3_me3li struct {
 func (prog *Symbolic_math3_me3li) MelInit(ep *mel.EvolutionParameters) {
 	impls := make(map[uint16]*mel3program.Mel3Implementation)
 	impls[MYLIBID] = &Implementation
-	prog.Mel3_init(impls, ep)
+	prog.Mel3Init(impls, ep)
 }
 
 func (prog *Symbolic_math3_me3li) Mel_copy() mel.Me3li {

@@ -5,7 +5,7 @@ import (
 )
 
 // Mel dump, it prints out the object
-func (prog *Mel3_object) MelDump() {
+func (prog *Mel3Object) MelDump() {
 
 	if prog != nil {
 		impl := prog.Implementation
@@ -29,7 +29,7 @@ func (prog *Mel3_object) MelDump() {
 }
 
 // Dump engine: it recurse over the program and show it
-func dump_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_program, level int) error {
+func dump_engine(implementation map[uint16]*Mel3Implementation, program *Mel3Program, level int) error {
 
 	programid := program.ProgramID
 	libraryid := program.LibraryID
@@ -44,7 +44,7 @@ func dump_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_pr
 		for i := 0; i < level; i++ {
 			fmt.Printf("\t")
 		}
-		fmt.Printf("%s.%s\n", implementation[libraryid].Implname, implementation[libraryid].ProgramNames[programid])
+		fmt.Printf("%s.%s\n", implementation[libraryid].ImplName, implementation[libraryid].ProgramNames[programid])
 		for i := range program.NextPrograms {
 			if dump_engine(implementation, program.NextPrograms[i], level+1) != nil {
 			}
@@ -53,7 +53,7 @@ func dump_engine(implementation map[uint16]*Mel3Implementation, program *Mel3_pr
 		for i := 0; i < level; i++ {
 			fmt.Printf("\t")
 		}
-		fmt.Printf("%s.%s -> %s\n", implementation[libraryid].Implname, implementation[libraryid].ProgramNames[programid], program.ProgramValue)
+		fmt.Printf("%s.%s -> %s\n", implementation[libraryid].ImplName, implementation[libraryid].ProgramNames[programid], program.ProgramValue)
 	}
 
 	return nil

@@ -17,10 +17,10 @@ type Evaluator struct {
 	Impl map[uint16]*mel3program.Mel3Implementation
 	Mux  mel3program.Mux
 	error
-	Result *mel3program.Mel3_program
+	Result *mel3program.Mel3Program
 }
 
-func M3uintcmpmux(v mel3program.Visitor, in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func M3uintcmpmux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
 	libraryid := in_prog.LibraryID
 
 	if libraryid == m3uint.MYLIBID {
@@ -63,11 +63,11 @@ func (ev *Evaluator) SetMux(in_mux mel3program.Mux) {
 	ev.Mux = in_mux
 }
 
-func (ev *Evaluator) GetResult() *mel3program.Mel3_program {
+func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
 
 	mymux := ev.GetMux()
 	checkev := mymux(ev, in_prog)
@@ -160,7 +160,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3_program) mel3program.Visito
 						op_results = "false"
 					}
 
-					result := new(mel3program.Mel3_program)
+					result := new(mel3program.Mel3Program)
 					result.LibraryID = m3bool.MYLIBID
 					result.ProgramID = m3bool.CONST
 					result.ProgramValue = op_results

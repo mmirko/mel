@@ -10,7 +10,7 @@ import (
 )
 
 // Mel string import: Call the Mel3 engine to get a program from a string
-func (prog *Mel3_object) MelStringImport(input_string string) error {
+func (prog *Mel3Object) MelStringImport(input_string string) error {
 
 	if prog == nil {
 		return errors.New("Uninitializated Program Object.")
@@ -34,8 +34,8 @@ func (prog *Mel3_object) MelStringImport(input_string string) error {
 }
 
 // String importer engine: it parse a string and create a program recursivly
-func import_engine(implementation map[uint16]*Mel3Implementation, input_string string) (*Mel3_program, *ArgumentsTypes, error) {
-	var result Mel3_program
+func import_engine(implementation map[uint16]*Mel3Implementation, input_string string) (*Mel3Program, *ArgumentsTypes, error) {
+	var result Mel3Program
 
 	// Get the program name
 	programname, err := mel3parser.FunctionalValue(input_string)
@@ -72,7 +72,7 @@ func import_engine(implementation map[uint16]*Mel3Implementation, input_string s
 	if isfunctional {
 
 		// Make space for the leaves programs
-		result.NextPrograms = make([]*Mel3_program, len(args))
+		result.NextPrograms = make([]*Mel3Program, len(args))
 
 		arglist := ArgumentsTypes{}
 
@@ -97,7 +97,7 @@ func import_engine(implementation map[uint16]*Mel3Implementation, input_string s
 				tempsignature += ","
 			}
 			impl := implementation[arg.LibraryID]
-			tempsignature += impl.Implname + "." + impl.TypeNames[arg.TypeID]
+			tempsignature += impl.ImplName + "." + impl.TypeNames[arg.TypeID]
 		}
 
 		tempsignature += ")()"
