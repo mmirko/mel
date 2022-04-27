@@ -20,10 +20,10 @@ func TestActions(t *testing.T) {
 
 	var ep *mel.EvolutionParameters
 	for i := 0; i < 1000; i++ {
-		ctest := ConconiGenerate(ep)
-		mutation := ConconiMutate(ctest, ep)
-		value, _ := ConconiFitness(ctest.(*Conconi), x, y)
-		fmt.Println("Generated: [", ctest, "] - Fitness: [", value, "] - Mutated: [", mutation, "]")
+		cTest := ConconiGenerate(ep)
+		mutation := ConconiMutate(cTest, ep)
+		value, _ := ConconiFitness(cTest.(*Conconi), x, y)
+		fmt.Println("Generated: [", cTest, "] - Fitness: [", value, "] - Mutated: [", mutation, "]")
 	}
 
 	fmt.Println("---- End test ----")

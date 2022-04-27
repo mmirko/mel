@@ -147,7 +147,7 @@ func ConconiMutateSlow(p mel.Me3li, ep *mel.EvolutionParameters) mel.Me3li {
 	return newprog
 }
 
-func ConconiSrossover_fake(p1 mel.Me3li, p2 mel.Me3li, ep *mel.EvolutionParameters) mel.Me3li {
+func ConconiCrossoverFake(p1 mel.Me3li, p2 mel.Me3li, ep *mel.EvolutionParameters) mel.Me3li {
 	prog1 := p1.(*Conconi)
 	prog2 := p2.(*Conconi)
 	newprog := (prog1.MelCopy()).(*Conconi)
