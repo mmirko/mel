@@ -10,7 +10,6 @@ const (
 	LIB_M3REDMON
 	LIB_M3UINTCMP
 	LIB_M3NUMBER
-	LIB_RECTANGULAR
 )
 
 type ArgType struct {
