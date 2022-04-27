@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestLisevoSignatures(t *testing.T) {
+func TestSignatures(t *testing.T) {
 
 	fmt.Println("---- Test: Signatures ----")
 
