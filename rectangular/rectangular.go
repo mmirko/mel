@@ -2,7 +2,6 @@ package rectangular
 
 import (
 	"errors"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -103,7 +102,6 @@ func Fitness(r *RectangularMe3li, target *image.Image, ep *mel.EvolutionParamete
 
 	if genImage, err := r.ToImage(ep); err == nil {
 		distance := imageDistance(&genImage, target)
-		fmt.Println(distance, float32(math.Exp(-1*distance)))
 		return float32(math.Exp(-1 * distance)), true
 	}
 	return 0, false

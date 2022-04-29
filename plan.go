@@ -786,7 +786,7 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 				codeslice := make([]Me3li, 1)
 				codeslice[0] = newcode
 				newfitness, _ := fitness(codeslice)
-				fmt.Println(fitness(codeslice))
+				//fmt.Println(fitness(codeslice))
 				newindiv.code = &newcode
 				//fmt.Println(newcode)
 				fitslice := make([]float32, 1)
