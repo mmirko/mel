@@ -61,7 +61,7 @@ func import_tb(filename string) bool {
 	return false
 }
 
-func Function_fit_fitness(tocheck []mel.Me3li) (float32, bool) {
+func FitnessFunction(tocheck []mel.Me3li) (float32, bool) {
 
 	program := tocheck[0].(*conconi.Conconi)
 
@@ -132,7 +132,7 @@ func main() {
 	mypop[0].Threads = 2
 
 	myfit := make([]mel.Fitness, 1)
-	myfit[0].FitnessFunction = Function_fit_fitness
+	myfit[0].FitnessFunction = FitnessFunction
 	myfit[0].Threads = 5
 
 	//ep.Pars["log_target:0:0"] = "stdout"
@@ -143,15 +143,15 @@ func main() {
 	myplan := new(mel.Plan)
 	myplan.Populations = mypop
 	myplan.Fitnesses = myfit
-	myplan.Exitat = 10000
+	myplan.ExitAt = 10000
 
 	mysimpleplan := new(mel.Plan_simple)
 	mysimpleplan.Generation_number = 1000
 	mysimpleplan.Population_size = 1000
 	mysimpleplan.Plan = *myplan
-	mysimpleplan.Deaths_perc = 0.5
-	mysimpleplan.Unary_perc = 0.5
-	mysimpleplan.Binary_perc = 0.25
+	mysimpleplan.DeathsPerc = 0.5
+	mysimpleplan.UnaryPerc = 0.5
+	mysimpleplan.BinaryPerc = 0.25
 
 	mysimpleplan.Execute_simple(ep)
 

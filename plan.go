@@ -51,16 +51,16 @@ type Fitness struct {
 type Plan struct {
 	Populations []Population
 	Fitnesses   []Fitness
-	Exitat      int
+	ExitAt      int
 }
 
 type Plan_simple struct {
 	Plan
 	Generation_number int
 	Population_size   int
-	Deaths_perc       float32
-	Unary_perc        float32
-	Binary_perc       float32
+	DeathsPerc        float32
+	UnaryPerc         float32
+	BinaryPerc        float32
 }
 
 type event_issued struct {
@@ -258,7 +258,7 @@ func fittcomp(id int, fitid int, fitness func([]Me3li) (float32, bool), ep *Evol
 func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 
 	// Evoulution variables
-	stopiter := plan.Exitat
+	stopiter := plan.ExitAt
 	population_num := len(plan.Populations)
 	fitness_num := len(plan.Fitnesses)
 
@@ -639,9 +639,9 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 	fitness := plan.Fitnesses[0].FitnessFunction
 
 	// Reading variables
-	deaths_perc := plan.Deaths_perc
-	unary_perc := plan.Unary_perc
-	binary_perc := plan.Binary_perc
+	deathsPerc := plan.DeathsPerc
+	unaryPerc := plan.UnaryPerc
+	binaryPerc := plan.BinaryPerc
 
 	// Main loop: cicle throught generations
 	for generation := 0; generation < gennum; generation++ {
@@ -651,7 +651,7 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 		binary_applied := 0
 
 		// Remove unfitted individuals
-		removed := int(float32(current_population) * deaths_perc)
+		removed := int(float32(current_population) * deathsPerc)
 		cut := current_population - removed
 		indiv_point := make([]*individual, cut)
 
@@ -672,7 +672,7 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 		if unary_num != 0 {
 
 			// Compute how many operators has to be applied
-			howmany_unary = int(float32(current_population) * unary_perc)
+			howmany_unary = int(float32(current_population) * unaryPerc)
 
 			// Prepare the new elements containers
 			unary_container = make([]*individual, howmany_unary)
@@ -720,7 +720,7 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 		if binary_num != 0 {
 
 			// Compute how many operators has to be applied
-			howmany_binary = int(float32(current_population) * binary_perc)
+			howmany_binary = int(float32(current_population) * binaryPerc)
 
 			// Prepare the new elements containers
 			binary_container = make([]*individual, howmany_binary)
@@ -786,6 +786,7 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 				codeslice := make([]Me3li, 1)
 				codeslice[0] = newcode
 				newfitness, _ := fitness(codeslice)
+				fmt.Println(fitness(codeslice))
 				newindiv.code = &newcode
 				//fmt.Println(newcode)
 				fitslice := make([]float32, 1)
@@ -817,7 +818,8 @@ func (plan *Plan_simple) Execute_simple(ep *EvolutionParameters) {
 				}
 			}
 		}
-		fmt.Println("Generation: ", generation, " - Population size: ", current_population, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unary_applied, " - Binary: ", binary_applied)
+		highestFitness := head.fitness_values[0]
+		fmt.Println("Generation: ", generation, " - Population size: ", current_population, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unary_applied, " - Binary: ", binary_applied, " - Highest: ", highestFitness)
 
 	}
 

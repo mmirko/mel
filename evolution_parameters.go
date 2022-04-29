@@ -1,6 +1,7 @@
 package mel
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 )
@@ -13,9 +14,9 @@ func (ep *EvolutionParameters) GetMatchingList(match string) (map[string]string,
 
 	result := make(map[string]string)
 
-	for param, value := range ep.Pars {
-		if strings.HasPrefix(param, match) {
-			result[param[len(match):len(param)]] = value
+	for key, value := range ep.Pars {
+		if strings.HasPrefix(key, match) {
+			result[key[len(match):]] = value
 		}
 	}
 
@@ -31,6 +32,28 @@ func (ep *EvolutionParameters) GetValue(param string) (string, bool) {
 		return result, true
 	}
 	return "", false
+}
+
+func (ep *EvolutionParameters) GetInt(param string) (int, bool) {
+	if result, ok := ep.Pars[param]; ok {
+
+		// Convert result to int
+		if result_int, ok := strconv.Atoi(result); ok == nil {
+			return result_int, true
+		}
+	}
+	return 0, false
+}
+
+func (ep *EvolutionParameters) SetValue(param string, value string) error {
+	if ep != nil {
+		if ep.Pars == nil {
+			ep.Pars = make(map[string]string)
+		}
+		ep.Pars[param] = value
+	}
+
+	return errors.New("uninitialized ep")
 }
 
 func GetNthParamsInt(param string, n int) (int, bool) {
