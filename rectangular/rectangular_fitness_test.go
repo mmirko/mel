@@ -30,7 +30,7 @@ func TestRectangularFitness(t *testing.T) {
 		im2, _ := mutation.(*RectangularMe3li).ToImage(ep)
 
 		fmt.Println("Fitness:")
-		fmt.Println(Fitness(cTest.(*RectangularMe3li), &im2, ep))
+		fmt.Println(FitnessImageDistance(cTest.(*RectangularMe3li), &im2, ep))
 
 	}
 

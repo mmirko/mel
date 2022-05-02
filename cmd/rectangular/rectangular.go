@@ -18,11 +18,11 @@ var imageTarget *image.Image
 
 var ep *mel.EvolutionParameters
 
-func FitnessFunction(toCheck []mel.Me3li) (float32, bool) {
+func FitnessImageDistance(toCheck []mel.Me3li) (float32, bool) {
 
 	me3li := toCheck[0].(*rectangular.RectangularMe3li)
 
-	if result, ok := rectangular.Fitness(me3li, imageTarget, ep); ok {
+	if result, ok := rectangular.FitnessImageDistance(me3li, imageTarget, ep); ok {
 		return result, true
 	}
 
@@ -108,7 +108,7 @@ func main() {
 	myPop[0].Threads = 1
 
 	myFit := make([]mel.Fitness, 1)
-	myFit[0].FitnessFunction = FitnessFunction
+	myFit[0].FitnessFunction = FitnessImageDistance
 	myFit[0].Threads = 1
 
 	//ep.Pars["log_target:0:0"] = "stdout"
@@ -121,15 +121,15 @@ func main() {
 	myPlan.Fitnesses = myFit
 	myPlan.ExitAt = 10000
 
-	mySimplePlan := new(mel.Plan_simple)
-	mySimplePlan.Generation_number = 100000
-	mySimplePlan.Population_size = 100
+	mySimplePlan := new(mel.PlanSimple)
+	mySimplePlan.GenerationNumber = 10000
+	mySimplePlan.PopulationSize = 100
 	mySimplePlan.Plan = *myPlan
-	mySimplePlan.DeathsPerc = 0.5
-	mySimplePlan.UnaryPerc = 0.5
-	mySimplePlan.BinaryPerc = 0.25
+	mySimplePlan.DeathsRate = 0.5
+	mySimplePlan.UnaryRate = 0.5
+	mySimplePlan.BinaryRate = 0.25
 
-	mySimplePlan.Execute_simple(ep)
+	mySimplePlan.Execute(ep)
 
 	best, value := mySimplePlan.Get_best()
 

@@ -145,15 +145,15 @@ func main() {
 	myplan.Fitnesses = myfit
 	myplan.ExitAt = 10000
 
-	mysimpleplan := new(mel.Plan_simple)
-	mysimpleplan.Generation_number = 1000
-	mysimpleplan.Population_size = 1000
+	mysimpleplan := new(mel.PlanSimple)
+	mysimpleplan.GenerationNumber = 1000
+	mysimpleplan.PopulationSize = 1000
 	mysimpleplan.Plan = *myplan
-	mysimpleplan.DeathsPerc = 0.5
-	mysimpleplan.UnaryPerc = 0.5
-	mysimpleplan.BinaryPerc = 0.25
+	mysimpleplan.DeathsRate = 0.5
+	mysimpleplan.UnaryRate = 0.5
+	mysimpleplan.BinaryRate = 0.25
 
-	mysimpleplan.Execute_simple(ep)
+	mysimpleplan.Execute(ep)
 
 	best, value := mysimpleplan.Get_best()
 
