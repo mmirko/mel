@@ -15,12 +15,12 @@ type PlanSimple struct {
 	BinaryRate       float32
 }
 
-// Use Simple Genetic evolution
+// Execute the simple evolution plan
 func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 
 	var head *individual
 
-	// Evoulution variables
+	// Evolution variables
 	gennum := plan.GenerationNumber
 	popsize := plan.PopulationSize
 	populationNum := len(plan.Populations)
@@ -100,19 +100,19 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 	fitness := plan.Fitnesses[0].FitnessFunction
 
 	// Reading variables
-	deathsPerc := plan.DeathsRate
-	unaryPerc := plan.UnaryRate
-	binaryPerc := plan.BinaryRate
+	deathRate := plan.DeathsRate
+	unaryRate := plan.UnaryRate
+	binaryRate := plan.BinaryRate
 
-	// Main loop: cicle throught generations
+	// Main loop: cycle throughout generations
 	for generation := 0; generation < gennum; generation++ {
 
 		generated := 0
-		unary_applied := 0
-		binary_applied := 0
+		unaryApplied := 0
+		binaryApplied := 0
 
 		// Remove unfitted individuals
-		removed := int(float32(current_population) * deathsPerc)
+		removed := int(float32(current_population) * deathRate)
 		cut := current_population - removed
 		indiv_point := make([]*individual, cut)
 
@@ -133,7 +133,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		if unary_num != 0 {
 
 			// Compute how many operators has to be applied
-			howmany_unary = int(float32(current_population) * unaryPerc)
+			howmany_unary = int(float32(current_population) * unaryRate)
 
 			// Prepare the new elements containers
 			unary_container = make([]*individual, howmany_unary)
@@ -181,7 +181,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		if binary_num != 0 {
 
 			// Compute how many operators has to be applied
-			howmany_binary = int(float32(current_population) * binaryPerc)
+			howmany_binary = int(float32(current_population) * binaryRate)
 
 			// Prepare the new elements containers
 			binary_container = make([]*individual, howmany_binary)
@@ -229,13 +229,13 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		for i := 0; i < howmany_unary && current_population < popsize; i++ {
 			ordered_place(&head, unary_container[i])
 			current_population++
-			unary_applied++
+			unaryApplied++
 		}
 
 		for i := 0; i < howmany_binary && current_population < popsize; i++ {
 			ordered_place(&head, binary_container[i])
 			current_population++
-			binary_applied++
+			binaryApplied++
 		}
 
 		// Grow the population with new individuals (Apply generators)
@@ -280,7 +280,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 			}
 		}
 		highestFitness := head.fitness_values[0]
-		fmt.Println("Generation: ", generation, " - Population size: ", current_population, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unary_applied, " - Binary: ", binary_applied, " - Highest: ", highestFitness)
+		fmt.Println("Generation: ", generation, " - Population size: ", current_population, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unaryApplied, " - Binary: ", binaryApplied, " - Highest: ", highestFitness)
 
 	}
 
