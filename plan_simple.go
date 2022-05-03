@@ -15,6 +15,32 @@ type PlanSimple struct {
 	BinaryRate       float32
 }
 
+func orderedPlace(queue_head **individual, newindiv *individual) {
+	head := *queue_head
+	tail := head
+	if head == nil {
+		*queue_head = newindiv
+	} else {
+		for curr := head; curr != nil; curr = curr.next {
+			tail = curr
+			if newindiv.fitness_values[0] > curr.fitness_values[0] {
+				newindiv.prev = curr.prev
+				newindiv.next = curr
+				if curr.prev != nil {
+					curr.prev.next = newindiv
+				} else {
+					*queue_head = newindiv
+				}
+				curr.prev = newindiv
+				return
+			}
+		}
+		newindiv.prev = tail
+		tail.next = newindiv
+
+	}
+}
+
 // Execute the simple evolution plan
 func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 
@@ -227,13 +253,13 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		}
 
 		for i := 0; i < howmanyUnary && currentPopulation < popsize; i++ {
-			ordered_place(&head, unaryContainer[i])
+			orderedPlace(&head, unaryContainer[i])
 			currentPopulation++
 			unaryApplied++
 		}
 
 		for i := 0; i < howmanyBinary && currentPopulation < popsize; i++ {
-			ordered_place(&head, binaryContainer[i])
+			orderedPlace(&head, binaryContainer[i])
 			currentPopulation++
 			binaryApplied++
 		}
@@ -253,7 +279,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 				fitslice := make([]float32, 1)
 				fitslice[0] = newfitness
 				newIndiv.fitness_values = fitslice
-				ordered_place(&head, newIndiv)
+				orderedPlace(&head, newIndiv)
 				currentPopulation++
 				generated++
 			default:
@@ -271,7 +297,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 						fitslice := make([]float32, 1)
 						fitslice[0] = newfitness
 						newIndiv.fitness_values = fitslice
-						ordered_place(&head, newIndiv)
+						orderedPlace(&head, newIndiv)
 						currentPopulation++
 						generated++
 						break
