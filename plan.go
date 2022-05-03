@@ -27,17 +27,17 @@ type individual struct {
 }
 
 type Population struct {
-	Population_name    string
-	Population_head    *individual
-	Newborn_head       *individual
-	Genetic_generators []interface{}
-	Genetic_unary      []interface{}
-	Genetic_binary     []interface{}
-	Weight_generators  []float32
-	Weight_unary       []float32
-	Weight_binary      []float32
-	Weight_death       float32
-	Threads            int
+	Population_name   string
+	PopulationHead    *individual
+	NewbornHead       *individual
+	GeneticGenerators []interface{}
+	GeneticUnary      []interface{}
+	GeneticBinary     []interface{}
+	WeightGenerators  []float32
+	WeightUnary       []float32
+	WeightBinary      []float32
+	WeightDeath       float32
+	Threads           int
 }
 
 type Fitness struct {
@@ -282,29 +282,29 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 	for pop_i := 0; pop_i < population_num; pop_i++ {
 		gen[pop_i] = new(genop_carrier)
 
-		gen[pop_i].g0slice = make([]g0, len(plan.Populations[pop_i].Genetic_generators))
-		gen[pop_i].g1slice = make([]g1, len(plan.Populations[pop_i].Genetic_unary))
-		gen[pop_i].g2slice = make([]g2, len(plan.Populations[pop_i].Genetic_binary))
+		gen[pop_i].g0slice = make([]g0, len(plan.Populations[pop_i].GeneticGenerators))
+		gen[pop_i].g1slice = make([]g1, len(plan.Populations[pop_i].GeneticUnary))
+		gen[pop_i].g2slice = make([]g2, len(plan.Populations[pop_i].GeneticBinary))
 
-		gen[pop_i].w0slice = make([]float32, len(plan.Populations[pop_i].Weight_generators))
-		gen[pop_i].w1slice = make([]float32, len(plan.Populations[pop_i].Weight_unary))
-		gen[pop_i].w2slice = make([]float32, len(plan.Populations[pop_i].Weight_binary))
+		gen[pop_i].w0slice = make([]float32, len(plan.Populations[pop_i].WeightGenerators))
+		gen[pop_i].w1slice = make([]float32, len(plan.Populations[pop_i].WeightUnary))
+		gen[pop_i].w2slice = make([]float32, len(plan.Populations[pop_i].WeightBinary))
 
-		gen[pop_i].wdeath = plan.Populations[pop_i].Weight_death
+		gen[pop_i].wdeath = plan.Populations[pop_i].WeightDeath
 
-		for genop_i := 0; genop_i < len(plan.Populations[pop_i].Genetic_generators); genop_i++ {
-			gen[pop_i].g0slice[genop_i] = plan.Populations[pop_i].Genetic_generators[genop_i].(func(*EvolutionParameters) Me3li)
-			gen[pop_i].w0slice[genop_i] = plan.Populations[pop_i].Weight_generators[genop_i]
+		for genop_i := 0; genop_i < len(plan.Populations[pop_i].GeneticGenerators); genop_i++ {
+			gen[pop_i].g0slice[genop_i] = plan.Populations[pop_i].GeneticGenerators[genop_i].(func(*EvolutionParameters) Me3li)
+			gen[pop_i].w0slice[genop_i] = plan.Populations[pop_i].WeightGenerators[genop_i]
 		}
 
-		for genop_i := 0; genop_i < len(plan.Populations[pop_i].Genetic_unary); genop_i++ {
-			gen[pop_i].g1slice[genop_i] = plan.Populations[pop_i].Genetic_unary[genop_i].(func(Me3li, *EvolutionParameters) Me3li)
-			gen[pop_i].w1slice[genop_i] = plan.Populations[pop_i].Weight_unary[genop_i]
+		for genop_i := 0; genop_i < len(plan.Populations[pop_i].GeneticUnary); genop_i++ {
+			gen[pop_i].g1slice[genop_i] = plan.Populations[pop_i].GeneticUnary[genop_i].(func(Me3li, *EvolutionParameters) Me3li)
+			gen[pop_i].w1slice[genop_i] = plan.Populations[pop_i].WeightUnary[genop_i]
 		}
 
-		for genop_i := 0; genop_i < len(plan.Populations[pop_i].Genetic_binary); genop_i++ {
-			gen[pop_i].g2slice[genop_i] = plan.Populations[pop_i].Genetic_binary[genop_i].(func(Me3li, Me3li, *EvolutionParameters) Me3li)
-			gen[pop_i].w2slice[genop_i] = plan.Populations[pop_i].Weight_binary[genop_i]
+		for genop_i := 0; genop_i < len(plan.Populations[pop_i].GeneticBinary); genop_i++ {
+			gen[pop_i].g2slice[genop_i] = plan.Populations[pop_i].GeneticBinary[genop_i].(func(Me3li, Me3li, *EvolutionParameters) Me3li)
+			gen[pop_i].w2slice[genop_i] = plan.Populations[pop_i].WeightBinary[genop_i]
 		}
 	}
 
@@ -360,7 +360,7 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 	// Spawn the goroutines
 	for i := 0; i < population_num; i++ {
 		// Spawn the life goroutine for evey population
-		go life(i, i, &plan.Populations[i].Population_head, &running_data[i], gen[i], ep, life_channels[i], responses_channel)
+		go life(i, i, &plan.Populations[i].PopulationHead, &running_data[i], gen[i], ep, life_channels[i], responses_channel)
 
 		// Spawn n-goroutines for every population
 		for j := 0; j < plan.Populations[i].Threads; j++ {
@@ -396,11 +396,11 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 				new_head.fitness_values = make([]float32, population_num)
 				new_head.code = stat.code
 				new_head.prev = nil
-				new_head.next = plan.Populations[stat.popid].Newborn_head
-				if plan.Populations[stat.popid].Newborn_head != nil {
-					plan.Populations[stat.popid].Newborn_head.prev = new_head
+				new_head.next = plan.Populations[stat.popid].NewbornHead
+				if plan.Populations[stat.popid].NewbornHead != nil {
+					plan.Populations[stat.popid].NewbornHead.prev = new_head
 				}
-				plan.Populations[stat.popid].Newborn_head = new_head
+				plan.Populations[stat.popid].NewbornHead = new_head
 				newpops[stat.popid]++
 
 				event_thread_status[stat.popid][stat.id] = true
@@ -426,11 +426,11 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 					if complete_check {
 						new_head := indiv
 						new_head.prev = nil
-						new_head.next = plan.Populations[stat.popids[res_i]].Population_head
-						if plan.Populations[stat.popids[res_i]].Population_head != nil {
-							plan.Populations[stat.popids[res_i]].Population_head.prev = new_head
+						new_head.next = plan.Populations[stat.popids[res_i]].PopulationHead
+						if plan.Populations[stat.popids[res_i]].PopulationHead != nil {
+							plan.Populations[stat.popids[res_i]].PopulationHead.prev = new_head
 						}
-						plan.Populations[stat.popids[res_i]].Population_head = new_head
+						plan.Populations[stat.popids[res_i]].PopulationHead = new_head
 						tot_ind++
 
 						running_data[stat.popids[res_i]].Lock()
@@ -440,7 +440,7 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 						if tot_ind%1000 == 0 {
 							running_data[stat.popids[res_i]].total_fitness = 0
 							running_data[stat.popids[res_i]].total_fitness_sq = 0
-							for jindiv := plan.Populations[stat.popids[res_i]].Population_head; jindiv != nil; jindiv = jindiv.next {
+							for jindiv := plan.Populations[stat.popids[res_i]].PopulationHead; jindiv != nil; jindiv = jindiv.next {
 								running_data[stat.popids[res_i]].total_fitness += jindiv.fitness_values[stat.popid]
 								running_data[stat.popids[res_i]].total_fitness_sq += jindiv.fitness_values[stat.popid] * jindiv.fitness_values[stat.popid]
 							}
@@ -497,12 +497,12 @@ func (plan *Plan) Execute_dep(ep *EvolutionParameters) {
 				for j, tstat := range fitness_thread_status[i] {
 					if tstat {
 						for popid := 0; popid < population_num; popid++ {
-							if plan.Populations[popid].Newborn_head != nil {
+							if plan.Populations[popid].NewbornHead != nil {
 								indivs := make([]*individual, 1)
 								popids := make([]int, 1)
-								indivs[0] = plan.Populations[popid].Newborn_head
+								indivs[0] = plan.Populations[popid].NewbornHead
 								popids[0] = popid
-								plan.Populations[popid].Newborn_head = plan.Populations[popid].Newborn_head.next
+								plan.Populations[popid].NewbornHead = plan.Populations[popid].NewbornHead.next
 								fitness_thread_comchan[i][j] <- fitness_issued{MEL_COM_COMPUTE_FITNESS, popids, indivs}
 								fitness_thread_status[i][j] = false
 								fitness_thread_free[i]--
@@ -543,8 +543,8 @@ func ordered_place(queue_head **individual, newindiv *individual) {
 	}
 }
 
-func (plan *Plan) Get_best() (*Me3li, float32) {
-	result := plan.Populations[0].Population_head.code
-	resultfit := plan.Populations[0].Population_head.fitness_values[0]
+func (plan *Plan) GetBest() (*Me3li, float32) {
+	result := plan.Populations[0].PopulationHead.code
+	resultfit := plan.Populations[0].PopulationHead.fitness_values[0]
 	return result, resultfit
 }

@@ -38,12 +38,12 @@ func (c *Conconi) String() string {
 	return m1 + " " + k1 + " " + m2 + " " + k2 + " " + cc
 }
 
-func (c *Conconi) Get_AT() (float32, float32) {
+func (c *Conconi) GetAT() (float32, float32) {
 	x := (c.k2 - c.k1) / (c.m1 - c.m2)
 	fca := c.m1*x + c.k1
 	return x, fca
 }
-func (c *Conconi) Get_params() (float32, float32, float32, float32) {
+func (c *Conconi) GetParams() (float32, float32, float32, float32) {
 	return c.m1, c.k1, c.m2, c.k2
 }
 

@@ -34,66 +34,66 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		log.Fatal("Simple Plan has to have 1 fitness function")
 	}
 
-	current_population := 0
-	head = plan.Populations[0].Population_head
+	currentPopulation := 0
+	head = plan.Populations[0].PopulationHead
 
 	// Creating the generators array and normalizing the generators weights
-	generators_num := len(plan.Populations[0].Genetic_generators)
-	if generators_num == 0 {
+	generatorsNum := len(plan.Populations[0].GeneticGenerators)
+	if generatorsNum == 0 {
 		log.Fatal("Simple Plan has to have at least a generator")
 	}
 
-	generators := make([]g0, generators_num)
+	generators := make([]g0, generatorsNum)
 
-	generator_weight_sum := float32(0.0)
+	generatorWeightSum := float32(0.0)
 
-	for i := 0; i < generators_num; i++ {
-		generators[i] = plan.Populations[0].Genetic_generators[i].(func(*EvolutionParameters) Me3li)
-		generator_weight_sum += plan.Populations[0].Weight_generators[i]
+	for i := 0; i < generatorsNum; i++ {
+		generators[i] = plan.Populations[0].GeneticGenerators[i].(func(*EvolutionParameters) Me3li)
+		generatorWeightSum += plan.Populations[0].WeightGenerators[i]
 	}
 
-	generators_weights := make([]float32, generators_num)
+	generatorsWeights := make([]float32, generatorsNum)
 
-	for i := 0; i < generators_num; i++ {
-		generators_weights[i] = plan.Populations[0].Weight_generators[i] / generator_weight_sum
+	for i := 0; i < generatorsNum; i++ {
+		generatorsWeights[i] = plan.Populations[0].WeightGenerators[i] / generatorWeightSum
 	}
 
 	// Normalizing the unary operators weights
 
-	unary_num := len(plan.Populations[0].Genetic_unary)
+	unaryNum := len(plan.Populations[0].GeneticUnary)
 
-	unary := make([]g1, unary_num)
+	unary := make([]g1, unaryNum)
 
-	unary_weight_sum := float32(0.0)
+	unaryWeightSum := float32(0.0)
 
-	for i := 0; i < unary_num; i++ {
-		unary[i] = plan.Populations[0].Genetic_unary[i].(func(Me3li, *EvolutionParameters) Me3li)
-		unary_weight_sum += plan.Populations[0].Weight_unary[i]
+	for i := 0; i < unaryNum; i++ {
+		unary[i] = plan.Populations[0].GeneticUnary[i].(func(Me3li, *EvolutionParameters) Me3li)
+		unaryWeightSum += plan.Populations[0].WeightUnary[i]
 	}
 
-	unary_weights := make([]float32, unary_num)
+	unaryWeights := make([]float32, unaryNum)
 
-	for i := 0; i < unary_num; i++ {
-		unary_weights[i] = plan.Populations[0].Weight_unary[i] / unary_weight_sum
+	for i := 0; i < unaryNum; i++ {
+		unaryWeights[i] = plan.Populations[0].WeightUnary[i] / unaryWeightSum
 	}
 
 	// Normalizing the binary operators weights
 
-	binary_num := len(plan.Populations[0].Genetic_binary)
+	binaryNum := len(plan.Populations[0].GeneticBinary)
 
-	binary := make([]g2, binary_num)
+	binary := make([]g2, binaryNum)
 
-	binary_weight_sum := float32(0.0)
+	binaryWeightSum := float32(0.0)
 
-	for i := 0; i < binary_num; i++ {
-		binary[i] = plan.Populations[0].Genetic_binary[i].(func(Me3li, Me3li, *EvolutionParameters) Me3li)
-		binary_weight_sum += plan.Populations[0].Weight_binary[i]
+	for i := 0; i < binaryNum; i++ {
+		binary[i] = plan.Populations[0].GeneticBinary[i].(func(Me3li, Me3li, *EvolutionParameters) Me3li)
+		binaryWeightSum += plan.Populations[0].WeightBinary[i]
 	}
 
-	binary_weights := make([]float32, binary_num)
+	binaryWeights := make([]float32, binaryNum)
 
-	for i := 0; i < binary_num; i++ {
-		binary_weights[i] = plan.Populations[0].Weight_binary[i] / binary_weight_sum
+	for i := 0; i < binaryNum; i++ {
+		binaryWeights[i] = plan.Populations[0].WeightBinary[i] / binaryWeightSum
 	}
 
 	// Fitness
@@ -112,14 +112,14 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		binaryApplied := 0
 
 		// Remove unfitted individuals
-		removed := int(float32(current_population) * deathRate)
-		cut := current_population - removed
-		indiv_point := make([]*individual, cut)
+		removed := int(float32(currentPopulation) * deathRate)
+		cut := currentPopulation - removed
+		indivPoint := make([]*individual, cut)
 
 		for i, curr := 0, head; curr != nil; curr = curr.next {
-			indiv_point[i] = curr
+			indivPoint[i] = curr
 			if i == cut-1 {
-				current_population = i + 1
+				currentPopulation = i + 1
 				curr.next = nil
 				break
 			}
@@ -128,47 +128,47 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 
 		// Apply genetic operators (unary and binary)
 
-		var howmany_unary int
-		var unary_container []*individual
-		if unary_num != 0 {
+		var howmanyUnary int
+		var unaryContainer []*individual
+		if unaryNum != 0 {
 
 			// Compute how many operators has to be applied
-			howmany_unary = int(float32(current_population) * unaryRate)
+			howmanyUnary = int(float32(currentPopulation) * unaryRate)
 
 			// Prepare the new elements containers
-			unary_container = make([]*individual, howmany_unary)
+			unaryContainer = make([]*individual, howmanyUnary)
 
-			for i := 0; i < howmany_unary; i++ {
-				undergoing := rand.Intn(current_population)
-				u_indiv := indiv_point[undergoing]
-				switch unary_num {
+			for i := 0; i < howmanyUnary; i++ {
+				undergoing := rand.Intn(currentPopulation)
+				uIndiv := indivPoint[undergoing]
+				switch unaryNum {
 				case 1:
-					newindiv := new(individual)
-					newcode := unary[0](*(u_indiv.code), ep)
+					newIndiv := new(individual)
+					newcode := unary[0](*(uIndiv.code), ep)
 					codeslice := make([]Me3li, 1)
 					codeslice[0] = newcode
 					newfitness, _ := fitness(codeslice)
-					newindiv.code = &newcode
+					newIndiv.code = &newcode
 					fitslice := make([]float32, 1)
 					fitslice[0] = newfitness
-					newindiv.fitness_values = fitslice
-					unary_container[i] = newindiv
+					newIndiv.fitness_values = fitslice
+					unaryContainer[i] = newIndiv
 				default:
-					choosen := rand.Float32()
+					chosen := rand.Float32()
 					partial := float32(0.0)
-					for j := 0; j < unary_num; j++ {
-						partial = partial + unary_weights[j]
-						if choosen < partial || j == unary_num-1 {
-							newindiv := new(individual)
-							newcode := unary[j](*(u_indiv.code), ep)
+					for j := 0; j < unaryNum; j++ {
+						partial = partial + unaryWeights[j]
+						if chosen < partial || j == unaryNum-1 {
+							newIndiv := new(individual)
+							newcode := unary[j](*(uIndiv.code), ep)
 							codeslice := make([]Me3li, 1)
 							codeslice[0] = newcode
 							newfitness, _ := fitness(codeslice)
-							newindiv.code = &newcode
+							newIndiv.code = &newcode
 							fitslice := make([]float32, 1)
 							fitslice[0] = newfitness
-							newindiv.fitness_values = fitslice
-							unary_container[i] = newindiv
+							newIndiv.fitness_values = fitslice
+							unaryContainer[i] = newIndiv
 							break
 						}
 					}
@@ -176,49 +176,49 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 			}
 		}
 
-		var howmany_binary int
-		var binary_container []*individual
-		if binary_num != 0 {
+		var howmanyBinary int
+		var binaryContainer []*individual
+		if binaryNum != 0 {
 
 			// Compute how many operators has to be applied
-			howmany_binary = int(float32(current_population) * binaryRate)
+			howmanyBinary = int(float32(currentPopulation) * binaryRate)
 
 			// Prepare the new elements containers
-			binary_container = make([]*individual, howmany_binary)
+			binaryContainer = make([]*individual, howmanyBinary)
 
-			for i := 0; i < howmany_binary; i++ {
-				undergoing1 := rand.Intn(current_population)
-				undergoing2 := rand.Intn(current_population)
-				u_indiv1 := indiv_point[undergoing1]
-				u_indiv2 := indiv_point[undergoing2]
-				switch binary_num {
+			for i := 0; i < howmanyBinary; i++ {
+				undergoing1 := rand.Intn(currentPopulation)
+				undergoing2 := rand.Intn(currentPopulation)
+				uIndiv1 := indivPoint[undergoing1]
+				uIndiv2 := indivPoint[undergoing2]
+				switch binaryNum {
 				case 1:
-					newindiv := new(individual)
-					newcode := binary[0](*(u_indiv1.code), *(u_indiv2.code), ep)
+					newIndiv := new(individual)
+					newcode := binary[0](*(uIndiv1.code), *(uIndiv2.code), ep)
 					codeslice := make([]Me3li, 1)
 					codeslice[0] = newcode
 					newfitness, _ := fitness(codeslice)
-					newindiv.code = &newcode
+					newIndiv.code = &newcode
 					fitslice := make([]float32, 1)
 					fitslice[0] = newfitness
-					newindiv.fitness_values = fitslice
-					binary_container[i] = newindiv
+					newIndiv.fitness_values = fitslice
+					binaryContainer[i] = newIndiv
 				default:
-					choosen := rand.Float32()
+					chosen := rand.Float32()
 					partial := float32(0.0)
-					for j := 0; j < binary_num; j++ {
-						partial = partial + binary_weights[j]
-						if choosen < partial || j == binary_num-1 {
-							newindiv := new(individual)
-							newcode := binary[j](*(u_indiv1.code), *(u_indiv2.code), ep)
+					for j := 0; j < binaryNum; j++ {
+						partial = partial + binaryWeights[j]
+						if chosen < partial || j == binaryNum-1 {
+							newIndiv := new(individual)
+							newcode := binary[j](*(uIndiv1.code), *(uIndiv2.code), ep)
 							codeslice := make([]Me3li, 1)
 							codeslice[0] = newcode
 							newfitness, _ := fitness(codeslice)
-							newindiv.code = &newcode
+							newIndiv.code = &newcode
 							fitslice := make([]float32, 1)
 							fitslice[0] = newfitness
-							newindiv.fitness_values = fitslice
-							binary_container[i] = newindiv
+							newIndiv.fitness_values = fitslice
+							binaryContainer[i] = newIndiv
 							break
 						}
 					}
@@ -226,53 +226,53 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 			}
 		}
 
-		for i := 0; i < howmany_unary && current_population < popsize; i++ {
-			ordered_place(&head, unary_container[i])
-			current_population++
+		for i := 0; i < howmanyUnary && currentPopulation < popsize; i++ {
+			ordered_place(&head, unaryContainer[i])
+			currentPopulation++
 			unaryApplied++
 		}
 
-		for i := 0; i < howmany_binary && current_population < popsize; i++ {
-			ordered_place(&head, binary_container[i])
-			current_population++
+		for i := 0; i < howmanyBinary && currentPopulation < popsize; i++ {
+			ordered_place(&head, binaryContainer[i])
+			currentPopulation++
 			binaryApplied++
 		}
 
 		// Grow the population with new individuals (Apply generators)
-		for i := current_population; i < popsize; i++ {
-			switch generators_num {
+		for i := currentPopulation; i < popsize; i++ {
+			switch generatorsNum {
 			case 1:
-				newindiv := new(individual)
+				newIndiv := new(individual)
 				newcode := generators[0](ep)
 				codeslice := make([]Me3li, 1)
 				codeslice[0] = newcode
 				newfitness, _ := fitness(codeslice)
 				//fmt.Println(fitness(codeslice))
-				newindiv.code = &newcode
+				newIndiv.code = &newcode
 				//fmt.Println(newcode)
 				fitslice := make([]float32, 1)
 				fitslice[0] = newfitness
-				newindiv.fitness_values = fitslice
-				ordered_place(&head, newindiv)
-				current_population++
+				newIndiv.fitness_values = fitslice
+				ordered_place(&head, newIndiv)
+				currentPopulation++
 				generated++
 			default:
-				choosen := rand.Float32()
+				chosen := rand.Float32()
 				partial := float32(0.0)
-				for j := 0; j < generators_num; j++ {
-					partial = partial + generators_weights[j]
-					if choosen < partial || j == generators_num-1 {
-						newindiv := new(individual)
+				for j := 0; j < generatorsNum; j++ {
+					partial = partial + generatorsWeights[j]
+					if chosen < partial || j == generatorsNum-1 {
+						newIndiv := new(individual)
 						newcode := generators[j](ep)
 						codeslice := make([]Me3li, 1)
 						codeslice[0] = newcode
 						newfitness, _ := fitness(codeslice)
-						newindiv.code = &newcode
+						newIndiv.code = &newcode
 						fitslice := make([]float32, 1)
 						fitslice[0] = newfitness
-						newindiv.fitness_values = fitslice
-						ordered_place(&head, newindiv)
-						current_population++
+						newIndiv.fitness_values = fitslice
+						ordered_place(&head, newIndiv)
+						currentPopulation++
 						generated++
 						break
 					}
@@ -280,10 +280,10 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 			}
 		}
 		highestFitness := head.fitness_values[0]
-		fmt.Println("Generation: ", generation, " - Population size: ", current_population, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unaryApplied, " - Binary: ", binaryApplied, " - Highest: ", highestFitness)
+		fmt.Println("Generation: ", generation, " - Population size: ", currentPopulation, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unaryApplied, " - Binary: ", binaryApplied, " - Highest: ", highestFitness)
 
 	}
 
-	plan.Populations[0].Population_head = head
+	plan.Populations[0].PopulationHead = head
 
 }

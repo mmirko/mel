@@ -96,15 +96,15 @@ func main() {
 	wBinary[0] = 1
 
 	myPop := make([]mel.Population, 1)
-	myPop[0].Population_head = nil
-	myPop[0].Newborn_head = nil
-	myPop[0].Genetic_generators = generators
-	myPop[0].Genetic_unary = unary
-	myPop[0].Genetic_binary = binary
-	myPop[0].Weight_generators = wGenerators
-	myPop[0].Weight_unary = wUnary
-	myPop[0].Weight_binary = wBinary
-	myPop[0].Weight_death = 0.01
+	myPop[0].PopulationHead = nil
+	myPop[0].NewbornHead = nil
+	myPop[0].GeneticGenerators = generators
+	myPop[0].GeneticUnary = unary
+	myPop[0].GeneticBinary = binary
+	myPop[0].WeightGenerators = wGenerators
+	myPop[0].WeightUnary = wUnary
+	myPop[0].WeightBinary = wBinary
+	myPop[0].WeightDeath = 0.01
 	myPop[0].Threads = 1
 
 	myFit := make([]mel.Fitness, 1)
@@ -131,7 +131,7 @@ func main() {
 
 	mySimplePlan.Execute(ep)
 
-	best, value := mySimplePlan.Get_best()
+	best, value := mySimplePlan.GetBest()
 
 	fmt.Println(*best, value)
 

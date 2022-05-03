@@ -21,15 +21,15 @@ var gnuplotfile = flag.String("gnuplotfile", "", "gnuplot output file")
 var x []float32
 var y []float32
 
-var minx float32
-var maxx float32
+var minX float32
+var maxX float32
 
 var ep *mel.EvolutionParameters
 
-func import_tb(filename string) bool {
+func importTB(filename string) bool {
 
-	minx = 100.0
-	maxx = 0.0
+	minX = 100.0
+	maxX = 0.0
 
 	x = make([]float32, 16)
 	y = make([]float32, 16)
@@ -49,11 +49,11 @@ func import_tb(filename string) bool {
 		y_val, _ := strconv.ParseFloat(varval[1], 32)
 		x[j] = float32(x_val)
 		y[j] = float32(y_val)
-		if x[j] < minx {
-			minx = x[j]
+		if x[j] < minX {
+			minX = x[j]
 		}
-		if x[j] > maxx {
-			maxx = x[j]
+		if x[j] > maxX {
+			maxX = x[j]
 		}
 		j++
 	}
@@ -61,9 +61,9 @@ func import_tb(filename string) bool {
 	return false
 }
 
-func FitnessFunction(tocheck []mel.Me3li) (float32, bool) {
+func FitnessFunction(toCheck []mel.Me3li) (float32, bool) {
 
-	program := tocheck[0].(*conconi.Conconi)
+	program := toCheck[0].(*conconi.Conconi)
 
 	if result, ok := conconi.ConconiFitness(program, x, y); ok {
 		return result, true
@@ -77,7 +77,7 @@ func main() {
 
 	flag.Parse()
 
-	err := import_tb(*datafile)
+	err := importTB(*datafile)
 	if err {
 		log.Fatal("Data file error")
 	}
@@ -107,60 +107,60 @@ func main() {
 	binary[0] = cr1
 	binary[1] = cr2
 
-	wgenerators := make([]float32, 2)
-	wgenerators[0] = 0.1
-	wgenerators[1] = 0.1
+	wGenerators := make([]float32, 2)
+	wGenerators[0] = 0.1
+	wGenerators[1] = 0.1
 
-	wunary := make([]float32, 2)
-	wunary[0] = 1
-	wunary[1] = 2
+	wUnary := make([]float32, 2)
+	wUnary[0] = 1
+	wUnary[1] = 2
 
-	wbinary := make([]float32, 2)
-	wbinary[0] = 1
-	wbinary[1] = 2
+	wBinary := make([]float32, 2)
+	wBinary[0] = 1
+	wBinary[1] = 2
 
-	mypop := make([]mel.Population, 1)
-	mypop[0].Population_head = nil
-	mypop[0].Newborn_head = nil
-	mypop[0].Genetic_generators = generators
-	mypop[0].Genetic_unary = unary
-	mypop[0].Genetic_binary = binary
-	mypop[0].Weight_generators = wgenerators
-	mypop[0].Weight_unary = wunary
-	mypop[0].Weight_binary = wbinary
-	mypop[0].Weight_death = 0.01
-	mypop[0].Threads = 2
+	myPop := make([]mel.Population, 1)
+	myPop[0].PopulationHead = nil
+	myPop[0].NewbornHead = nil
+	myPop[0].GeneticGenerators = generators
+	myPop[0].GeneticUnary = unary
+	myPop[0].GeneticBinary = binary
+	myPop[0].WeightGenerators = wGenerators
+	myPop[0].WeightUnary = wUnary
+	myPop[0].WeightBinary = wBinary
+	myPop[0].WeightDeath = 0.01
+	myPop[0].Threads = 2
 
-	myfit := make([]mel.Fitness, 1)
-	myfit[0].FitnessFunction = FitnessFunction
-	myfit[0].Threads = 5
+	myFit := make([]mel.Fitness, 1)
+	myFit[0].FitnessFunction = FitnessFunction
+	myFit[0].Threads = 5
 
 	//ep.Pars["log_target:0:0"] = "stdout"
 	//ep.Pars["log_target:1:0"] = "/tmp/prova"
 
 	//ep.Pars["symbolic_math:const:alt:range_int:-10_10"] = "1"
 
-	myplan := new(mel.Plan)
-	myplan.Populations = mypop
-	myplan.Fitnesses = myfit
-	myplan.ExitAt = 10000
+	myPlan := new(mel.Plan)
+	myPlan.Populations = myPop
+	myPlan.Fitnesses = myFit
+	myPlan.ExitAt = 10000
 
-	mysimpleplan := new(mel.PlanSimple)
-	mysimpleplan.GenerationNumber = 1000
-	mysimpleplan.PopulationSize = 1000
-	mysimpleplan.Plan = *myplan
-	mysimpleplan.DeathsRate = 0.5
-	mysimpleplan.UnaryRate = 0.5
-	mysimpleplan.BinaryRate = 0.25
+	mySimplePlan := new(mel.PlanSimple)
+	mySimplePlan.GenerationNumber = 1000
+	mySimplePlan.PopulationSize = 1000
+	mySimplePlan.Plan = *myPlan
+	mySimplePlan.DeathsRate = 0.5
+	mySimplePlan.UnaryRate = 0.5
+	mySimplePlan.BinaryRate = 0.25
 
-	mysimpleplan.Execute(ep)
+	mySimplePlan.Execute(ep)
 
-	best, value := mysimpleplan.Get_best()
+	best, value := mySimplePlan.GetBest()
 
 	//	fmt.Println(*best,value)
 	c := (*best).(*conconi.Conconi)
-	get_x, get_fca := c.Get_AT()
-	m1, k1, m2, k2 := c.Get_params()
+	get_x, get_fca := c.GetAT()
+	m1, k1, m2, k2 := c.GetParams()
 
 	fmt.Println("Fitness:", value, "- FCA:", get_fca, "Bpm - Speed:", get_x, "Km/h")
 
@@ -182,9 +182,9 @@ func main() {
 		gnuplotstring = gnuplotstring + fmt.Sprintf("set terminal png size 1024,768 enhanced font \"Helvetica,20\"\n")
 		gnuplotstring = gnuplotstring + fmt.Sprintf("set output 'output.png'\n")
 		gnuplotstring = gnuplotstring + fmt.Sprintf("set key outside\n")
-		gnuplotstring = gnuplotstring + fmt.Sprintf("set xrange [%f-0.2:%f+0.2]\n", minx, maxx)
+		gnuplotstring = gnuplotstring + fmt.Sprintf("set xrange [%f-0.2:%f+0.2]\n", minX, maxX)
 		gnuplotstring = gnuplotstring + fmt.Sprintf("g(x,min,max)=( (x>=min && x<=max)? 1.0 : (1/0) )\n")
-		gnuplotstring = gnuplotstring + fmt.Sprintf("plot (%f*x+%f)*g(x,%f-0.2,%f+0.2) title \"aerobic\", (%f*x+ %f)*g(x,%f-0.2,%f+0.2) title \"anaerobic\" , \"%s\" title \"data\"\n", m1, k1, minx, get_x, m2, k2, get_x, maxx, *datafile)
+		gnuplotstring = gnuplotstring + fmt.Sprintf("plot (%f*x+%f)*g(x,%f-0.2,%f+0.2) title \"aerobic\", (%f*x+ %f)*g(x,%f-0.2,%f+0.2) title \"anaerobic\" , \"%s\" title \"data\"\n", m1, k1, minX, get_x, m2, k2, get_x, maxX, *datafile)
 
 		if _, err := fo.Write([]byte(gnuplotstring)); err != nil {
 			panic(err)
