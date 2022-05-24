@@ -9,6 +9,9 @@ runcharts:
       - label: Mean
         sample: ./readlog MeanFitness
         color: 178      # 8-bit color number, default one is chosen from a pre-defined palette
+      - label: StdDev
+        sample: ./readlog StdDeviation
+        color: 123      # 8-bit color number, default one is chosen from a pre-defined palette
       - label: Highest
         sample: ./readlog HighestFitness
         color: 54      # 8-bit color number, default one is chosen from a pre-defined palette

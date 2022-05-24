@@ -7,24 +7,6 @@ import (
 	"math/rand"
 )
 
-// Info on each generation
-type RunInfo struct {
-	meanFitness    []float32
-	highestFitness []float32
-	stdDevFitness  []float32
-}
-
-func (ri *RunInfo) dumpRunInfo() string {
-	return fmt.Sprint(ri)
-}
-func (ri *RunInfo) dumpRunInfoLatest() string {
-	result := ""
-	result += fmt.Sprintf(" - MeanFitness: %f", ri.meanFitness[len(ri.meanFitness)-1])
-	result += fmt.Sprintf(" - HighestFitness: %f", ri.highestFitness[len(ri.highestFitness)-1])
-	result += fmt.Sprintf(" - StdDevFitness: %f", ri.stdDevFitness[len(ri.stdDevFitness)-1])
-	return result
-}
-
 type PlanBasic struct {
 	Plan
 	GenerationNumber int
@@ -32,7 +14,7 @@ type PlanBasic struct {
 	DeathsRate       float32
 	UnaryRate        float32
 	BinaryRate       float32
-	RunInfo
+	*RunInfo
 }
 
 // Execute the simple evolution plan
@@ -319,9 +301,9 @@ func (plan *PlanBasic) Execute(ep *EvolutionParameters) {
 		stdDeviation := float32(math.Sqrt(float64(stdDeviationSum / float64(currentPopulation))))
 
 		// Update run info
-		plan.highestFitness = append(plan.highestFitness, head.fitness_values[0])
-		plan.meanFitness = append(plan.meanFitness, meanFitness)
-		plan.stdDevFitness = append(plan.stdDevFitness, stdDeviation)
+		plan.InsertRunInfo("MeanFitness", meanFitness)
+		plan.InsertRunInfo("StdDeviation", stdDeviation)
+		plan.InsertRunInfo("HighestFitness", head.fitness_values[0])
 		fmt.Println(plan.dumpRunInfoLatest())
 
 	}

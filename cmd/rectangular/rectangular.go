@@ -124,19 +124,19 @@ func main() {
 	myInfo := new(mel.RunInfo)
 
 	mySecPlan := new(mel.PlanBasic)
-	mySecPlan.GenerationNumber = 100
-	mySecPlan.PopulationSize = 10
+	mySecPlan.GenerationNumber = 10000
+	mySecPlan.PopulationSize = 100
 	mySecPlan.Plan = *myPlan
 	mySecPlan.DeathsRate = 0.5
 	mySecPlan.UnaryRate = 0.5
 	mySecPlan.BinaryRate = 0.25
-	mySecPlan.RunInfo = *myInfo
+	mySecPlan.RunInfo = myInfo
 
 	mySecPlan.Execute(ep)
 
-	best, value := mySecPlan.GetBest()
+	best, _ := mySecPlan.GetBest()
 
-	fmt.Println(*best, value)
+	//fmt.Println(*best, value)
 
 	// Write the image to a file
 	file, err := os.Create("out.png")
