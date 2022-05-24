@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "a$1" == "aHighestFitness" ]
+then
+	tail -n 1 gen.log | sed  's/.*HighestFitness: \(.*\) - .*/\1/' | cut -d" " -f1
+	exit
+fi
+
+if [ "a$1" == "aMeanFitness" ]
+then
+	tail -n 1 gen.log | sed  's/.*MeanFitness: \(.*\) - .*/\1/' | cut -d" " -f1
+	exit
+fi
+
+
+echo 0.0

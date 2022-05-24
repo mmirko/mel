@@ -3,20 +3,40 @@ package mel
 import (
 	"fmt"
 	"log"
+	"math"
 	"math/rand"
 )
 
-type PlanSimple struct {
+// Info on each generation
+type RunInfo struct {
+	meanFitness    []float32
+	highestFitness []float32
+	stdDevFitness  []float32
+}
+
+func (ri *RunInfo) dumpRunInfo() string {
+	return fmt.Sprint(ri)
+}
+func (ri *RunInfo) dumpRunInfoLatest() string {
+	result := ""
+	result += fmt.Sprintf(" - MeanFitness: %f", ri.meanFitness[len(ri.meanFitness)-1])
+	result += fmt.Sprintf(" - HighestFitness: %f", ri.highestFitness[len(ri.highestFitness)-1])
+	result += fmt.Sprintf(" - StdDevFitness: %f", ri.stdDevFitness[len(ri.stdDevFitness)-1])
+	return result
+}
+
+type PlanBasic struct {
 	Plan
 	GenerationNumber int
 	PopulationSize   int
 	DeathsRate       float32
 	UnaryRate        float32
 	BinaryRate       float32
+	RunInfo
 }
 
 // Execute the simple evolution plan
-func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
+func (plan *PlanBasic) Execute(ep *EvolutionParameters) {
 
 	var head *individual
 
@@ -27,11 +47,11 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 	fitnessNum := len(plan.Fitnesses)
 
 	if populationNum != 1 {
-		log.Fatal("Simple Plan has to have 1 population")
+		log.Fatal("Basic Plan has to have 1 population")
 	}
 
 	if fitnessNum != 1 {
-		log.Fatal("Simple Plan has to have 1 fitness function")
+		log.Fatal("Basic Plan has to have 1 fitness function")
 	}
 
 	currentPopulation := 0
@@ -40,7 +60,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 	// Creating the generators array and normalizing the generators weights
 	generatorsNum := len(plan.Populations[0].GeneticGenerators)
 	if generatorsNum == 0 {
-		log.Fatal("Simple Plan has to have at least a generator")
+		log.Fatal("Basic Plan has to have at least a generator")
 	}
 
 	generators := make([]g0, generatorsNum)
@@ -111,6 +131,8 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 		unaryApplied := 0
 		binaryApplied := 0
 
+		fitnessSum := float32(0.0)
+
 		// Remove unfitted individuals
 		removed := int(float32(currentPopulation) * deathRate)
 		cut := currentPopulation - removed
@@ -118,6 +140,7 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 
 		for i, curr := 0, head; curr != nil; curr = curr.next {
 			indivPoint[i] = curr
+			fitnessSum += curr.fitness_values[0]
 			if i == cut-1 {
 				currentPopulation = i + 1
 				curr.next = nil
@@ -144,14 +167,15 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 				switch unaryNum {
 				case 1:
 					newIndiv := new(individual)
-					newcode := unary[0](*(uIndiv.code), ep)
-					codeslice := make([]Me3li, 1)
-					codeslice[0] = newcode
-					newfitness, _ := fitness(codeslice)
-					newIndiv.code = &newcode
-					fitslice := make([]float32, 1)
-					fitslice[0] = newfitness
-					newIndiv.fitness_values = fitslice
+					newCode := unary[0](*(uIndiv.code), ep)
+					codeSlice := make([]Me3li, 1)
+					codeSlice[0] = newCode
+					newFitness, _ := fitness(codeSlice)
+					newIndiv.code = &newCode
+					fitSlice := make([]float32, 1)
+					fitSlice[0] = newFitness
+					fitnessSum += newFitness
+					newIndiv.fitness_values = fitSlice
 					unaryContainer[i] = newIndiv
 				default:
 					chosen := rand.Float32()
@@ -161,13 +185,14 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 						if chosen < partial || j == unaryNum-1 {
 							newIndiv := new(individual)
 							newcode := unary[j](*(uIndiv.code), ep)
-							codeslice := make([]Me3li, 1)
-							codeslice[0] = newcode
-							newfitness, _ := fitness(codeslice)
+							codeSlice := make([]Me3li, 1)
+							codeSlice[0] = newcode
+							newFitness, _ := fitness(codeSlice)
 							newIndiv.code = &newcode
-							fitslice := make([]float32, 1)
-							fitslice[0] = newfitness
-							newIndiv.fitness_values = fitslice
+							fitSlice := make([]float32, 1)
+							fitSlice[0] = newFitness
+							fitnessSum += newFitness
+							newIndiv.fitness_values = fitSlice
 							unaryContainer[i] = newIndiv
 							break
 						}
@@ -194,14 +219,15 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 				switch binaryNum {
 				case 1:
 					newIndiv := new(individual)
-					newcode := binary[0](*(uIndiv1.code), *(uIndiv2.code), ep)
-					codeslice := make([]Me3li, 1)
-					codeslice[0] = newcode
-					newfitness, _ := fitness(codeslice)
-					newIndiv.code = &newcode
-					fitslice := make([]float32, 1)
-					fitslice[0] = newfitness
-					newIndiv.fitness_values = fitslice
+					newCode := binary[0](*(uIndiv1.code), *(uIndiv2.code), ep)
+					codeSlice := make([]Me3li, 1)
+					codeSlice[0] = newCode
+					newFitness, _ := fitness(codeSlice)
+					newIndiv.code = &newCode
+					fitSlice := make([]float32, 1)
+					fitSlice[0] = newFitness
+					fitnessSum += newFitness
+					newIndiv.fitness_values = fitSlice
 					binaryContainer[i] = newIndiv
 				default:
 					chosen := rand.Float32()
@@ -210,14 +236,15 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 						partial = partial + binaryWeights[j]
 						if chosen < partial || j == binaryNum-1 {
 							newIndiv := new(individual)
-							newcode := binary[j](*(uIndiv1.code), *(uIndiv2.code), ep)
-							codeslice := make([]Me3li, 1)
-							codeslice[0] = newcode
-							newfitness, _ := fitness(codeslice)
-							newIndiv.code = &newcode
-							fitslice := make([]float32, 1)
-							fitslice[0] = newfitness
-							newIndiv.fitness_values = fitslice
+							newCode := binary[j](*(uIndiv1.code), *(uIndiv2.code), ep)
+							codeSlice := make([]Me3li, 1)
+							codeSlice[0] = newCode
+							newFitness, _ := fitness(codeSlice)
+							newIndiv.code = &newCode
+							fitSlice := make([]float32, 1)
+							fitSlice[0] = newFitness
+							fitnessSum += newFitness
+							newIndiv.fitness_values = fitSlice
 							binaryContainer[i] = newIndiv
 							break
 						}
@@ -243,16 +270,17 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 			switch generatorsNum {
 			case 1:
 				newIndiv := new(individual)
-				newcode := generators[0](ep)
-				codeslice := make([]Me3li, 1)
-				codeslice[0] = newcode
-				newfitness, _ := fitness(codeslice)
+				newCode := generators[0](ep)
+				codeSlice := make([]Me3li, 1)
+				codeSlice[0] = newCode
+				newFitness, _ := fitness(codeSlice)
 				//fmt.Println(fitness(codeslice))
-				newIndiv.code = &newcode
+				newIndiv.code = &newCode
 				//fmt.Println(newcode)
-				fitslice := make([]float32, 1)
-				fitslice[0] = newfitness
-				newIndiv.fitness_values = fitslice
+				fitSlice := make([]float32, 1)
+				fitSlice[0] = newFitness
+				fitnessSum += newFitness
+				newIndiv.fitness_values = fitSlice
 				orderedPlace(&head, newIndiv)
 				currentPopulation++
 				generated++
@@ -263,14 +291,15 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 					partial = partial + generatorsWeights[j]
 					if chosen < partial || j == generatorsNum-1 {
 						newIndiv := new(individual)
-						newcode := generators[j](ep)
-						codeslice := make([]Me3li, 1)
-						codeslice[0] = newcode
-						newfitness, _ := fitness(codeslice)
-						newIndiv.code = &newcode
-						fitslice := make([]float32, 1)
-						fitslice[0] = newfitness
-						newIndiv.fitness_values = fitslice
+						newCode := generators[j](ep)
+						codeSlice := make([]Me3li, 1)
+						codeSlice[0] = newCode
+						newFitness, _ := fitness(codeSlice)
+						newIndiv.code = &newCode
+						fitSlice := make([]float32, 1)
+						fitSlice[0] = newFitness
+						fitnessSum += newFitness
+						newIndiv.fitness_values = fitSlice
 						orderedPlace(&head, newIndiv)
 						currentPopulation++
 						generated++
@@ -279,8 +308,21 @@ func (plan *PlanSimple) Execute(ep *EvolutionParameters) {
 				}
 			}
 		}
-		highestFitness := head.fitness_values[0]
-		fmt.Println("Generation: ", generation, " - Population size: ", currentPopulation, " - Removed: ", removed, "- Generated: ", generated, " - Unary: ", unaryApplied, " - Binary: ", binaryApplied, " - Highest: ", highestFitness)
+
+		meanFitness := fitnessSum / float32(currentPopulation)
+		stdDeviationSum := float64(0.0)
+
+		for curr := head; curr != nil; curr = curr.next {
+			stdDeviationSum += math.Pow(float64(curr.fitness_values[0]-meanFitness), 2)
+		}
+
+		stdDeviation := float32(math.Sqrt(float64(stdDeviationSum / float64(currentPopulation))))
+
+		// Update run info
+		plan.highestFitness = append(plan.highestFitness, head.fitness_values[0])
+		plan.meanFitness = append(plan.meanFitness, meanFitness)
+		plan.stdDevFitness = append(plan.stdDevFitness, stdDeviation)
+		fmt.Println(plan.dumpRunInfoLatest())
 
 	}
 
