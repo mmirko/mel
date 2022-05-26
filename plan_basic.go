@@ -304,6 +304,10 @@ func (plan *PlanBasic) Execute(ep *EvolutionParameters) {
 		plan.InsertRunInfo("MeanFitness", meanFitness)
 		plan.InsertRunInfo("StdDeviation", stdDeviation)
 		plan.InsertRunInfo("HighestFitness", head.fitness_values[0])
+		plan.InsertRunInfo("Generated", float32(generated))
+		plan.InsertRunInfo("UnaryApplied", float32(unaryApplied))
+		plan.InsertRunInfo("BinaryApplied", float32(binaryApplied))
+		plan.InsertRunInfo("Removed", float32(removed))
 		fmt.Println(plan.dumpRunInfoLatest())
 
 	}

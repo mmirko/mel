@@ -1,5 +1,5 @@
 runcharts:
-  - title: Evolution parameters 
+  - title: Fitness
     rate-ms: 1000
     scale: 2
     legend:
@@ -9,9 +9,12 @@ runcharts:
       - label: Mean
         sample: ./readlog MeanFitness
         color: 178
-      - label: StdDev
-        sample: ./readlog StdDeviation
-        color: 123
       - label: Highest
         sample: ./readlog HighestFitness
         color: 54
+sparklines:
+  - title: Deviation
+    rate-ms: 1000
+    scale: 2
+    sample: ./readlog StdDeviation
+    color: 123

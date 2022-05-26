@@ -125,7 +125,7 @@ func main() {
 
 	mySecPlan := new(mel.PlanBasic)
 	mySecPlan.GenerationNumber = 10000
-	mySecPlan.PopulationSize = 100
+	mySecPlan.PopulationSize = 10
 	mySecPlan.Plan = *myPlan
 	mySecPlan.DeathsRate = 0.5
 	mySecPlan.UnaryRate = 0.5

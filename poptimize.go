@@ -5,12 +5,12 @@ import (
 	"sort"
 )
 
-type RunInfoValues []float32
+type OptimizerValues []float32
 
 // Info on each generation
-type RunInfo map[string]RunInfoValues
+type OptimizerInfo map[string]OptimizerValues
 
-func (ri *RunInfo) dumpRunInfoLatest() string {
+func (ri *OptimizerInfo) dumpOptimizerInfo() string {
 	result := ""
 
 	// Order the keys
@@ -27,20 +27,20 @@ func (ri *RunInfo) dumpRunInfoLatest() string {
 	return result
 }
 
-func (ri *RunInfo) InsertRunInfo(key string, value float32) {
-	var r RunInfo
+func (ri *OptimizerInfo) InsertOptimizerInfo(key string, value float32) {
+	var r OptimizerInfo
 	if ri != nil {
 		r = *ri
 	}
 	if r == nil {
-		r = make(map[string]RunInfoValues)
+		r = make(map[string]OptimizerValues)
 	}
 	if slice, ok := r[key]; ok {
 		r[key] = append(slice, value)
 	} else {
-		newRunInfoValues := make(RunInfoValues, 1)
-		newRunInfoValues[0] = value
-		r[key] = newRunInfoValues
+		newOptimizerInfoValues := make(OptimizerValues, 1)
+		newOptimizerInfoValues[0] = value
+		r[key] = newOptimizerInfoValues
 	}
 	*ri = r
 }
