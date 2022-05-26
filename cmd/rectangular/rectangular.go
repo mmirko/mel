@@ -80,7 +80,7 @@ func main() {
 	var un0 func(mel.Me3li, *mel.EvolutionParameters) mel.Me3li
 	var un1 func(mel.Me3li, *mel.EvolutionParameters) mel.Me3li
 	un0 = rectangular.MutateRectSubstitute
-	un1 = rectangular.MutateRectSubstitute
+	un1 = rectangular.MutateRectElide
 	unary[0] = un0
 	unary[1] = un1
 
