@@ -23,7 +23,7 @@ func TestRectangularFitness(t *testing.T) {
 
 	for i := 0; i < 1; i++ {
 		cTest := Generate(ep)
-		mutation := Mutate(cTest, ep)
+		mutation := MutateRectSubstitute(cTest, ep)
 		fmt.Println("Generated: ")
 		fmt.Println("[", cTest, "]")
 

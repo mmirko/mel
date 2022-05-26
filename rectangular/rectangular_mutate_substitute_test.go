@@ -9,9 +9,9 @@ import (
 	mel "github.com/mmirko/mel"
 )
 
-func TestRectangularMutate(t *testing.T) {
+func TestRectangularMutateSubstitute(t *testing.T) {
 
-	fmt.Println("---- Test: Rectangular Mutate ----")
+	fmt.Println("---- Test: Rectangular Mutate Substitute ----")
 
 	// Random seed based on seconds since epoch
 	rand.Seed(int64(time.Now().Second()))
@@ -23,13 +23,13 @@ func TestRectangularMutate(t *testing.T) {
 
 	for i := 0; i < 1; i++ {
 		cTest := Generate(ep)
-		mutation := Mutate(cTest, ep)
+		mutation := MutateRectSubstitute(cTest, ep)
 		fmt.Println("Generated: ")
 		fmt.Println("[", cTest, "]")
 		fmt.Println("Mutated:")
 		fmt.Println("[", mutation, "]")
 	}
 
-	fmt.Println("---- End test: Rectangular Mutate ----")
+	fmt.Println("---- End test: Rectangular Mutate Substitute ----")
 
 }

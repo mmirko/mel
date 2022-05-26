@@ -9,9 +9,9 @@ import (
 	mel "github.com/mmirko/mel"
 )
 
-func TestRectangularDistance(t *testing.T) {
+func TestRectangularMutateElide(t *testing.T) {
 
-	fmt.Println("---- Test: Rectangular Mutate ----")
+	fmt.Println("---- Test: Rectangular Mutate Elide ----")
 
 	// Random seed based on seconds since epoch
 	rand.Seed(int64(time.Now().Second()))
@@ -23,20 +23,13 @@ func TestRectangularDistance(t *testing.T) {
 
 	for i := 0; i < 1; i++ {
 		cTest := Generate(ep)
-		mutation := MutateRectSubstitute(cTest, ep)
+		mutation := MutateRectElide(cTest, ep)
 		fmt.Println("Generated: ")
 		fmt.Println("[", cTest, "]")
 		fmt.Println("Mutated:")
 		fmt.Println("[", mutation, "]")
-
-		im1, _ := cTest.(*RectangularMe3li).ToImage(ep)
-		im2, _ := mutation.(*RectangularMe3li).ToImage(ep)
-
-		fmt.Println("Distance:")
-		fmt.Println(imageDistance(&im1, &im2))
-
 	}
 
-	fmt.Println("---- End test: Rectangular Distance ----")
+	fmt.Println("---- End test: Rectangular Mutate Elide ----")
 
 }

@@ -76,10 +76,13 @@ func main() {
 	gen = rectangular.Generate
 	generators[0] = gen
 
-	unary := make([]interface{}, 1)
+	unary := make([]interface{}, 2)
+	var un0 func(mel.Me3li, *mel.EvolutionParameters) mel.Me3li
 	var un1 func(mel.Me3li, *mel.EvolutionParameters) mel.Me3li
-	un1 = rectangular.Mutate
-	unary[0] = un1
+	un0 = rectangular.MutateRectSubstitute
+	un1 = rectangular.MutateRectSubstitute
+	unary[0] = un0
+	unary[1] = un1
 
 	binary := make([]interface{}, 1)
 	var cr1 func(mel.Me3li, mel.Me3li, *mel.EvolutionParameters) mel.Me3li
@@ -89,8 +92,9 @@ func main() {
 	wGenerators := make([]float32, 1)
 	wGenerators[0] = 1
 
-	wUnary := make([]float32, 1)
+	wUnary := make([]float32, 2)
 	wUnary[0] = 1
+	wUnary[1] = 1
 
 	wBinary := make([]float32, 1)
 	wBinary[0] = 1
