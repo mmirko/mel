@@ -82,3 +82,11 @@ func (s *linearSpace) getPoint(index string) pointVSpace {
 	}
 	return s.neighborhood[i]
 }
+
+func (s *linearSpace) getPoints() []pointVSpace {
+	res := make([]pointVSpace, len(s.neighborhood))
+	for i, p := range s.neighborhood {
+		res[i] = p
+	}
+	return res
+}

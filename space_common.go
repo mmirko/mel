@@ -11,5 +11,6 @@ type pointVSpace interface {
 type vSpace interface {
 	init(string) error
 	dump() string
+	getPoints() []pointVSpace
 	getPoint(string) pointVSpace
 }
