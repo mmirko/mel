@@ -15,7 +15,7 @@ func TestSymbolicMathImporter(t *testing.T) {
 	var ep *mel.EvolutionParameters
 	a.MelInit(ep)
 
-	istrings := []string{`
+	iStrings := []string{`
 multistmt(
 	nop(),	
 	nop(),	
@@ -31,9 +31,9 @@ multistmt(
 )
 `}
 
-	for i := 0; i < len(istrings); i++ {
-		fmt.Println("Importing: " + istrings[i])
-		a.MelStringImport(istrings[i])
+	for i := 0; i < len(iStrings); i++ {
+		fmt.Println("Importing: " + iStrings[i])
+		a.MelStringImport(iStrings[i])
 		a.MelDump()
 		fmt.Println("---")
 	}
