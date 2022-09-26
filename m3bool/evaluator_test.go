@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	mel "github.com/mmirko/mel"
-	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 func TestM3uintEvaluator(t *testing.T) {
@@ -14,7 +13,7 @@ func TestM3uintEvaluator(t *testing.T) {
 
 	a := new(M3boolMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	a.MelInit(nil, ep)
 
 	istrings := []string{
 		`
@@ -31,14 +30,9 @@ and(m3boolconst(true),m3boolconst(true))
 
 		fmt.Println("\tEvaluating: " + istring)
 
-		ev := new(Evaluator)
-		ev.Impl = a.Implementation
-		ev.Mux = M3boolmux
-		ev.Result = new(mel3program.Mel3Program)
+		a.Walk()
 
-		mel3program.Walk(ev, a.StartProgram)
-
-		fmt.Println("\t" + ev.Inspect())
+		fmt.Println("\t" + a.Inspect())
 
 		fmt.Println("<<<")
 

@@ -22,7 +22,7 @@ type Evaluator struct {
 	Result *mel3program.Mel3Program
 }
 
-func M3redmonmux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func M3redmonmux(v mel3program.Mel3Visitor, in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 	libraryid := in_prog.LibraryID
 
 	if libraryid == m3uint.MYLIBID {
@@ -83,7 +83,7 @@ func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 
 	mymux := ev.GetMux()
 	checkev := mymux(ev, in_prog)

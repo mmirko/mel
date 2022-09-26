@@ -13,7 +13,9 @@ func TestM3uintcmpImporter(t *testing.T) {
 
 	a := new(M3uintcmpMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	c := new(mel.MelConfig)
+	c.Debug = true
+	a.MelInit(c, ep)
 
 	istrings := []string{
 		`

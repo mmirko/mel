@@ -100,10 +100,14 @@ type M3boolMe3li struct {
 // ********* Mel interface
 
 // The Mel entry point for M3boolMe3li
-func (prog *M3boolMe3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3Implementation)
-	impls[MYLIBID] = &Implementation
-	prog.Mel3Init(impls, ep)
+func (prog *M3boolMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := make(map[uint16]*mel3program.Mel3Implementation)
+	implementations[MYLIBID] = &Implementation
+
+	evaluators := make(map[uint16]mel3program.Mel3Visitor)
+	evaluators[MYLIBID] = new(Evaluator)
+
+	prog.Mel3Init(c, implementations, evaluators, ep)
 }
 
 func (prog *M3boolMe3li) MelCopy() mel.Me3li {

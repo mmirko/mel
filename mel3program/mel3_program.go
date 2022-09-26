@@ -1,5 +1,7 @@
 package mel3program
 
+import "github.com/mmirko/mel"
+
 const (
 	BUILTINS = uint16(0) + iota
 	LIB_STATEMENTS
@@ -40,10 +42,23 @@ type Mel3Program struct {
 	ProgramValue string
 }
 
+type Mel3Visitor interface {
+	GetName() string
+	GetMel3Object() *Mel3Object
+	SetMel3Object(*Mel3Object)
+	Visit(*Mel3Program) Mel3Visitor
+	GetError() error
+	GetResult() *Mel3Program
+	Inspect() string
+}
+
+type Mel3VisitorCreator func() Mel3Visitor
 type Mel3Object struct {
 	StartProgram   *Mel3Program
+	Config         *mel.MelConfig
 	Implementation map[uint16]*Mel3Implementation
-	Environment    interface{}
+	VisitorCreator map[uint16]Mel3VisitorCreator
+	Result         *Mel3Program
 }
 
 func (a ArgType) String(impl *Mel3Implementation) string {
@@ -80,29 +95,32 @@ func SameType(t1 ArgType, t2 ArgType) bool {
 	return true
 }
 
-type VisitFunction func(Visitor, *Mel3Program) Visitor
+func (mo *Mel3Object) Compute() {
+	prog := mo.StartProgram
+	v := mo.VisitorCreator[prog.LibraryID]
+	ev := v()
+	ev.SetMel3Object(mo)
+	Walk(ev, prog)
+	mo.Result = ev.GetResult()
 
-type Visitor interface {
-	GetName() string
-	Visit(*Mel3Program) Visitor
-	Get_Implementations() map[uint16]*Mel3Implementation
-	GetMux() Mux
-	SetMux(Mux)
-	GetError() error
-	GetResult() *Mel3Program
-	Inspect() string
 }
 
-type Mux func(Visitor, *Mel3Program) Visitor
+func (mo *Mel3Object) Inspect() string {
+	result, _ := ProgDump(mo.Implementation, mo.Result)
+	return result
+}
 
-// Walk
-func Walk(v Visitor, in_prog *Mel3Program) {
-	implementations := v.Get_Implementations()
+type Mux func(Mel3Visitor, *Mel3Program) Mel3Visitor
+
+// Walking the program tree
+func Walk(v Mel3Visitor, in_prog *Mel3Program) {
+	obj := v.GetMel3Object()
+	implementations := obj.Implementation
+
 	programID := in_prog.ProgramID
 	libraryID := in_prog.LibraryID
 
 	implementation := implementations[libraryID]
-	myMux := v.GetMux()
 
 	if v = v.Visit(in_prog); v == nil {
 		return
@@ -116,8 +134,23 @@ func Walk(v Visitor, in_prog *Mel3Program) {
 
 	if isFunctional {
 		for _, nextProg := range in_prog.NextPrograms {
-			evaluator := myMux(v, nextProg)
+			evaluator := ProgMux(v, nextProg)
 			evaluator.Visit(nextProg)
 		}
+	}
+}
+
+// Muxing different libraries
+func ProgMux(v Mel3Visitor, in_prog *Mel3Program) Mel3Visitor {
+
+	libId := in_prog.LibraryID
+	obj := v.GetMel3Object()
+
+	if creator, ok := obj.VisitorCreator[libId]; ok {
+		c := creator()
+		c.SetMel3Object(obj)
+		return c
+	} else {
+		return v
 	}
 }

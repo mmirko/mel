@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	mel "github.com/mmirko/mel"
-	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 func TestM3uintcmpEvaluator(t *testing.T) {
@@ -15,7 +14,9 @@ func TestM3uintcmpEvaluator(t *testing.T) {
 
 	a := new(M3uintcmpMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	c := new(mel.MelConfig)
+	c.Debug = true
+	a.MelInit(c, ep)
 
 	istrings := []string{`
 eq(
@@ -33,15 +34,9 @@ eq(
 
 		fmt.Println("\tEvaluating: " + istring)
 
-		v := new(Evaluator)
-		v.Impl = a.Implementation
-		v.Mux = M3uintcmpmux
+		a.Walk()
 
-		ev := v
-
-		mel3program.Walk(ev, a.StartProgram)
-
-		fmt.Println("\t" + ev.Inspect())
+		fmt.Println("\t" + a.Inspect())
 
 		fmt.Println("<<<")
 

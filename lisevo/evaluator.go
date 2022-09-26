@@ -8,12 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
-	m3bool "github.com/mmirko/mel/m3bool"
-	m3number "github.com/mmirko/mel/m3number"
-	m3uint "github.com/mmirko/mel/m3uint"
-	m3uintcmp "github.com/mmirko/mel/m3uintcmp"
 	mel3program "github.com/mmirko/mel/mel3program"
-	statements "github.com/mmirko/mel/statements"
 )
 
 type Evaluator struct {
@@ -23,68 +18,19 @@ type Evaluator struct {
 	Result *mel3program.Mel3Program
 }
 
-func lisevoMux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
-	libraryId := in_prog.LibraryID
-
-	switch libraryId {
-	case m3uint.MYLIBID:
-		newEv := new(m3uint.Evaluator)
-		newEv.Impl = v.Get_Implementations()
-		newEv.Mux = v.GetMux()
-		return newEv
-	case m3uintcmp.MYLIBID:
-		newEv := new(m3uintcmp.Evaluator)
-		newEv.Impl = v.Get_Implementations()
-		newEv.Mux = v.GetMux()
-		return newEv
-	case m3number.MYLIBID:
-		newEv := new(m3number.Evaluator)
-		newEv.Impl = v.Get_Implementations()
-		newEv.Mux = v.GetMux()
-		return newEv
-	case m3bool.MYLIBID:
-		newEv := new(m3bool.Evaluator)
-		newEv.Impl = v.Get_Implementations()
-		newEv.Mux = v.GetMux()
-		return newEv
-	case statements.MYLIBID:
-		newEv := new(statements.Evaluator)
-		newEv.Impl = v.Get_Implementations()
-		newEv.Mux = v.GetMux()
-		return newEv
-	default:
-		newEv := new(Evaluator)
-		newEv.Impl = v.Get_Implementations()
-		newEv.Mux = v.GetMux()
-		return newEv
-	}
-}
-
 func (ev *Evaluator) GetName() string {
 	return "lisevo"
-}
-
-func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3Implementation {
-	return ev.Impl
-}
-
-func (ev *Evaluator) GetMux() mel3program.Mux {
-	return ev.Mux
 }
 
 func (ev *Evaluator) GetError() error {
 	return ev.error
 }
 
-func (ev *Evaluator) SetMux(in_mux mel3program.Mux) {
-	ev.Mux = in_mux
-}
-
 func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 
 	myMux := ev.GetMux()
 	checkEv := myMux(ev, in_prog)

@@ -5,9 +5,13 @@ import (
 	"time"
 )
 
+type MelConfig struct {
+	Debug bool
+}
+
 // The main interface, it states: It is a mel object
 type Me3li interface {
-	MelInit(*EvolutionParameters)
+	MelInit(*MelConfig, *EvolutionParameters)
 	MelCopy() Me3li
 }
 

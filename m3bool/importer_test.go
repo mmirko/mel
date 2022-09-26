@@ -13,7 +13,7 @@ func TestM3boolImporter(t *testing.T) {
 
 	a := new(M3boolMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	a.MelInit(nil, ep)
 
 	istrings := []string{`
 	m3boolconst(true)

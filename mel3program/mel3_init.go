@@ -8,8 +8,10 @@ import (
 )
 
 // The Mel3 registration program every new data struct has to do it (This is not an entry point !! Not MelInit !! )
-func (obj *Mel3Object) Mel3Init(implementation map[uint16]*Mel3Implementation, ep *mel.EvolutionParameters) {
+func (obj *Mel3Object) Mel3Init(c *mel.MelConfig, implementation map[uint16]*Mel3Implementation, creators map[uint16]Mel3VisitorCreator, ep *mel.EvolutionParameters) {
+	obj.Config = c
 	obj.Implementation = implementation
+	obj.VisitorCreator = creators
 
 	for _, impl := range implementation {
 
@@ -18,28 +20,28 @@ func (obj *Mel3Object) Mel3Init(implementation map[uint16]*Mel3Implementation, e
 			impl.Signatures = make(map[uint16]string)
 
 			// Compute signatures
-			for programid, pname := range impl.ProgramNames {
+			for programId, pname := range impl.ProgramNames {
 				signature := pname + "("
 
-				atleastone := false
-				for i, arg := range impl.NonVariadicArgs[programid] {
-					atleastone = true
+				atLeastOne := false
+				for i, arg := range impl.NonVariadicArgs[programId] {
+					atLeastOne = true
 					if i != 0 {
 						signature += ","
 					}
 					signature += implementation[arg.LibraryID].ImplName + "." + implementation[arg.LibraryID].TypeNames[arg.TypeID]
 				}
 
-				if impl.IsVariadic[programid] {
-					if atleastone {
+				if impl.IsVariadic[programId] {
+					if atLeastOne {
 						signature += ","
 					}
 					// TODO check
-					signature += implementation[impl.VariadicType[programid].LibraryID].ImplName + "." + impl.TypeNames[impl.VariadicType[programid].TypeID] + ",..."
+					signature += implementation[impl.VariadicType[programId].LibraryID].ImplName + "." + impl.TypeNames[impl.VariadicType[programId].TypeID] + ",..."
 				}
 
 				signature += ")("
-				for i, arg := range impl.ProgramTypes[programid] {
+				for i, arg := range impl.ProgramTypes[programId] {
 					if i != 0 {
 						signature += ","
 					}
@@ -48,7 +50,7 @@ func (obj *Mel3Object) Mel3Init(implementation map[uint16]*Mel3Implementation, e
 
 				signature += ")"
 
-				impl.Signatures[programid] = signature
+				impl.Signatures[programId] = signature
 			}
 		}
 	}

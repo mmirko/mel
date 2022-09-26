@@ -18,7 +18,7 @@ type Evaluator struct {
 	Result *mel3program.Mel3Program
 }
 
-func StatementsMux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func StatementsMux(v mel3program.Mel3Visitor, in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 	libraryId := in_prog.LibraryID
 
 	switch libraryId {
@@ -55,7 +55,7 @@ func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 
 	myMux := ev.GetMux()
 	checkEv := myMux(ev, in_prog)

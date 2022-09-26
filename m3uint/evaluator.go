@@ -12,71 +12,69 @@ import (
 )
 
 type Evaluator struct {
-	Impl map[uint16]*mel3program.Mel3Implementation
-	Mux  mel3program.Mux
+	*mel3program.Mel3Object
 	error
 	Result *mel3program.Mel3Program
 }
 
-func M3uintmux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
-	result := new(Evaluator)
-	result.Impl = v.Get_Implementations()
-	result.Mux = v.GetMux()
-	return result
-}
-
-func (ev *Evaluator) Get_Implementations() map[uint16]*mel3program.Mel3Implementation {
-	return ev.Impl
+func EvaluatorCreator() mel3program.Mel3Visitor {
+	return new(Evaluator)
 }
 
 func (ev *Evaluator) GetName() string {
 	return "m3uint"
 }
 
+func (ev *Evaluator) GetMel3Object() *mel3program.Mel3Object {
+	return ev.Mel3Object
+}
+
+func (ev *Evaluator) SetMel3Object(mel3o *mel3program.Mel3Object) {
+	ev.Mel3Object = mel3o
+}
+
 func (ev *Evaluator) GetError() error {
 	return ev.error
-}
-
-func (ev *Evaluator) GetMux() mel3program.Mux {
-	return ev.Mux
-}
-
-func (ev *Evaluator) SetMux(in_mux mel3program.Mux) {
-	ev.Mux = in_mux
 }
 
 func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 
-	mymux := ev.GetMux()
-	checkev := mymux(ev, in_prog)
+	debug := ev.Config.Debug
 
-	if ev.GetName() != checkev.GetName() {
-		return checkev.Visit(in_prog)
+	if debug {
+		fmt.Println("m3uint: Visit: ", in_prog)
 	}
 
-	programid := in_prog.ProgramID
-	libraryid := in_prog.LibraryID
+	checkEv := mel3program.ProgMux(ev, in_prog)
 
-	implementation := ev.Impl[libraryid]
-
-	isfunctional := true
-
-	if len(implementation.NonVariadicArgs[programid]) == 0 && !implementation.IsVariadic[programid] {
-		isfunctional = false
+	if ev.GetName() != checkEv.GetName() {
+		return checkEv.Visit(in_prog)
 	}
 
-	if isfunctional {
+	obj := ev.GetMel3Object()
+	implementations := obj.Implementation
+
+	programId := in_prog.ProgramID
+	libraryId := in_prog.LibraryID
+
+	implementation := implementations[libraryId]
+
+	isFunctional := true
+
+	if len(implementation.NonVariadicArgs[programId]) == 0 && !implementation.IsVariadic[programId] {
+		isFunctional = false
+	}
+
+	if isFunctional {
 		arg_num := len(in_prog.NextPrograms)
-		evaluators := make([]mel3program.Visitor, arg_num)
+		evaluators := make([]mel3program.Mel3Visitor, arg_num)
 		for i, prog := range in_prog.NextPrograms {
-			mymux := ev.GetMux()
-			evaluators[i] = mymux(ev, prog)
+			evaluators[i] = mel3program.ProgMux(ev, prog)
 			evaluators[i].Visit(prog)
-
 		}
 
 		switch in_prog.LibraryID {
@@ -87,18 +85,18 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 					res0 := evaluators[0].GetResult()
 					res1 := evaluators[1].GetResult()
 					value0 := ""
-					if res0 != nil && res0.LibraryID == libraryid && res0.ProgramID == M3UINTCONST {
+					if res0 != nil && res0.LibraryID == libraryId && res0.ProgramID == M3UINTCONST {
 						value0 = res0.ProgramValue
 					} else {
-						ev.error = errors.New("Wrong argument type")
+						ev.error = errors.New("wrong argument type")
 						return nil
 					}
 
 					value1 := ""
-					if res1 != nil && res1.LibraryID == libraryid && res1.ProgramID == M3UINTCONST {
+					if res1 != nil && res1.LibraryID == libraryId && res1.ProgramID == M3UINTCONST {
 						value1 = res1.ProgramValue
 					} else {
-						ev.error = errors.New("Wrong argument type")
+						ev.error = errors.New("wrong argument type")
 						return nil
 					}
 
@@ -107,7 +105,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 					if value0n, err := strconv.Atoi(value0); err == nil {
 						if value1n, err := strconv.Atoi(value1); err == nil {
 							if value0n < 0 || value1n < 0 {
-								ev.error = errors.New("Convert to integer failed")
+								ev.error = errors.New("convert to integer failed")
 								return nil
 							}
 
@@ -137,19 +135,19 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 					}
 
 					result := new(mel3program.Mel3Program)
-					result.LibraryID = libraryid
+					result.LibraryID = libraryId
 					result.ProgramID = M3UINTCONST
 					result.ProgramValue = op_result
 					result.NextPrograms = nil
 					ev.Result = result
 					return nil
 				} else {
-					ev.error = errors.New("Wrong argument number")
+					ev.error = errors.New("wrong argument number")
 					return nil
 				}
 			}
 		default:
-			ev.error = errors.New("Unkwown LibraryID")
+			ev.error = errors.New("unknown LibraryID")
 			return nil
 		}
 	} else {
@@ -161,8 +159,8 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 				switch in_prog.ProgramValue {
 				default:
 					result := new(mel3program.Mel3Program)
-					result.LibraryID = libraryid
-					result.ProgramID = programid
+					result.LibraryID = libraryId
+					result.ProgramID = programId
 					result.ProgramValue = in_prog.ProgramValue
 					result.NextPrograms = nil
 					ev.Result = result
@@ -170,7 +168,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 				}
 			}
 		default:
-			ev.error = errors.New("Unkwown LibraryID")
+			ev.error = errors.New("unknown LibraryID")
 			return nil
 		}
 	}
@@ -179,8 +177,10 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 }
 
 func (ev *Evaluator) Inspect() string {
+	obj := ev.GetMel3Object()
+	implementations := obj.Implementation
 	if ev.error == nil {
-		if dump, err := mel3program.ProgDump(ev.Impl, ev.Result); err == nil {
+		if dump, err := mel3program.ProgDump(implementations, ev.Result); err == nil {
 			return "Evaluation ok: " + dump
 		} else {
 			return "Result export failed:" + fmt.Sprint(err)

@@ -3,6 +3,8 @@ package m3uintcmp
 import (
 	//"math/rand"
 	//"fmt"
+	"fmt"
+
 	mel "github.com/mmirko/mel"
 	m3bool "github.com/mmirko/mel/m3bool"
 	m3uint "github.com/mmirko/mel/m3uint"
@@ -80,12 +82,19 @@ type M3uintcmpMe3li struct {
 // ********* Mel interface
 
 // The Mel entry point for M3uintcmpMe3li
-func (prog *M3uintcmpMe3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3Implementation)
-	impls[MYLIBID] = &Implementation
-	impls[m3uint.MYLIBID] = &m3uint.Implementation
-	impls[m3bool.MYLIBID] = &m3bool.Implementation
-	prog.Mel3Init(impls, ep)
+func (prog *M3uintcmpMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := make(map[uint16]*mel3program.Mel3Implementation)
+	implementations[MYLIBID] = &Implementation
+	implementations[m3uint.MYLIBID] = &m3uint.Implementation
+	implementations[m3bool.MYLIBID] = &m3bool.Implementation
+
+	evaluators := make(map[uint16]mel3program.Mel3Visitor)
+	evaluators[MYLIBID] = new(Evaluator)
+	evaluators[m3uint.MYLIBID] = new(m3uint.Evaluator)
+	evaluators[m3bool.MYLIBID] = new(m3bool.Evaluator)
+
+	prog.Mel3Init(c, implementations, evaluators, ep)
+	fmt.Println(evaluators)
 }
 
 func (prog *M3uintcmpMe3li) MelCopy() mel.Me3li {

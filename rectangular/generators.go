@@ -32,7 +32,7 @@ func (eObj *RectangularMe3li) Generate(ep *mel.EvolutionParameters) {
 func Generate(ep *mel.EvolutionParameters) mel.Me3li {
 	var result mel.Me3li
 	eObj := new(RectangularMe3li)
-	eObj.MelInit(ep)
+	eObj.MelInit(nil, ep)
 	eObj.Generate(ep)
 	result = eObj
 	//fmt.Println("Generated",result)

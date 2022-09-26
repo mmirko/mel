@@ -13,7 +13,7 @@ func TestM3uintImporter(t *testing.T) {
 
 	a := new(M3uintMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	a.MelInit(nil, ep)
 
 	istrings := []string{
 		`

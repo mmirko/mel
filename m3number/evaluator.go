@@ -15,7 +15,7 @@ type Evaluator struct {
 	Result *mel3program.Mel3Program
 }
 
-func M3numbermux(v mel3program.Visitor, in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func M3numbermux(v mel3program.Mel3Visitor, in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 	result := new(Evaluator)
 	result.Impl = v.Get_Implementations()
 	result.Mux = v.GetMux()
@@ -46,7 +46,7 @@ func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 	return ev.Result
 }
 
-func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor {
+func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
 
 	mymux := ev.GetMux()
 	checkev := mymux(ev, in_prog)
@@ -68,7 +68,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Visitor
 
 	if isfunctional {
 		arg_num := len(in_prog.NextPrograms)
-		evaluators := make([]mel3program.Visitor, arg_num)
+		evaluators := make([]mel3program.Mel3Visitor, arg_num)
 		for i, prog := range in_prog.NextPrograms {
 			mymux := ev.GetMux()
 			evaluators[i] = mymux(ev, prog)
