@@ -3,7 +3,6 @@ package m3uintcmp
 import (
 	//"math/rand"
 	//"fmt"
-	"fmt"
 
 	mel "github.com/mmirko/mel"
 	m3bool "github.com/mmirko/mel/m3bool"
@@ -88,13 +87,12 @@ func (prog *M3uintcmpMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameter
 	implementations[m3uint.MYLIBID] = &m3uint.Implementation
 	implementations[m3bool.MYLIBID] = &m3bool.Implementation
 
-	evaluators := make(map[uint16]mel3program.Mel3Visitor)
-	evaluators[MYLIBID] = new(Evaluator)
-	evaluators[m3uint.MYLIBID] = new(m3uint.Evaluator)
-	evaluators[m3bool.MYLIBID] = new(m3bool.Evaluator)
+	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+	creators[MYLIBID] = EvaluatorCreator
+	creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
+	creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
 
-	prog.Mel3Init(c, implementations, evaluators, ep)
-	fmt.Println(evaluators)
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
 func (prog *M3uintcmpMe3li) MelCopy() mel.Me3li {

@@ -1,8 +1,6 @@
 package m3uintcmp
 
 import (
-	"fmt"
-	//m3uint "github.com/mmirko/mel/m3uint"
 	"testing"
 
 	mel "github.com/mmirko/mel"
@@ -10,37 +8,26 @@ import (
 
 func TestM3uintcmpEvaluator(t *testing.T) {
 
-	fmt.Println("---- Test: M3uintcmp evaluator ----")
-
 	a := new(M3uintcmpMe3li)
 	var ep *mel.EvolutionParameters
 	c := new(mel.MelConfig)
-	c.Debug = true
+	c.Debug = false
 	a.MelInit(c, ep)
 
-	istrings := []string{`
-eq(
-	m3uintconst(2),
-	m3uintconst(4)
-)
-`}
+	tests := []string{"eq(m3uintconst(45),m3uintconst(45))", "m3boolconst(true)"}
+	tests = append(tests, "eq(add(m3uintconst(45),m3uintconst(5)),m3uintconst(50))", "m3boolconst(true)")
 
-	for _, istring := range istrings {
+	for i, iString := range tests {
 
-		fmt.Println(">>>")
+		if i%2 == 1 {
+			continue
+		}
 
-		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
-
-		fmt.Println("\tEvaluating: " + istring)
-
-		a.Walk()
-
-		fmt.Println("\t" + a.Inspect())
-
-		fmt.Println("<<<")
+		a.MelStringImport(iString)
+		a.Compute()
+		if a.Inspect() != tests[i+1] {
+			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
+		}
 
 	}
-	fmt.Println("---- End test ----")
-
 }

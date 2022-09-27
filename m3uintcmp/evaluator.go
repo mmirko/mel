@@ -19,6 +19,10 @@ type Evaluator struct {
 	Result *mel3program.Mel3Program
 }
 
+func EvaluatorCreator() mel3program.Mel3Visitor {
+	return new(Evaluator)
+}
+
 func (ev *Evaluator) GetName() string {
 	return "m3uintcmp"
 }
@@ -40,6 +44,12 @@ func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 }
 
 func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
+
+	debug := ev.Config.Debug
+
+	if debug {
+		fmt.Println("m3uintcmp: Visit: ", in_prog)
+	}
 
 	checkEv := mel3program.ProgMux(ev, in_prog)
 
@@ -67,7 +77,6 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 		for i, prog := range in_prog.NextPrograms {
 			evaluators[i] = mel3program.ProgMux(ev, prog)
 			evaluators[i].Visit(prog)
-
 		}
 
 		switch in_prog.LibraryID {
@@ -81,7 +90,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					if res0 != nil && res0.LibraryID == m3uint.MYLIBID && res0.ProgramID == m3uint.M3UINTCONST {
 						value0 = res0.ProgramValue
 					} else {
-						ev.error = errors.New("Wrong argument type")
+						ev.error = errors.New("wrong argument type")
 						return nil
 					}
 
@@ -89,71 +98,71 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					if res1 != nil && res1.LibraryID == m3uint.MYLIBID && res1.ProgramID == m3uint.M3UINTCONST {
 						value1 = res1.ProgramValue
 					} else {
-						ev.error = errors.New("Wrong argument type")
+						ev.error = errors.New("wrong argument type")
 						return nil
 					}
 
-					var op_result bool
-					var op_results string
+					var opResult bool
+					var opResults string
 
 					if value0n, err := strconv.Atoi(value0); err == nil {
 						if value1n, err := strconv.Atoi(value1); err == nil {
 							if value0n < 0 || value1n < 0 {
-								ev.error = errors.New("Convert to integer failed")
+								ev.error = errors.New("convert to integer failed")
 								return nil
 							}
 
 							switch in_prog.ProgramID {
 							case EQ:
-								op_result = value0n == value1n
+								opResult = value0n == value1n
 							case NE:
-								op_result = value0n != value1n
+								opResult = value0n != value1n
 							case LT:
-								op_result = value0n < value1n
+								opResult = value0n < value1n
 							case LE:
-								op_result = value0n <= value1n
+								opResult = value0n <= value1n
 							case GT:
-								op_result = value0n > value1n
+								opResult = value0n > value1n
 							case GE:
-								op_result = value0n >= value1n
+								opResult = value0n >= value1n
 							}
 						} else {
-							ev.error = errors.New("Convert to integer failed")
+							ev.error = errors.New("convert to integer failed")
 							return nil
 						}
 
 					} else {
-						ev.error = errors.New("Convert to integer failed")
+						ev.error = errors.New("convert to integer failed")
 						return nil
 					}
 
-					if op_result {
-						op_results = "true"
+					if opResult {
+						opResults = "true"
 					} else {
-						op_results = "false"
+						opResults = "false"
 					}
 
 					result := new(mel3program.Mel3Program)
 					result.LibraryID = m3bool.MYLIBID
 					result.ProgramID = m3bool.CONST
-					result.ProgramValue = op_results
+					result.ProgramValue = opResults
 					result.NextPrograms = nil
 					ev.Result = result
 					return nil
 				} else {
-					ev.error = errors.New("Wrong argument number")
+					ev.error = errors.New("wrong argument number")
 					return nil
 				}
 			}
 		default:
-			ev.error = errors.New("Unkwown LibraryID")
+			ev.error = errors.New("unknown LibraryID")
 			return nil
 		}
 	} else {
 
 		switch in_prog.LibraryID {
 		default:
-			ev.error = errors.New("Unkwown LibraryID")
+			ev.error = errors.New("unknown LibraryID")
 			return nil
 		}
 	}
