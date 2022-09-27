@@ -104,10 +104,10 @@ func (prog *M3boolMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 	implementations := make(map[uint16]*mel3program.Mel3Implementation)
 	implementations[MYLIBID] = &Implementation
 
-	evaluators := make(map[uint16]mel3program.Mel3Visitor)
-	evaluators[MYLIBID] = new(Evaluator)
+	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+	creators[MYLIBID] = EvaluatorCreator
 
-	prog.Mel3Init(c, implementations, evaluators, ep)
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
 func (prog *M3boolMe3li) MelCopy() mel.Me3li {

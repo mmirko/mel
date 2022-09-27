@@ -109,28 +109,28 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 								return nil
 							}
 
-							var op_resultn uint
+							var opResultN uint
 
 							switch in_prog.ProgramID {
 							case ADD:
-								op_resultn = uint(value0n + value1n)
+								opResultN = uint(value0n + value1n)
 							case SUB:
 								// TODO Check for the ovwrflow
-								op_resultn = uint(value0n - value1n)
+								opResultN = uint(value0n - value1n)
 							case MULT:
-								op_resultn = uint(value0n * value1n)
+								opResultN = uint(value0n * value1n)
 							case DIV:
-								op_resultn = uint(value0n / value1n)
+								opResultN = uint(value0n / value1n)
 							}
 
-							op_result = strconv.Itoa(int(op_resultn))
+							op_result = strconv.Itoa(int(opResultN))
 
 						} else {
-							ev.error = errors.New("Convert to integer failed")
+							ev.error = errors.New("convert to integer failed")
 							return nil
 						}
 					} else {
-						ev.error = errors.New("Convert to integer failed")
+						ev.error = errors.New("convert to integer failed")
 						return nil
 					}
 

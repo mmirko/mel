@@ -16,6 +16,10 @@ type Evaluator struct {
 	Result *mel3program.Mel3Program
 }
 
+func EvaluatorCreator() mel3program.Mel3Visitor {
+	return new(Evaluator)
+}
+
 func (ev *Evaluator) GetName() string {
 	return "m3bool"
 }
@@ -37,6 +41,12 @@ func (ev *Evaluator) GetResult() *mel3program.Mel3Program {
 }
 
 func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Visitor {
+
+	debug := ev.Config.Debug
+
+	if debug {
+		fmt.Println("m3bool: Visit: ", in_prog)
+	}
 
 	checkEv := mel3program.ProgMux(ev, in_prog)
 
@@ -64,7 +74,6 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 		for i, prog := range in_prog.NextPrograms {
 			evaluators[i] = mel3program.ProgMux(ev, prog)
 			evaluators[i].Visit(prog)
-
 		}
 
 		switch in_prog.LibraryID {

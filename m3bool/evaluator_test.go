@@ -1,42 +1,32 @@
 package m3bool
 
 import (
-	"fmt"
 	"testing"
 
 	mel "github.com/mmirko/mel"
 )
 
-func TestM3uintEvaluator(t *testing.T) {
-
-	fmt.Println("---- Test: M3uint evaluator ----")
+func TestM3boolEvaluator(t *testing.T) {
 
 	a := new(M3boolMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(nil, ep)
+	c := new(mel.MelConfig)
+	c.Debug = false
+	a.MelInit(c, ep)
 
-	istrings := []string{
-		`
-and(m3boolconst(true),m3boolconst(true))
+	tests := []string{"m3boolconst(true)", "m3boolconst(true)"}
 
-`}
+	for i, iString := range tests {
 
-	for _, istring := range istrings {
+		if i%2 == 1 {
+			continue
+		}
 
-		fmt.Println(">>>")
-
-		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
-
-		fmt.Println("\tEvaluating: " + istring)
-
-		a.Walk()
-
-		fmt.Println("\t" + a.Inspect())
-
-		fmt.Println("<<<")
+		a.MelStringImport(iString)
+		a.Compute()
+		if a.Inspect() != tests[i+1] {
+			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
+		}
 
 	}
-	fmt.Println("---- End test ----")
-
 }
