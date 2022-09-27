@@ -1,7 +1,6 @@
 package m3uint
 
 import (
-	"fmt"
 	"testing"
 
 	mel "github.com/mmirko/mel"
@@ -9,74 +8,27 @@ import (
 
 func TestM3uintEvaluator(t *testing.T) {
 
-	fmt.Println("---- Test: M3uint evaluator ----")
-
 	a := new(M3uintMe3li)
 	var ep *mel.EvolutionParameters
 	c := new(mel.MelConfig)
-	c.Debug = true
+	c.Debug = false
 	a.MelInit(c, ep)
 
-	istrings := []string{
-		`
-m3uintconst(54)
+	tests := []string{"m3uintconst(45)", "m3uintconst(45)"}
+	tests = append(tests, "add(m3uintconst(4),m3uintconst(2))", "m3uintconst(6)")
+	tests = append(tests, "mult(m3uintconst(3),m3uintconst(5))", "m3uintconst(15)")
 
-`,
-		`
-add(
-        m3uintconst(3),
-        m3uintconst(1)
-)
+	for i, iString := range tests {
 
-`,
-		`
-sub(
-        m3uintconst(3),
-        m3uintconst(1)
-)
+		if i%2 == 1 {
+			continue
+		}
 
-`,
-		`
-div(
-        m3uintconst(3),
-        m3uintconst(1)
-)
-
-`,
-		`
-mult(
-        m3uintconst(3),
-        m3uintconst(1)
-)
-
-`,
-		`
-mult(
-	add(
-        	m3uintconst(3),
-		m3uintconst(5)
-	),
-        m3uintconst(2)
-)
-
-`}
-
-	for _, istring := range istrings {
-
-		fmt.Println(">>>")
-
-		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
-
-		fmt.Println("\tEvaluating: " + istring)
-
+		a.MelStringImport(iString)
 		a.Compute()
-
-		fmt.Println("\t" + a.Inspect())
-
-		fmt.Println("<<<")
+		if a.Inspect() != tests[i+1] {
+			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
+		}
 
 	}
-	fmt.Println("---- End test ----")
-
 }
