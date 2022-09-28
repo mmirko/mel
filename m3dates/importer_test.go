@@ -13,7 +13,7 @@ func TestM3datesImporter(t *testing.T) {
 
 	a := new(M3datesMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	a.MelInit(nil, ep)
 
 	istrings := []string{`dateconst(2014)`, `timestampconst(34242342)`, `
 add(

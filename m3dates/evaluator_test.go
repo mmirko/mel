@@ -1,64 +1,35 @@
 package m3dates
 
 import (
-	"fmt"
+
 	//m3uint "github.com/mmirko/mel/m3uint"
 	"testing"
 
 	mel "github.com/mmirko/mel"
-	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 func TestM3datesEvaluator(t *testing.T) {
 
-	fmt.Println("---- Test: M3dates evaluator ----")
-
 	a := new(M3datesMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	c := new(mel.MelConfig)
+	c.Debug = false
+	a.MelInit(c, ep)
 
-	istrings := []string{`
-add(
-	diffdays(
-		dateconst(2020-05-06),
-		dateconst(2020-03-02)
-	),
-	m3uintconst(1)
-)
-`}
+	tests := []string{"dateconst(2020-05-06)", "dateconst(2020-05-06)"}
+	tests = append(tests, "add(diffdays(dateconst(2020-05-06),dateconst(2020-03-02)),m3uintconst(1))", "m3uintconst(66)")
 
-	for _, istring := range istrings {
+	for i, iString := range tests {
 
-		fmt.Println(">>>")
+		if i%2 == 1 {
+			continue
+		}
 
-		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
-
-		fmt.Println("\tEvaluating: " + istring)
-
-		//		var ev mel3program.Visitor
-
-		//		switch a.StartProgram.LibraryID {
-		//		case MYLIBID:
-		v := new(Evaluator)
-		v.Impl = a.Implementation
-		v.Mux = M3datesmux
-		//	v.Result = new(mel3program.Mel3Program)
-		ev := v
-		//		case m3uint.MYLIBID:
-		//			v := new(m3uint.Evaluator)
-		//			v.Impl = a.Implementation
-		//			v.Result = new(mel3program.Mel3Program)
-		//			ev = v
-		//		}
-
-		mel3program.Walk(ev, a.StartProgram)
-
-		fmt.Println("\t" + ev.Inspect())
-
-		fmt.Println("<<<")
+		a.MelStringImport(iString)
+		a.Compute()
+		if a.Inspect() != tests[i+1] {
+			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
+		}
 
 	}
-	fmt.Println("---- End test ----")
-
 }

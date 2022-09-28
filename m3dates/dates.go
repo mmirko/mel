@@ -66,12 +66,17 @@ type M3datesMe3li struct {
 
 // ********* Mel interface
 
-// The Mel entry point for M3datesMe3li
-func (prog *M3datesMe3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3Implementation)
-	impls[MYLIBID] = &Implementation
-	impls[m3uint.MYLIBID] = &m3uint.Implementation
-	prog.Mel3Init(impls, ep)
+// The Mel entry point for M3uintMe3li
+func (prog *M3datesMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := make(map[uint16]*mel3program.Mel3Implementation)
+	implementations[MYLIBID] = &Implementation
+	implementations[m3uint.MYLIBID] = &m3uint.Implementation
+
+	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+	creators[MYLIBID] = EvaluatorCreator
+	creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
+
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
 func (prog *M3datesMe3li) MelCopy() mel.Me3li {
