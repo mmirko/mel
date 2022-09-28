@@ -1,6 +1,10 @@
 package mel3program
 
-import "github.com/mmirko/mel"
+import (
+	"fmt"
+
+	"github.com/mmirko/mel"
+)
 
 const (
 	BUILTINS = uint16(0) + iota
@@ -59,6 +63,7 @@ type Mel3Object struct {
 	Implementation map[uint16]*Mel3Implementation
 	VisitorCreator map[uint16]Mel3VisitorCreator
 	Result         *Mel3Program
+	Environment    *interface{}
 }
 
 func (a ArgType) String(impl *Mel3Implementation) string {
@@ -95,14 +100,18 @@ func SameType(t1 ArgType, t2 ArgType) bool {
 	return true
 }
 
-func (mo *Mel3Object) Compute() {
+func (mo *Mel3Object) Compute() error {
 	prog := mo.StartProgram
 	v := mo.VisitorCreator[prog.LibraryID]
 	ev := v()
 	ev.SetMel3Object(mo)
 	Walk(ev, prog)
-	mo.Result = ev.GetResult()
-	// TODO: Check for errors
+	if err := ev.GetError(); err != nil {
+		return err
+	} else {
+		mo.Result = ev.GetResult()
+		return nil
+	}
 }
 
 func (mo *Mel3Object) Inspect() string {
@@ -116,6 +125,10 @@ type Mux func(Mel3Visitor, *Mel3Program) Mel3Visitor
 func Walk(v Mel3Visitor, in_prog *Mel3Program) {
 	obj := v.GetMel3Object()
 	implementations := obj.Implementation
+	if obj.Config.Debug {
+		fmt.Printf("walk enter\n")
+		defer fmt.Printf("walk exit\n")
+	}
 
 	programID := in_prog.ProgramID
 	libraryID := in_prog.LibraryID
