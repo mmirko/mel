@@ -12,7 +12,7 @@ type MelConfig struct {
 // The main interface, it states: It is a mel object
 type Me3li interface {
 	MelInit(*MelConfig, *EvolutionParameters)
-	MelCopy() Me3li
+	MelCopy(*MelConfig) Me3li
 }
 
 type Me3liStringImport interface {

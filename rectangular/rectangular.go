@@ -21,7 +21,7 @@ type RectangularMe3li struct {
 func (m3 *RectangularMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
 }
 
-func (m3 *RectangularMe3li) MelCopy() mel.Me3li {
+func (m3 *RectangularMe3li) MelCopy(c *mel.MelConfig) mel.Me3li {
 	result := new(RectangularMe3li)
 	result.list = make([]Rect, len(m3.list))
 

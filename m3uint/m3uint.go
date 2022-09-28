@@ -87,7 +87,7 @@ func (prog *M3uintMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 	prog.Mel3Init(c, implementations, creators, ep)
 }
 
-func (prog *M3uintMe3li) MelCopy() mel.Me3li {
+func (prog *M3uintMe3li) MelCopy(c *mel.MelConfig) mel.Me3li {
 	var result mel.Me3li
 	return result
 }

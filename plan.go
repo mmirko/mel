@@ -39,6 +39,6 @@ type g2 func(Me3li, Me3li, *EvolutionParameters) Me3li
 
 func (plan *Plan) GetBest() (*Me3li, float32) {
 	result := plan.Populations[0].PopulationHead.code
-	resultfit := plan.Populations[0].PopulationHead.fitness_values[0]
-	return result, resultfit
+	resultFit := plan.Populations[0].PopulationHead.fitness_values[0]
+	return result, resultFit
 }
