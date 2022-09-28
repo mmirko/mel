@@ -16,7 +16,7 @@ type Conconi struct {
 	crosspoint float32
 }
 
-func (gen *Conconi) MelInit(ep *mel.EvolutionParameters) {
+func (gen *Conconi) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
 }
 
 func (gen *Conconi) MelCopy() mel.Me3li {
@@ -124,7 +124,7 @@ func ConconiGenerate(ep *mel.EvolutionParameters) mel.Me3li {
 	var result mel.Me3li
 	var eobj *Conconi
 	eobj = new(Conconi)
-	eobj.MelInit(ep)
+	eobj.MelInit(nil, ep)
 	eobj.Generate(ep)
 	result = eobj
 	//fmt.Println("Generated",result)
