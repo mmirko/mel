@@ -1,86 +1,34 @@
 package m3number
 
 import (
-	"fmt"
 	"testing"
 
 	mel "github.com/mmirko/mel"
-	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 func TestM3numberEvaluator(t *testing.T) {
 
-	fmt.Println("---- Test: M3number evaluator ----")
-
 	a := new(M3numberMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	c := new(mel.MelConfig)
+	c.Debug = false
+	a.MelInit(c, ep)
 
-	istrings := []string{
-		`
-m3numberconst(54)
+	tests := []string{"m3numberconst(45.2)", "m3numberconst(45.2)"}
+	tests = append(tests, "add(m3numberconst(1E+1),m3numberconst(2))", "m3numberconst(1.2E+01)")
+	tests = append(tests, "mult(m3numberconst(3.2),m3numberconst(5))", "m3numberconst(1.6E+01)")
 
-`,
-		`
-add(
-        m3numberconst(3.6),
-        m3numberconst(1E+1)
-)
+	for i, iString := range tests {
 
-`,
-		`
-sub(
-        m3numberconst(3),
-        m3numberconst(11.2)
-)
+		if i%2 == 1 {
+			continue
+		}
 
-`,
-		`
-div(
-        m3numberconst(5),
-        m3numberconst(2)
-)
-
-`,
-		`
-mult(
-        m3numberconst(3),
-        m3numberconst(4.05)
-)
-
-`,
-		`
-mult(
-	add(
-        	m3numberconst(3),
-		m3numberconst(5)
-	),
-        m3numberconst(2)
-)
-
-`}
-
-	for _, istring := range istrings {
-
-		fmt.Println(">>>")
-
-		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
-
-		fmt.Println("\tEvaluating: " + istring)
-
-		ev := new(Evaluator)
-		ev.Impl = a.Implementation
-		ev.Mux = M3numbermux
-		ev.Result = new(mel3program.Mel3Program)
-
-		mel3program.Walk(ev, a.StartProgram)
-
-		fmt.Println("\t" + ev.Inspect())
-
-		fmt.Println("<<<")
+		a.MelStringImport(iString)
+		a.Compute()
+		if a.Inspect() != tests[i+1] {
+			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
+		}
 
 	}
-	fmt.Println("---- End test ----")
-
 }
