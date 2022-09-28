@@ -4,7 +4,7 @@ import "github.com/mmirko/mel"
 
 const (
 	BUILTINS = uint16(0) + iota
-	LIB_STATEMENTS
+	LIB_M3STATEMENTS
 	LIB_M3SYMBOLIC
 	LIB_M3BOOL
 	LIB_M3UINT
@@ -102,7 +102,7 @@ func (mo *Mel3Object) Compute() {
 	ev.SetMel3Object(mo)
 	Walk(ev, prog)
 	mo.Result = ev.GetResult()
-
+	// TODO: Check for errors
 }
 
 func (mo *Mel3Object) Inspect() string {

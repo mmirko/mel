@@ -1,4 +1,4 @@
-package statements
+package m3statements
 
 import (
 	//"math/rand"
@@ -19,7 +19,7 @@ const (
 )
 
 const (
-	MYLIBID = mel3program.LIB_STATEMENTS
+	MYLIBID = mel3program.LIB_M3STATEMENTS
 )
 
 // The Mel3 implementation
@@ -47,24 +47,28 @@ var Implementation = mel3program.Mel3Implementation{
 		MULTISTMT: mel3program.ArgType{MYLIBID, STMT, []uint64{}},
 		NOP:       mel3program.ArgType{},
 	},
-	ImplName: "statements",
+	ImplName: "m3statements",
 }
 
 // The effective Me3li
-type StatementsMe3li struct {
+type M3statementsMe3li struct {
 	mel3program.Mel3Object
 }
 
 // ********* Mel interface
 
-// The Mel entry point for Symbolic_math_me3li
-func (prog *StatementsMe3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3Implementation)
-	impls[MYLIBID] = &Implementation
-	prog.Mel3Init(impls, ep)
+// The Mel entry point for M3uintMe3li
+func (prog *M3statementsMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := make(map[uint16]*mel3program.Mel3Implementation)
+	implementations[MYLIBID] = &Implementation
+
+	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+	creators[MYLIBID] = EvaluatorCreator
+
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
-func (prog *StatementsMe3li) Mel_copy() mel.Me3li {
+func (prog *M3statementsMe3li) Mel_copy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

@@ -1,7 +1,7 @@
 //go:build !DEBUG
 // +build !DEBUG
 
-package m3uint
+package m3statements
 
 import (
 	"errors"
@@ -22,7 +22,7 @@ func EvaluatorCreator() mel3program.Mel3Visitor {
 }
 
 func (ev *Evaluator) GetName() string {
-	return "m3uint"
+	return "m3statements"
 }
 
 func (ev *Evaluator) GetMel3Object() *mel3program.Mel3Object {
@@ -46,7 +46,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 	debug := ev.Config.Debug
 
 	if debug {
-		fmt.Println("m3uint: Visit: ", in_prog)
+		fmt.Println("m3statements: Visit: ", in_prog)
 	}
 
 	checkEv := mel3program.ProgMux(ev, in_prog)
@@ -70,105 +70,69 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 	}
 
 	if isFunctional {
+
 		arg_num := len(in_prog.NextPrograms)
 		evaluators := make([]mel3program.Mel3Visitor, arg_num)
 		for i, prog := range in_prog.NextPrograms {
 			evaluators[i] = mel3program.ProgMux(ev, prog)
 			evaluators[i].Visit(prog)
+			if err := evaluators[i].GetError(); err != nil {
+				ev.error = err
+				return ev
+			}
 		}
 
 		switch in_prog.LibraryID {
 		case MYLIBID:
 			switch in_prog.ProgramID {
-			case ADD, SUB, MULT, DIV:
-				if arg_num == 2 {
-					res0 := evaluators[0].GetResult()
-					res1 := evaluators[1].GetResult()
-					value0 := ""
-					if res0 != nil && res0.LibraryID == libraryId && res0.ProgramID == M3UINTCONST {
-						value0 = res0.ProgramValue
+			case MULTISTMT:
+
+				nextPrograms := make([]*mel3program.Mel3Program, 0)
+
+				for i := 0; i < arg_num; i++ {
+					res := evaluators[i].GetResult()
+					if res != nil && implementations[res.LibraryID].ProgramTypes[res.ProgramID][0].LibraryID == MYLIBID && implementations[res.LibraryID].ProgramTypes[res.ProgramID][0].TypeID == MULTISTMT {
+						nextPrograms = append(nextPrograms, res)
 					} else {
 						ev.error = errors.New("wrong argument type")
 						return nil
 					}
-
-					value1 := ""
-					if res1 != nil && res1.LibraryID == libraryId && res1.ProgramID == M3UINTCONST {
-						value1 = res1.ProgramValue
-					} else {
-						ev.error = errors.New("wrong argument type")
-						return nil
-					}
-
-					op_result := ""
-
-					if value0n, err := strconv.Atoi(value0); err == nil {
-						if value1n, err := strconv.Atoi(value1); err == nil {
-							if value0n < 0 || value1n < 0 {
-								ev.error = errors.New("convert to integer failed")
-								return nil
-							}
-
-							var opResultN uint
-
-							switch in_prog.ProgramID {
-							case ADD:
-								opResultN = uint(value0n + value1n)
-							case SUB:
-								// TODO Check for the ovwrflow
-								opResultN = uint(value0n - value1n)
-							case MULT:
-								opResultN = uint(value0n * value1n)
-							case DIV:
-								opResultN = uint(value0n / value1n)
-							}
-
-							op_result = strconv.Itoa(int(opResultN))
-
-						} else {
-							ev.error = errors.New("convert to integer failed")
-							return nil
-						}
-					} else {
-						ev.error = errors.New("convert to integer failed")
-						return nil
-					}
-
-					result := new(mel3program.Mel3Program)
-					result.LibraryID = libraryId
-					result.ProgramID = M3UINTCONST
-					result.ProgramValue = op_result
-					result.NextPrograms = nil
-					ev.Result = result
-					return nil
-				} else {
-					ev.error = errors.New("wrong argument number")
-					return nil
 				}
+				result := new(mel3program.Mel3Program)
+				result.LibraryID = libraryId
+				result.ProgramID = MULTISTMT
+				result.ProgramValue = ""
+				result.NextPrograms = nextPrograms
+				ev.Result = result
+				return nil
 			}
 		default:
-			ev.error = errors.New("unknown LibraryID on " + strconv.Itoa(int(libraryId)) + ":" + strconv.Itoa(int(programId)))
+			ev.error = errors.New("unknown library")
 			return nil
 		}
+
 	} else {
 
 		switch in_prog.LibraryID {
 		case MYLIBID:
 			switch in_prog.ProgramID {
-			case M3UINTCONST:
+			case NOP:
 				switch in_prog.ProgramValue {
 				default:
 					result := new(mel3program.Mel3Program)
 					result.LibraryID = libraryId
-					result.ProgramID = programId
+					result.ProgramID = NOP
 					result.ProgramValue = in_prog.ProgramValue
 					result.NextPrograms = nil
 					ev.Result = result
 					return nil
 				}
+			default:
+				ev.error = errors.New("unknown ProgramID on " + strconv.Itoa(int(libraryId)) + ":" + strconv.Itoa(int(programId)))
+				return nil
 			}
 		default:
-			ev.error = errors.New("unknown LibraryID")
+			ev.error = errors.New("unknown LibraryID on " + strconv.Itoa(int(libraryId)) + ":" + strconv.Itoa(int(programId)))
 			return nil
 		}
 	}

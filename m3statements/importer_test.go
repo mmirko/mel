@@ -1,4 +1,4 @@
-package statements
+package m3statements
 
 import (
 	"fmt"
@@ -11,9 +11,9 @@ func TestSymbolicMathImporter(t *testing.T) {
 
 	fmt.Println("---- Test: Statements importer ----")
 
-	a := new(StatementsMe3li)
+	a := new(M3statementsMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	a.MelInit(nil, ep)
 
 	iStrings := []string{`
 multistmt(

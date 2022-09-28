@@ -1,55 +1,47 @@
 package lisevo
 
 import (
-	"fmt"
+
 	//m3uint "github.com/mmirko/mel/m3uint"
+
 	"testing"
 
 	mel "github.com/mmirko/mel"
-	mel3program "github.com/mmirko/mel/mel3program"
 )
 
 func TestLisevoEvaluator(t *testing.T) {
 
-	fmt.Println("---- Test: Lisevo evaluator ----")
-
 	a := new(LisevoMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	c := new(mel.MelConfig)
+	c.Debug = true
+	a.MelInit(c, ep)
 
-	istrings := []string{`
+	tests := []string{`
 eq(
 	add(
 		m3uintconst(1),
 		m3uintconst(66)
 	),
 	m3uintconst(1)
-)
-`, `multistmt(
-	gt(m3uintconst(3),m3uintconst(9)),
-	lt(m3uintconst(3),m3uintconst(9))
-)`}
+)`, "m3boolconst(false)", `
+multistmt(
+	nop(),
+	nop()
+)`, "multistmt(nop(),nop())"}
 
-	for _, istring := range istrings {
+	for i, iString := range tests {
+		if i%2 == 1 {
+			continue
+		}
 
-		fmt.Println(">>>")
-
-		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
-
-		fmt.Println("\tEvaluating: " + istring)
-
-		v := new(Evaluator)
-		v.Impl = a.Implementation
-		v.Mux = lisevoMux
-
-		mel3program.Walk(v, a.StartProgram)
-
-		fmt.Println("\t" + v.Inspect())
-
-		fmt.Println("<<<")
+		if err := a.MelStringImport(iString); err != nil {
+			t.Errorf("Error importing: %s", err)
+		}
+		a.Compute()
+		if a.Inspect() != tests[i+1] {
+			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
+		}
 
 	}
-	fmt.Println("---- End test ----")
-
 }
