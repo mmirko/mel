@@ -5,21 +5,31 @@ package mel3program
 
 import (
 	"errors"
+	"io/ioutil"
 
 	mel3parser "github.com/mmirko/mel/mel3parser"
 )
+
+func (p *Mel3Object) LoadProgramFromFile(filename string) error {
+	fileContent, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	return p.MelStringImport(string(fileContent))
+}
 
 // Mel string import: Call the Mel3 engine to get a program from a string
 func (prog *Mel3Object) MelStringImport(input_string string) error {
 
 	if prog == nil {
-		return errors.New("Uninitializated Program Object.")
+		return errors.New("uninitialized program object")
 	}
 
 	impl := prog.Implementation
 
 	if impl == nil {
-		return errors.New("Uninitializated Program Implementation")
+		return errors.New("uninitialized program implementation")
 	}
 
 	if result, _, err := import_engine(impl, input_string); err == nil {
