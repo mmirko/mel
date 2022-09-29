@@ -15,7 +15,7 @@ func TestLisevoEvaluator(t *testing.T) {
 	var ep *mel.EvolutionParameters
 	c := new(mel.MelConfig)
 	c.Debug = true
-	a.MelInit(c, ep)
+	a.Init(c, ep, []string{"m3uint", "m3statements", "m3uintcmp", "m3bool"})
 
 	tests := []string{`
 eq(

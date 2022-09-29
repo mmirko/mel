@@ -5,6 +5,7 @@ import (
 	//"fmt"
 	mel "github.com/mmirko/mel"
 	"github.com/mmirko/mel/m3bool"
+	"github.com/mmirko/mel/m3dates"
 	"github.com/mmirko/mel/m3number"
 	"github.com/mmirko/mel/m3statements"
 	"github.com/mmirko/mel/m3uint"
@@ -36,6 +37,13 @@ var Implementation = mel3program.Mel3Implementation{
 // The effective Me3li
 type LisevoMe3li struct {
 	mel3program.Mel3Object
+	libs []string
+}
+
+func (l *LisevoMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs []string) {
+	l.libs = make([]string, len(libs))
+	copy(l.libs, libs)
+	l.MelInit(c, ep)
 }
 
 // ********* Mel interface
@@ -44,19 +52,43 @@ type LisevoMe3li struct {
 func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
 	implementations := make(map[uint16]*mel3program.Mel3Implementation)
 	implementations[MYLIBID] = &Implementation
-	implementations[m3bool.MYLIBID] = &m3bool.Implementation
-	implementations[m3number.MYLIBID] = &m3number.Implementation
-	implementations[m3uint.MYLIBID] = &m3uint.Implementation
-	implementations[m3uintcmp.MYLIBID] = &m3uintcmp.Implementation
-	implementations[m3statements.MYLIBID] = &m3statements.Implementation
+
+	for _, lib := range prog.libs {
+		switch lib {
+		case "m3uint":
+			implementations[m3uint.MYLIBID] = &m3uint.Implementation
+		case "m3uintcmp":
+			implementations[m3uintcmp.MYLIBID] = &m3uintcmp.Implementation
+		case "m3number":
+			implementations[m3number.MYLIBID] = &m3number.Implementation
+		case "m3bool":
+			implementations[m3bool.MYLIBID] = &m3bool.Implementation
+		case "m3statements":
+			implementations[m3statements.MYLIBID] = &m3statements.Implementation
+		case "m3dates":
+			implementations[m3dates.MYLIBID] = &m3dates.Implementation
+		}
+	}
 
 	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
 	creators[MYLIBID] = EvaluatorCreator
-	creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
-	creators[m3number.MYLIBID] = m3number.EvaluatorCreator
-	creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
-	creators[m3uintcmp.MYLIBID] = m3uintcmp.EvaluatorCreator
-	creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
+
+	for _, lib := range prog.libs {
+		switch lib {
+		case "m3uint":
+			creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
+		case "m3uintcmp":
+			creators[m3uintcmp.MYLIBID] = m3uintcmp.EvaluatorCreator
+		case "m3number":
+			creators[m3number.MYLIBID] = m3number.EvaluatorCreator
+		case "m3bool":
+			creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
+		case "m3statements":
+			creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
+		case "m3dates":
+			creators[m3dates.MYLIBID] = m3dates.EvaluatorCreator
+		}
+	}
 
 	prog.Mel3Init(c, implementations, creators, ep)
 }
