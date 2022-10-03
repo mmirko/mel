@@ -5,6 +5,7 @@ import (
 	//"fmt"
 	mel "github.com/mmirko/mel"
 	"github.com/mmirko/mel/m3bool"
+	"github.com/mmirko/mel/m3boolcmp"
 	"github.com/mmirko/mel/m3dates"
 	"github.com/mmirko/mel/m3number"
 	"github.com/mmirko/mel/m3statements"
@@ -63,6 +64,8 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 			implementations[m3number.MYLIBID] = &m3number.Implementation
 		case "m3bool":
 			implementations[m3bool.MYLIBID] = &m3bool.Implementation
+		case "m3boolcmp":
+			implementations[m3boolcmp.MYLIBID] = &m3boolcmp.Implementation
 		case "m3statements":
 			implementations[m3statements.MYLIBID] = &m3statements.Implementation
 		case "m3dates":
@@ -83,6 +86,8 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 			creators[m3number.MYLIBID] = m3number.EvaluatorCreator
 		case "m3bool":
 			creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
+		case "m3boolcmp":
+			creators[m3boolcmp.MYLIBID] = m3boolcmp.EvaluatorCreator
 		case "m3statements":
 			creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
 		case "m3dates":
