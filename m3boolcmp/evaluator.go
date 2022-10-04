@@ -46,7 +46,8 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 	debug := ev.Config.Debug
 
 	if debug {
-		fmt.Println("m3boolcmp: Visit: ", in_prog)
+		fmt.Println("m3boolcmp enter:", in_prog)
+		defer fmt.Println("m3boolcmp exit")
 	}
 
 	checkEv := mel3program.ProgMux(ev, in_prog)

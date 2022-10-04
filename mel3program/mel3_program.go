@@ -125,12 +125,13 @@ type Mux func(Mel3Visitor, *Mel3Program) Mel3Visitor
 // Walking the program tree
 func Walk(v Mel3Visitor, in_prog *Mel3Program) {
 	obj := v.GetMel3Object()
-	implementations := obj.Implementation
+
 	if obj.Config.Debug {
 		fmt.Printf("walk enter\n")
 		defer fmt.Printf("walk exit\n")
 	}
 
+	implementations := obj.Implementation
 	programID := in_prog.ProgramID
 	libraryID := in_prog.LibraryID
 

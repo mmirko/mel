@@ -46,7 +46,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 	debug := ev.Config.Debug
 
 	if debug {
-		fmt.Println("m3statements enter: ", in_prog)
+		fmt.Println("m3statements enter:", in_prog)
 		defer fmt.Println("m3statements exit")
 	}
 
