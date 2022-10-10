@@ -9,6 +9,7 @@ import (
 )
 
 type Conconi struct {
+	*mel.MelConfig
 	m1         float32
 	k1         float32
 	m2         float32
@@ -16,17 +17,19 @@ type Conconi struct {
 	crosspoint float32
 }
 
-func (gen *Conconi) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+func (c *Conconi) MelInit(config *mel.MelConfig, ep *mel.EvolutionParameters) {
+	c.MelConfig = config
 }
 
-func (gen *Conconi) MelCopy() mel.Me3li {
-	newconc := new(Conconi)
-	newconc.m1 = gen.m1
-	newconc.m2 = gen.m2
-	newconc.k1 = gen.k1
-	newconc.k2 = gen.k2
-	newconc.crosspoint = gen.crosspoint
-	return newconc
+func (c *Conconi) MelCopy() mel.Me3li {
+	newConc := new(Conconi)
+	newConc.MelConfig = c.MelConfig
+	newConc.m1 = c.m1
+	newConc.m2 = c.m2
+	newConc.k1 = c.k1
+	newConc.k2 = c.k2
+	newConc.crosspoint = c.crosspoint
+	return newConc
 }
 
 func (c *Conconi) String() string {
@@ -47,111 +50,110 @@ func (c *Conconi) GetParams() (float32, float32, float32, float32) {
 	return c.m1, c.k1, c.m2, c.k2
 }
 
-func (eobj *Conconi) Generate(ep *mel.EvolutionParameters) {
-	eobj.m1 = rand.Float32() * 20.0
-	eobj.m2 = rand.Float32() * 20.0
-	eobj.k1 = rand.Float32()*160.0 + 60.0 // FC
-	eobj.k2 = rand.Float32()*160.0 + 60.0
-	eobj.crosspoint = rand.Float32()*7.0 + 11.0 // m
+func (c *Conconi) Generate(ep *mel.EvolutionParameters) {
+	c.m1 = rand.Float32() * 20.0
+	c.m2 = rand.Float32() * 20.0
+	c.k1 = rand.Float32()*160.0 + 60.0 // FC
+	c.k2 = rand.Float32()*160.0 + 60.0
+	c.crosspoint = rand.Float32()*7.0 + 11.0 // m
 }
 
-func (eobj *Conconi) Mutate(ep *mel.EvolutionParameters) {
+func (c *Conconi) Mutate(ep *mel.EvolutionParameters) {
 
 	choose := rand.Intn(5)
 	switch choose {
 	case 0:
-		eobj.m1 = rand.Float32() * 20.0
+		c.m1 = rand.Float32() * 20.0
 	case 1:
-		eobj.m2 = rand.Float32() * 20.0
+		c.m2 = rand.Float32() * 20.0
 	case 2:
-		eobj.k1 = rand.Float32()*160.0 + 60.0
+		c.k1 = rand.Float32()*160.0 + 60.0
 	case 3:
-		eobj.k2 = rand.Float32()*160.0 + 60.0
+		c.k2 = rand.Float32()*160.0 + 60.0
 	case 4:
-		eobj.crosspoint = rand.Float32()*7.0 + 11.0
+		c.crosspoint = rand.Float32()*7.0 + 11.0
 	}
 }
 
-func (eobj *Conconi) MutateSlow(ep *mel.EvolutionParameters) {
+func (c *Conconi) MutateSlow(ep *mel.EvolutionParameters) {
 
 	choose := rand.Intn(5)
 	switch choose {
 	case 0:
-		eobj.m1 = eobj.m1 + rand.Float32() - 0.5
+		c.m1 = c.m1 + rand.Float32() - 0.5
 	case 1:
-		eobj.m2 = eobj.m2 + rand.Float32() - 0.5
+		c.m2 = c.m2 + rand.Float32() - 0.5
 	case 2:
-		eobj.k1 = eobj.k1 + rand.Float32() - 0.5
+		c.k1 = c.k1 + rand.Float32() - 0.5
 	case 3:
-		eobj.k2 = eobj.k2 + rand.Float32() - 0.5
+		c.k2 = c.k2 + rand.Float32() - 0.5
 	case 4:
-		eobj.crosspoint = eobj.crosspoint + rand.Float32() - 0.5
+		c.crosspoint = c.crosspoint + rand.Float32() - 0.5
 	}
 }
 
-func (eobj *Conconi) CrossoverFake(sec *Conconi, ep *mel.EvolutionParameters) {
+func (c *Conconi) CrossoverFake(sec *Conconi, ep *mel.EvolutionParameters) {
 
 	choose := rand.Intn(5)
 	switch choose {
 	case 0:
-		eobj.m1 = eobj.m1 + rand.Float32() - 0.5
+		c.m1 = c.m1 + rand.Float32() - 0.5
 	case 1:
-		eobj.m2 = eobj.m2 + rand.Float32() - 0.5
+		c.m2 = c.m2 + rand.Float32() - 0.5
 	case 2:
-		eobj.k1 = eobj.k1 + rand.Float32() - 0.5
+		c.k1 = c.k1 + rand.Float32() - 0.5
 	case 3:
-		eobj.k2 = eobj.k2 + rand.Float32() - 0.5
+		c.k2 = c.k2 + rand.Float32() - 0.5
 	case 4:
-		eobj.crosspoint = eobj.crosspoint + rand.Float32() - 0.5
+		c.crosspoint = c.crosspoint + rand.Float32() - 0.5
 	}
 }
 
 func ConconiFitness(in_prog *Conconi, x []float32, y []float32) (float32, bool) {
 
-	var summ float64
+	var sumM float64
 	for i := 0; i < 16; i++ {
 		if x[i] < in_prog.crosspoint {
-			summ = summ + math.Abs(float64(in_prog.m1*x[i]+in_prog.k1-y[i]))
+			sumM = sumM + math.Abs(float64(in_prog.m1*x[i]+in_prog.k1-y[i]))
 		} else {
-			summ = summ + math.Abs(float64(in_prog.m2*x[i]+in_prog.k2-y[i]))
+			sumM = sumM + math.Abs(float64(in_prog.m2*x[i]+in_prog.k2-y[i]))
 		}
 	}
 
-	return float32(math.Exp(-1 * summ / 100)), true
+	return float32(math.Exp(-1 * sumM / 100)), true
 }
 
 func ConconiGenerate(ep *mel.EvolutionParameters) mel.Me3li {
 	var result mel.Me3li
-	var eobj *Conconi
-	eobj = new(Conconi)
-	eobj.MelInit(nil, ep)
-	eobj.Generate(ep)
-	result = eobj
+	eObj := new(Conconi)
+	eObj.MelInit(nil, ep)
+	eObj.Generate(ep)
+	result = eObj
 	//fmt.Println("Generated",result)
 	return result
 }
 
 func ConconiMutate(p mel.Me3li, ep *mel.EvolutionParameters) mel.Me3li {
 	prog := p.(*Conconi)
-	newprog := (prog.MelCopy()).(*Conconi)
-	newprog.Mutate(ep)
+	newProg := (prog.MelCopy()).(*Conconi)
+	newProg.Mutate(ep)
 	//	//fmt.Println("Mutated ",prog, " in ",&result)
-	return newprog
+	return newProg
 }
 
 func ConconiMutateSlow(p mel.Me3li, ep *mel.EvolutionParameters) mel.Me3li {
 	prog := p.(*Conconi)
-	newprog := (prog.MelCopy()).(*Conconi)
-	newprog.MutateSlow(ep)
+	newProg := (prog.MelCopy()).(*Conconi)
+	newProg.MutateSlow(ep)
 	//	//fmt.Println("Mutated ",prog, " in ",&result)
-	return newprog
+	return newProg
 }
 
 func ConconiCrossoverFake(p1 mel.Me3li, p2 mel.Me3li, ep *mel.EvolutionParameters) mel.Me3li {
 	prog1 := p1.(*Conconi)
 	prog2 := p2.(*Conconi)
-	newprog := (prog1.MelCopy()).(*Conconi)
-	newprog.CrossoverFake(prog2, ep)
+	newProg := (prog1.MelCopy()).(*Conconi)
+	newProg.CrossoverFake(prog2, ep)
 	//	//fmt.Println("Mutated ",prog, " in ",&result)
-	return newprog
+	return newProg
 }
