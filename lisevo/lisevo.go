@@ -3,6 +3,7 @@ package lisevo
 import (
 	//"math/rand"
 	//"fmt"
+
 	mel "github.com/mmirko/mel"
 	"github.com/mmirko/mel/m3bool"
 	"github.com/mmirko/mel/m3boolcmp"
@@ -41,10 +42,17 @@ type LisevoMe3li struct {
 	libs []string
 }
 
-func (l *LisevoMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs []string) {
-	l.libs = make([]string, len(libs))
-	copy(l.libs, libs)
+func (l *LisevoMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs []string) error {
+
+	if checked, err := mel3program.LibsCheckAndRequirements(libs); err != nil {
+		return err
+	} else {
+		l.libs = make([]string, len(checked))
+		copy(l.libs, checked)
+	}
+
 	l.MelInit(c, ep)
+	return nil
 }
 
 // ********* Mel interface

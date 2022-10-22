@@ -30,11 +30,12 @@ func main() {
 		c := new(mel.MelConfig)
 		c.Debug = true
 
-		l.Init(c, ep, libs)
+		if err := l.Init(c, ep, libs); err != nil {
+			log.Fatal(err)
+		}
 
 		if err := l.LoadProgramFromFile(lisevoFile); err != nil {
 			log.Fatal("Error while parsing file:", err)
-			return
 		}
 		l.MelDump()
 	}

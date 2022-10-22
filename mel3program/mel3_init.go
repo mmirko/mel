@@ -4,6 +4,8 @@
 package mel3program
 
 import (
+	"errors"
+
 	mel "github.com/mmirko/mel"
 )
 
@@ -54,4 +56,45 @@ func (obj *Mel3Object) Mel3Init(c *mel.MelConfig, implementation map[uint16]*Mel
 			}
 		}
 	}
+}
+
+func LibsCheckAndRequirements(libs []string) ([]string, error) {
+
+	ExistingLibs := make(map[string]struct{})
+	ExistingLibs["m3uint"] = struct{}{}
+	ExistingLibs["m3uintcmp"] = struct{}{}
+	ExistingLibs["m3number"] = struct{}{}
+	ExistingLibs["m3bool"] = struct{}{}
+	ExistingLibs["m3boolcmp"] = struct{}{}
+	ExistingLibs["m3statements"] = struct{}{}
+	ExistingLibs["m3dates"] = struct{}{}
+
+	CheckdLibs := make(map[string]struct{})
+
+	for _, lib := range libs {
+		if _, ok := ExistingLibs[lib]; !ok {
+			return nil, errors.New("Unknown library: " + lib)
+		} else {
+			CheckdLibs[lib] = struct{}{}
+			switch lib {
+			case "m3uint":
+			case "m3uintcmp":
+				CheckdLibs["m3uint"] = struct{}{}
+			case "m3number":
+			case "m3bool":
+			case "m3boolcmp":
+				CheckdLibs["m3bool"] = struct{}{}
+			case "m3statements":
+			case "m3dates":
+			}
+		}
+	}
+
+	// Convert map to slice
+	libS := make([]string, 0, len(CheckdLibs))
+	for lib := range CheckdLibs {
+		libS = append(libS, lib)
+	}
+
+	return libS, nil
 }
