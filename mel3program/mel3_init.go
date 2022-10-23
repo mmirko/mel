@@ -86,6 +86,7 @@ func LibsCheckAndRequirements(libs []string) ([]string, error) {
 				CheckdLibs["m3bool"] = struct{}{}
 			case "m3statements":
 			case "m3dates":
+				CheckdLibs["m3uint"] = struct{}{}
 			}
 		}
 	}
