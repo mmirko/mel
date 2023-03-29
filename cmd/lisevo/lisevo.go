@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mmirko/mel"
-	"github.com/mmirko/mel/lisevo"
+	"github.com/mmirko/mel/pkg/lisevo"
+	"github.com/mmirko/mel/pkg/mel"
 )
 
 var debug = flag.Bool("debug", false, "debug mode")

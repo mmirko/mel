@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mmirko/mel"
-	"github.com/mmirko/mel/conconi"
+	"github.com/mmirko/mel/pkg/conconi"
+	"github.com/mmirko/mel/pkg/mel"
 )
 
 var datafile = flag.String("datafile", "datafile.csv", "CSV Datafile")
