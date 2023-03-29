@@ -17,6 +17,8 @@ import (
 // Program IDs
 const (
 	READINPUT = uint16(0) + iota
+	READOUTPUT
+	READKEEP
 	WRITEOUTPUT
 )
 
@@ -31,15 +33,21 @@ const (
 var Implementation = mel3program.Mel3Implementation{
 	ProgramNames: map[uint16]string{
 		READINPUT:   "readinput",
+		READOUTPUT:  "readoutput",
+		READKEEP:    "readkeep",
 		WRITEOUTPUT: "writeoutput",
 	},
 	TypeNames: map[uint16]string{},
 	ProgramTypes: map[uint16]mel3program.ArgumentsTypes{
 		READINPUT:   mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		READOUTPUT:  mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		READKEEP:    mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
 		WRITEOUTPUT: mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
 	},
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{
 		READINPUT:   mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
+		READOUTPUT:  mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
+		READKEEP:    mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
 		WRITEOUTPUT: mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}, mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
 	},
 	IsVariadic: map[uint16]bool{
@@ -47,6 +55,8 @@ var Implementation = mel3program.Mel3Implementation{
 	},
 	VariadicType: map[uint16]mel3program.ArgType{
 		READINPUT:   mel3program.ArgType{},
+		READOUTPUT:  mel3program.ArgType{},
+		READKEEP:    mel3program.ArgType{},
 		WRITEOUTPUT: mel3program.ArgType{},
 	},
 	ImplName: "envfloat",

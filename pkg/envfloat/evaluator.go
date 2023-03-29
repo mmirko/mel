@@ -86,7 +86,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 		switch in_prog.LibraryID {
 		case MYLIBID:
 			switch in_prog.ProgramID {
-			case READINPUT:
+			case READINPUT, READOUTPUT, READKEEP:
 				if arg_num == 1 {
 					res0 := evaluators[0].GetResult()
 					value0 := ""
@@ -98,20 +98,39 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					}
 
 					if value0n, err := strconv.Atoi(value0); err == nil {
-						if value0n < len(env.inVars) {
-							resultN := env.inVars[value0n]
-							resultS := strconv.FormatFloat(float64(resultN), 'f', -1, 32)
-							result := new(mel3program.Mel3Program)
-							result.LibraryID = m3number.MYLIBID
-							result.ProgramID = m3number.M3NUMBERCONST
-							result.ProgramValue = resultS
-							result.NextPrograms = nil
-							ev.Result = result
-							return nil
-						} else {
-							ev.error = errors.New("wrong argument value")
-							return nil
+						var resultN float32
+						switch in_prog.ProgramID {
+						case READINPUT:
+							if value0n < len(env.inVars) {
+								resultN = env.inVars[value0n]
+							} else {
+								ev.error = errors.New("wrong argument value")
+								return nil
+							}
+						case READOUTPUT:
+							if value0n < len(env.outVars) {
+								resultN = env.outVars[value0n]
+							} else {
+								ev.error = errors.New("wrong argument value")
+								return nil
+							}
+						case READKEEP:
+							if value0n < len(env.keepVars) {
+								resultN = env.keepVars[value0n]
+							} else {
+								ev.error = errors.New("wrong argument value")
+								return nil
+							}
 						}
+
+						resultS := strconv.FormatFloat(float64(resultN), 'f', -1, 32)
+						result := new(mel3program.Mel3Program)
+						result.LibraryID = m3number.MYLIBID
+						result.ProgramID = m3number.M3NUMBERCONST
+						result.ProgramValue = resultS
+						result.NextPrograms = nil
+						ev.Result = result
+						return nil
 					} else {
 						ev.error = errors.New("convert to integer failed")
 						return nil
