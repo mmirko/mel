@@ -12,7 +12,7 @@ import (
 	"github.com/mmirko/mel/pkg/m3uint"
 	"github.com/mmirko/mel/pkg/m3uintcmp"
 	"github.com/mmirko/mel/pkg/mel"
-	mel3program "github.com/mmirko/mel/pkg/mel3program"
+	"github.com/mmirko/mel/pkg/mel3program"
 )
 
 // Program IDs
@@ -33,7 +33,7 @@ var Implementation = mel3program.Mel3Implementation{
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{},
 	IsVariadic:      map[uint16]bool{},
 	VariadicType:    map[uint16]mel3program.ArgType{},
-	ImplName:        "m3redmon",
+	ImplName:        "lisevo",
 }
 
 // The effective Me3li

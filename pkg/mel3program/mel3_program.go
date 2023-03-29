@@ -18,6 +18,7 @@ const (
 	LIB_M3UINTCMP
 	LIB_M3NUMBER
 	LIB_LISEVO
+	LIB_ENVFLOAT
 )
 
 type ArgType struct {
@@ -64,7 +65,7 @@ type Mel3Object struct {
 	Implementation map[uint16]*Mel3Implementation
 	VisitorCreator map[uint16]Mel3VisitorCreator
 	Result         *Mel3Program
-	Environment    *interface{}
+	Environment    interface{}
 }
 
 func (a ArgType) String(impl *Mel3Implementation) string {

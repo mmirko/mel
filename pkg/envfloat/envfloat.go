@@ -1,58 +1,124 @@
 package envfloat
 
-import "errors"
+import (
+	//"math/rand"
+	//"fmt"
 
-type EnvFloat struct {
-	inVars   []float32
-	keepVars []float32
-	outVars  []float32
+	"github.com/mmirko/mel/pkg/m3bool"
+	"github.com/mmirko/mel/pkg/m3boolcmp"
+	"github.com/mmirko/mel/pkg/m3number"
+	"github.com/mmirko/mel/pkg/m3statements"
+	"github.com/mmirko/mel/pkg/m3uint"
+	"github.com/mmirko/mel/pkg/m3uintcmp"
+	"github.com/mmirko/mel/pkg/mel"
+	"github.com/mmirko/mel/pkg/mel3program"
+)
+
+// Program IDs
+const (
+	READINPUT = uint16(0) + iota
+	WRITEOUTPUT
+)
+
+// Program types
+const ()
+
+const (
+	MYLIBID = mel3program.LIB_ENVFLOAT
+)
+
+// The Mel3 implementation
+var Implementation = mel3program.Mel3Implementation{
+	ProgramNames: map[uint16]string{
+		READINPUT:   "readinput",
+		WRITEOUTPUT: "writeoutput",
+	},
+	TypeNames: map[uint16]string{},
+	ProgramTypes: map[uint16]mel3program.ArgumentsTypes{
+		READINPUT:   mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		WRITEOUTPUT: mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+	},
+	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{
+		READINPUT:   mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
+		WRITEOUTPUT: mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}, mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+	},
+	IsVariadic: map[uint16]bool{
+		READINPUT: false,
+	},
+	VariadicType: map[uint16]mel3program.ArgType{
+		READINPUT:   mel3program.ArgType{},
+		WRITEOUTPUT: mel3program.ArgType{},
+	},
+	ImplName: "envfloat",
 }
 
-func (env *EnvFloat) Init(inputs []float32, outputs int) {
-	copy(env.inVars, inputs)
-	env.keepVars = make([]float32, 0)
-	env.outVars = make([]float32, outputs)
+// The effective Me3li
+type EnvFloatMe3li struct {
+	mel3program.Mel3Object
+	libs []string
 }
 
-func (env *EnvFloat) ReadInput(num int) (float32, error) {
-	if num < len(env.inVars) {
-		return env.inVars[num], nil
+func (l *EnvFloatMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs []string) error {
+
+	if checked, err := mel3program.LibsCheckAndRequirements(libs); err != nil {
+		return err
+	} else {
+		l.libs = make([]string, len(checked))
+		copy(l.libs, checked)
 	}
-	return 0, errors.New("input index out of range")
+
+	l.MelInit(c, ep)
+	return nil
 }
 
-func (env *EnvFloat) WriteOutput(num int, value float32) error {
-	if num < len(env.outVars) {
-		env.outVars[num] = value
-		return nil
+// ********* Mel interface
+
+// The Mel entry point for M3uintMe3li
+func (prog *EnvFloatMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := make(map[uint16]*mel3program.Mel3Implementation)
+	implementations[MYLIBID] = &Implementation
+
+	for _, lib := range prog.libs {
+		switch lib {
+		case "m3uint":
+			implementations[m3uint.MYLIBID] = &m3uint.Implementation
+		case "m3uintcmp":
+			implementations[m3uintcmp.MYLIBID] = &m3uintcmp.Implementation
+		case "m3number":
+			implementations[m3number.MYLIBID] = &m3number.Implementation
+		case "m3bool":
+			implementations[m3bool.MYLIBID] = &m3bool.Implementation
+		case "m3boolcmp":
+			implementations[m3boolcmp.MYLIBID] = &m3boolcmp.Implementation
+		case "m3statements":
+			implementations[m3statements.MYLIBID] = &m3statements.Implementation
+		}
 	}
-	return errors.New("output index out of range")
-}
 
-func (env *EnvFloat) ReadVar(num int) (float32, error) {
-	if num < len(env.keepVars) {
-		return env.keepVars[num], nil
+	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+	creators[MYLIBID] = EvaluatorCreator
+
+	for _, lib := range prog.libs {
+		switch lib {
+		case "m3uint":
+			creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
+		case "m3uintcmp":
+			creators[m3uintcmp.MYLIBID] = m3uintcmp.EvaluatorCreator
+		case "m3number":
+			creators[m3number.MYLIBID] = m3number.EvaluatorCreator
+		case "m3bool":
+			creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
+		case "m3boolcmp":
+			creators[m3boolcmp.MYLIBID] = m3boolcmp.EvaluatorCreator
+		case "m3statements":
+			creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
+		}
 	}
-	return 0, errors.New("var index out of range")
+
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
-func (env *EnvFloat) WriteVar(num int, value float32) error {
-	if num < len(env.keepVars) {
-		env.keepVars[num] = value
-		return nil
-	}
-	return errors.New("var index out of range")
-}
-
-func (env *EnvFloat) PushVar(value float32) {
-	env.keepVars = append(env.keepVars, value)
-}
-
-func (env *EnvFloat) PopVar() (float32, error) {
-	if len(env.keepVars) > 0 {
-		value := env.keepVars[len(env.keepVars)-1]
-		env.keepVars = env.keepVars[:len(env.keepVars)-1]
-		return value, nil
-	}
-	return 0, errors.New("no vars to pop")
+func (prog *EnvFloatMe3li) MelCopy() mel.Me3li {
+	var result mel.Me3li
+	return result
 }

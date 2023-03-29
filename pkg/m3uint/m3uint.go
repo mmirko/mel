@@ -5,7 +5,7 @@ import (
 	//"math/rand"
 	//"fmt"
 	"github.com/mmirko/mel/pkg/mel"
-	mel3program "github.com/mmirko/mel/pkg/mel3program"
+	"github.com/mmirko/mel/pkg/mel3program"
 )
 
 // Program IDs
