@@ -80,6 +80,9 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 			evaluators[i].Visit(prog)
 		}
 
+		envI := *ev.Environment
+		env := envI.(*EnvFloat)
+
 		switch in_prog.LibraryID {
 		case MYLIBID:
 			switch in_prog.ProgramID {
@@ -95,8 +98,8 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					}
 
 					if value0n, err := strconv.Atoi(value0); err == nil {
-						if value0n < len(ev.Environment.(*EnvFloat).inVars) {
-							resultN := ev.Environment.(*EnvFloat).inVars[value0n]
+						if value0n < len(env.inVars) {
+							resultN := env.inVars[value0n]
 							resultS := strconv.FormatFloat(float64(resultN), 'f', -1, 32)
 							result := new(mel3program.Mel3Program)
 							result.LibraryID = m3number.MYLIBID
@@ -118,6 +121,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					return nil
 				}
 			case WRITEOUTPUT:
+
 				if arg_num == 2 {
 					res0 := evaluators[0].GetResult()
 					res1 := evaluators[1].GetResult()
@@ -130,7 +134,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					}
 
 					value1 := ""
-					if res1 != nil && res1.LibraryID == m3uint.MYLIBID && res1.ProgramID == m3number.M3NUMBERCONST {
+					if res1 != nil && res1.LibraryID == m3number.MYLIBID && res1.ProgramID == m3number.M3NUMBERCONST {
 						value1 = res1.ProgramValue
 					} else {
 						ev.error = errors.New("wrong argument type")
@@ -138,9 +142,9 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					}
 
 					if value0n, err := strconv.Atoi(value0); err == nil {
-						if value0n < len(ev.Environment.(*EnvFloat).outVars) {
+						if value0n < len(env.outVars) {
 							if value1n, err := strconv.ParseFloat(value1, 32); err == nil {
-								ev.Environment.(*EnvFloat).outVars[value0n] = float32(value1n)
+								env.outVars[value0n] = float32(value1n)
 								result := new(mel3program.Mel3Program)
 								result.LibraryID = m3number.MYLIBID
 								result.ProgramID = m3number.M3NUMBERCONST
