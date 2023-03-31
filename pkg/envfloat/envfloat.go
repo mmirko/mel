@@ -20,6 +20,9 @@ const (
 	READOUTPUT
 	READKEEP
 	WRITEOUTPUT
+	WRITEKEEP
+	PUSHKEEP
+	POPKEEP
 )
 
 // Program types
@@ -36,6 +39,9 @@ var Implementation = mel3program.Mel3Implementation{
 		READOUTPUT:  "readoutput",
 		READKEEP:    "readkeep",
 		WRITEOUTPUT: "writeoutput",
+		WRITEKEEP:   "writekeep",
+		PUSHKEEP:    "pushkeep",
+		POPKEEP:     "popkeep",
 	},
 	TypeNames: map[uint16]string{},
 	ProgramTypes: map[uint16]mel3program.ArgumentsTypes{
@@ -43,21 +49,36 @@ var Implementation = mel3program.Mel3Implementation{
 		READOUTPUT:  mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
 		READKEEP:    mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
 		WRITEOUTPUT: mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		WRITEKEEP:   mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		PUSHKEEP:    mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		POPKEEP:     mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
 	},
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{
 		READINPUT:   mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
 		READOUTPUT:  mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
 		READKEEP:    mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}},
 		WRITEOUTPUT: mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}, mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		WRITEKEEP:   mel3program.ArgumentsTypes{mel3program.ArgType{m3uint.MYLIBID, m3uint.M3UINT, []uint64{}}, mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		PUSHKEEP:    mel3program.ArgumentsTypes{mel3program.ArgType{m3number.MYLIBID, m3number.M3NUMBER, []uint64{}}},
+		POPKEEP:     mel3program.ArgumentsTypes{},
 	},
 	IsVariadic: map[uint16]bool{
-		READINPUT: false,
+		READINPUT:   false,
+		READOUTPUT:  false,
+		READKEEP:    false,
+		WRITEOUTPUT: false,
+		WRITEKEEP:   false,
+		PUSHKEEP:    false,
+		POPKEEP:     false,
 	},
 	VariadicType: map[uint16]mel3program.ArgType{
 		READINPUT:   mel3program.ArgType{},
 		READOUTPUT:  mel3program.ArgType{},
 		READKEEP:    mel3program.ArgType{},
 		WRITEOUTPUT: mel3program.ArgType{},
+		WRITEKEEP:   mel3program.ArgType{},
+		PUSHKEEP:    mel3program.ArgType{},
+		POPKEEP:     mel3program.ArgType{},
 	},
 	ImplName: "envfloat",
 }

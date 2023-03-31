@@ -71,6 +71,8 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 		isFunctional = false
 	}
 
+	envI := *ev.Environment
+	env := envI.(*EnvFloat)
 	if isFunctional {
 
 		arg_num := len(in_prog.NextPrograms)
@@ -79,9 +81,6 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 			evaluators[i] = mel3program.ProgMux(ev, prog)
 			evaluators[i].Visit(prog)
 		}
-
-		envI := *ev.Environment
-		env := envI.(*EnvFloat)
 
 		switch in_prog.LibraryID {
 		case MYLIBID:
@@ -101,24 +100,24 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 						var resultN float32
 						switch in_prog.ProgramID {
 						case READINPUT:
-							if value0n < len(env.inVars) {
-								resultN = env.inVars[value0n]
+							if val, err := env.ReadInput(value0n); err == nil {
+								resultN = val
 							} else {
-								ev.error = errors.New("wrong argument value")
+								ev.error = err
 								return nil
 							}
 						case READOUTPUT:
-							if value0n < len(env.outVars) {
-								resultN = env.outVars[value0n]
+							if val, err := env.ReadOutput(value0n); err == nil {
+								resultN = val
 							} else {
-								ev.error = errors.New("wrong argument value")
+								ev.error = err
 								return nil
 							}
 						case READKEEP:
-							if value0n < len(env.keepVars) {
-								resultN = env.keepVars[value0n]
+							if val, err := env.ReadKeep(value0n); err == nil {
+								resultN = val
 							} else {
-								ev.error = errors.New("wrong argument value")
+								ev.error = err
 								return nil
 							}
 						}
@@ -139,7 +138,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 					ev.error = errors.New("wrong argument number")
 					return nil
 				}
-			case WRITEOUTPUT:
+			case WRITEOUTPUT, WRITEKEEP:
 
 				if arg_num == 2 {
 					res0 := evaluators[0].GetResult()
@@ -160,29 +159,80 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 						return nil
 					}
 
-					if value0n, err := strconv.Atoi(value0); err == nil {
-						if value0n < len(env.outVars) {
-							if value1n, err := strconv.ParseFloat(value1, 32); err == nil {
-								env.outVars[value0n] = float32(value1n)
-								result := new(mel3program.Mel3Program)
-								result.LibraryID = m3number.MYLIBID
-								result.ProgramID = m3number.M3NUMBERCONST
-								result.ProgramValue = value1
-								result.NextPrograms = nil
-								ev.Result = result
-								return nil
-							} else {
-								ev.error = errors.New("convert to float failed")
-								return nil
-							}
-						} else {
-							ev.error = errors.New("wrong argument value")
-							return nil
-						}
+					value0n := 0
+					if res, err := strconv.Atoi(value0); err == nil {
+						value0n = res
 					} else {
 						ev.error = errors.New("convert to integer failed")
 						return nil
 					}
+
+					value1n := float32(0.0)
+					if res, err := strconv.ParseFloat(value1, 32); err == nil {
+						value1n = float32(res)
+					} else {
+						ev.error = errors.New("convert to float failed")
+						return nil
+					}
+
+					switch in_prog.ProgramID {
+					case WRITEOUTPUT:
+						if err := env.WriteOutput(value0n, value1n); err != nil {
+							ev.error = err
+							return nil
+						}
+					case WRITEKEEP:
+						if err := env.WriteKeep(value0n, value1n); err != nil {
+							ev.error = err
+							return nil
+						}
+					}
+
+					result := new(mel3program.Mel3Program)
+					result.LibraryID = m3number.MYLIBID
+					result.ProgramID = m3number.M3NUMBERCONST
+					result.ProgramValue = value1
+					result.NextPrograms = nil
+					ev.Result = result
+					return nil
+
+				} else {
+					ev.error = errors.New("wrong argument number")
+					return nil
+				}
+			case PUSHKEEP:
+				if arg_num == 1 {
+					res0 := evaluators[0].GetResult()
+
+					value0 := ""
+					if res0 != nil && res0.LibraryID == m3number.MYLIBID && res0.ProgramID == m3number.M3NUMBERCONST {
+						value0 = res0.ProgramValue
+					} else {
+						ev.error = errors.New("wrong argument type")
+						return nil
+					}
+
+					value0n := float32(0.0)
+					if res, err := strconv.ParseFloat(value0, 32); err == nil {
+						value0n = float32(res)
+					} else {
+						ev.error = errors.New("convert to float failed")
+						return nil
+					}
+
+					if err := env.PushKeep(value0n); err != nil {
+						ev.error = err
+						return nil
+					}
+
+					result := new(mel3program.Mel3Program)
+					result.LibraryID = m3number.MYLIBID
+					result.ProgramID = m3number.M3NUMBERCONST
+					result.ProgramValue = value0
+					result.NextPrograms = nil
+					ev.Result = result
+					return nil
+
 				} else {
 					ev.error = errors.New("wrong argument number")
 					return nil
@@ -198,6 +248,25 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 	} else {
 
 		switch in_prog.LibraryID {
+		case MYLIBID:
+			switch in_prog.ProgramID {
+			case POPKEEP:
+				if val, err := env.PopKeep(); err == nil {
+					result := new(mel3program.Mel3Program)
+					result.LibraryID = m3number.MYLIBID
+					result.ProgramID = m3number.M3NUMBERCONST
+					result.ProgramValue = strconv.FormatFloat(float64(val), 'f', -1, 32)
+					result.NextPrograms = nil
+					ev.Result = result
+					return nil
+				} else {
+					ev.error = err
+					return nil
+				}
+			default:
+				ev.error = errors.New("unknown ProgramID")
+				return nil
+			}
 		default:
 			ev.error = errors.New("unknown LibraryID")
 			return nil

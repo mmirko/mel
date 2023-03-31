@@ -21,6 +21,10 @@ func TestEnvFloatEvaluator(t *testing.T) {
 	tests := []string{`readinput(m3uintconst(0))`,
 		`writeoutput(m3uintconst(1),m3numberconst(4.34))`,
 		`writeoutput(m3uintconst(1),add(m3numberconst(4.34),m3numberconst(1.0))))`,
+		`pushkeep(m3numberconst(1.0))`,
+		`pushkeep(m3numberconst(1.0))`,
+		`writekeep(m3uintconst(1),add(m3numberconst(3.0),m3numberconst(1.0)))`,
+		`popkeep()`,
 	}
 
 	env := new(EnvFloat)
