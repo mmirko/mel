@@ -3,7 +3,7 @@ package mel
 const (
 	VISEVAL = uint8(0) + iota
 	VISDUMP
-	VISSBASM
+	VISBASM
 )
 
 func (c *MelConfig) IsGenericVisitorCreator() bool {

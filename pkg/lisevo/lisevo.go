@@ -106,7 +106,7 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 		}
 		prog.Mel3Init(c, implementations, creators, ep)
 	} else {
-		creators := mel3program.CreateGenericCreators(c, ep)
+		creators := mel3program.CreateGenericCreators(c, ep, implementations)
 		prog.Mel3Init(c, implementations, creators, ep)
 	}
 }

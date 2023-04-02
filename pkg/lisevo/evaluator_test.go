@@ -14,6 +14,7 @@ func TestLisevoEvaluator(t *testing.T) {
 	a := new(LisevoMe3li)
 	var ep *mel.EvolutionParameters
 	c := new(mel.MelConfig)
+	//c.VisitorCreatorSet = mel.VISBASM
 	c.Debug = true
 	a.Init(c, ep, []string{"m3uint", "m3statements", "m3uintcmp", "m3bool"})
 
