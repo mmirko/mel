@@ -81,29 +81,34 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 		}
 	}
 
-	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
-	creators[MYLIBID] = EvaluatorCreator
+	if !c.IsGenericVisitorCreator() {
 
-	for _, lib := range prog.libs {
-		switch lib {
-		case "m3uint":
-			creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
-		case "m3uintcmp":
-			creators[m3uintcmp.MYLIBID] = m3uintcmp.EvaluatorCreator
-		case "m3number":
-			creators[m3number.MYLIBID] = m3number.EvaluatorCreator
-		case "m3bool":
-			creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
-		case "m3boolcmp":
-			creators[m3boolcmp.MYLIBID] = m3boolcmp.EvaluatorCreator
-		case "m3statements":
-			creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
-		case "m3dates":
-			creators[m3dates.MYLIBID] = m3dates.EvaluatorCreator
+		creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+		creators[MYLIBID] = EvaluatorCreator
+
+		for _, lib := range prog.libs {
+			switch lib {
+			case "m3uint":
+				creators[m3uint.MYLIBID] = m3uint.EvaluatorCreator
+			case "m3uintcmp":
+				creators[m3uintcmp.MYLIBID] = m3uintcmp.EvaluatorCreator
+			case "m3number":
+				creators[m3number.MYLIBID] = m3number.EvaluatorCreator
+			case "m3bool":
+				creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
+			case "m3boolcmp":
+				creators[m3boolcmp.MYLIBID] = m3boolcmp.EvaluatorCreator
+			case "m3statements":
+				creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
+			case "m3dates":
+				creators[m3dates.MYLIBID] = m3dates.EvaluatorCreator
+			}
 		}
+		prog.Mel3Init(c, implementations, creators, ep)
+	} else {
+		creators := mel3program.CreateGenericCreators(c, ep)
+		prog.Mel3Init(c, implementations, creators, ep)
 	}
-
-	prog.Mel3Init(c, implementations, creators, ep)
 }
 
 func (prog *LisevoMe3li) MelCopy() mel.Me3li {
