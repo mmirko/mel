@@ -1,9 +1,6 @@
 package envfloat
 
 import (
-
-	//m3uint "github.com/mmirko/mel/pkg/m3uint"
-
 	"fmt"
 	"testing"
 

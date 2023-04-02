@@ -156,7 +156,7 @@ func Walk(v Mel3Visitor, in_prog *Mel3Program) {
 	}
 }
 
-// Muxing different libraries
+// Mux different libraries
 func ProgMux(v Mel3Visitor, in_prog *Mel3Program) Mel3Visitor {
 
 	libId := in_prog.LibraryID

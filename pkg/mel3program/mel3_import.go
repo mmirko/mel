@@ -48,7 +48,7 @@ func import_engine(implementation map[uint16]*Mel3Implementation, input_string s
 	var result Mel3Program
 
 	// Get the program name
-	programname, err := mel3parser.FunctionalValue(input_string)
+	programName, err := mel3parser.FunctionalValue(input_string)
 	if err != nil {
 		return nil, nil, errors.New("Failed to find identifier on " + input_string)
 	}
@@ -58,80 +58,80 @@ func import_engine(implementation map[uint16]*Mel3Implementation, input_string s
 		return nil, nil, errors.New("Failed to find arguments on " + input_string)
 	}
 
-	// Check for builtins
-	if isBuiltin(programname) {
-		return processBuiltin(programname, args)
+	// Check for built-ins
+	if isBuiltin(programName) {
+		return processBuiltin(programName, args)
 	}
 
 	// Funcitonall Programs can share names but cannot share the same name with a non funcional one
-	libraryids, programids, ok := ids_from_name(implementation, programname)
+	libraryIds, programIds, ok := ids_from_name(implementation, programName)
 	if !ok {
-		return nil, nil, errors.New("Failed to find program id of " + programname)
+		return nil, nil, errors.New("Failed to find program id of " + programName)
 	}
 
-	isfunctional := true
+	isFunctional := true
 
-	var nonfunctlib uint16
+	var nonFunctionalLib uint16
 
 	// If one is not functional all are
-	for i, libraryid := range libraryids {
-		programid := programids[i]
-		impl := implementation[libraryid]
-		if len(impl.NonVariadicArgs[programid]) == 0 && !impl.IsVariadic[programid] {
-			isfunctional = false
-			nonfunctlib = libraryid
+	for i, libraryId := range libraryIds {
+		programId := programIds[i]
+		impl := implementation[libraryId]
+		if len(impl.NonVariadicArgs[programId]) == 0 && !impl.IsVariadic[programId] {
+			isFunctional = false
+			nonFunctionalLib = libraryId
 			break
 		}
 	}
 
-	if isfunctional {
+	if isFunctional {
 
 		// Make space for the leaves programs
 		result.NextPrograms = make([]*Mel3Program, len(args))
 
-		arglist := ArgumentsTypes{}
+		argList := ArgumentsTypes{}
 
 		for i := 0; i < len(args); i++ {
-			if temp_progr, temp_type, err := import_engine(implementation, args[i]); err != nil {
+			if tempProgr, tempType, err := import_engine(implementation, args[i]); err != nil {
 				return nil, nil, err
 			} else {
-				result.NextPrograms[i] = temp_progr
+				result.NextPrograms[i] = tempProgr
 
 				// Composition of the argument list
-				for _, itype := range *temp_type {
-					arglist = append(arglist, itype)
+				for _, itype := range *tempType {
+					argList = append(argList, itype)
 				}
 			}
 		}
 
 		// Creation of a signature based on computed argument list
-		tempsignature := programname + "("
+		tempSignature := programName + "("
 
-		for i, arg := range arglist {
+		for i, arg := range argList {
 			if i != 0 {
-				tempsignature += ","
+				tempSignature += ","
 			}
 			impl := implementation[arg.LibraryID]
-			tempsignature += impl.ImplName + "." + impl.TypeNames[arg.TypeID]
+			tempSignature += impl.ImplName + "." + impl.TypeNames[arg.TypeID]
 		}
 
-		tempsignature += ")()"
+		tempSignature += ")()"
 
 		pids := make([]uint16, 0)
 		libs := make([]uint16, 0)
 
 		// Check for matching signatures (there has to be 1)
-		for libid, impl := range implementation {
-			for programid, sig := range impl.Signatures {
-				if MatchSignature(tempsignature, sig, 0) {
-					pids = append(pids, programid)
-					libs = append(libs, libid)
+		for libId, impl := range implementation {
+			for programId, sig := range impl.Signatures {
+				if MatchSignature(tempSignature, sig, 0) {
+					pids = append(pids, programId)
+					libs = append(libs, libId)
 				}
 			}
 		}
 
 		if len(pids) != 1 {
-			return nil, nil, errors.New("Argument of different type than expected")
+			return nil, nil, errors.New("argument of different type than expected")
 		}
 
 		// The new real programid chosen by
@@ -141,27 +141,25 @@ func import_engine(implementation map[uint16]*Mel3Implementation, input_string s
 		result.LibraryID = lid
 		result.ProgramID = pid
 
-		ptype := implementation[lid].ProgramTypes[pid]
+		pType := implementation[lid].ProgramTypes[pid]
 
-		return &result, &ptype, nil
+		return &result, &pType, nil
 
 	} else {
-		// Non funcional program cannot have name ambiguity
-		programid, ok := id_from_name(implementation[nonfunctlib], programname)
+		// Non functional program cannot have name ambiguity
+		programId, ok := id_from_name(implementation[nonFunctionalLib], programName)
 		if !ok {
-			return nil, nil, errors.New("Failed to find program id of " + programname)
+			return nil, nil, errors.New("failed to find program id of " + programName)
 		}
 
-		result.LibraryID = nonfunctlib
-		result.ProgramID = programid
+		result.LibraryID = nonFunctionalLib
+		result.ProgramID = programId
 
-		ptype := implementation[nonfunctlib].ProgramTypes[programid]
+		pType := implementation[nonFunctionalLib].ProgramTypes[programId]
 
 		// args[0] is "" even if there are no args
 		result.ProgramValue = args[0]
 
-		return &result, &ptype, nil
+		return &result, &pType, nil
 	}
-
-	return nil, nil, errors.New("Wrong import")
 }
