@@ -60,10 +60,10 @@ func import_engine(implementation map[uint16]*Mel3Implementation, input_string s
 
 	// Check for built-ins
 	if isBuiltin(programName) {
-		return processBuiltin(programName, args)
+		return processBuiltin(implementation, programName, args)
 	}
 
-	// Funcitonall Programs can share names but cannot share the same name with a non funcional one
+	// Functional Programs can share names but cannot share the same name with a non functional one
 	libraryIds, programIds, ok := ids_from_name(implementation, programName)
 	if !ok {
 		return nil, nil, errors.New("Failed to find program id of " + programName)

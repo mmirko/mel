@@ -15,6 +15,11 @@ func (obj *Mel3Object) Mel3Init(c *mel.MelConfig, implementation map[uint16]*Mel
 	obj.Implementation = implementation
 	obj.VisitorCreator = creators
 
+	// Eventually attach the built-in libraries
+	if _, ok := creators[BUILTINS]; !ok {
+		creators[BUILTINS] = BuiltInCreator
+	}
+
 	for _, impl := range implementation {
 
 		if impl.Signatures == nil {
