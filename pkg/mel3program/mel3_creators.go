@@ -12,12 +12,14 @@ func CreateGenericCreators(c *mel.MelConfig, ep *mel.EvolutionParameters, impls 
 	switch c.VisitorCreatorSet {
 	case mel.VISDUMP:
 		creators := make(map[uint16]Mel3VisitorCreator)
+		creators[BUILTINS] = DumpCreator
 		for libId, _ := range impls {
 			creators[libId] = DumpCreator
 		}
 		return creators
 	case mel.VISBASM:
 		creators := make(map[uint16]Mel3VisitorCreator)
+		creators[BUILTINS] = BasmCreator
 		for libId, _ := range impls {
 			creators[libId] = BasmCreator
 		}
@@ -113,6 +115,7 @@ type DumpEvaluator struct {
 	*Mel3Object
 	error
 	Result *Mel3Program
+	level  int
 }
 
 func (ev *DumpEvaluator) GetName() string {
@@ -143,39 +146,27 @@ func (ev *DumpEvaluator) Visit(in_prog *Mel3Program) Mel3Visitor {
 		fmt.Println("dump: Visit: ", in_prog)
 	}
 
-	checkEv := ProgMux(ev, in_prog)
+	// checkEv := ProgMux(ev, in_prog)
 
-	if ev.GetName() != checkEv.GetName() {
-		return checkEv.Visit(in_prog)
+	// if ev.GetName() != checkEv.GetName() {
+	// 	return checkEv.Visit(in_prog)
+	// }
+
+	for i := 0; i < ev.level; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Println(in_prog)
+
+	ev.level = ev.level + 1
+
+	arg_num := len(in_prog.NextPrograms)
+	evaluators := make([]Mel3Visitor, arg_num)
+	for i, prog := range in_prog.NextPrograms {
+		evaluators[i] = ev
+		evaluators[i].Visit(prog)
 	}
 
-	obj := ev.GetMel3Object()
-	implementations := obj.Implementation
-
-	programId := in_prog.ProgramID
-	libraryId := in_prog.LibraryID
-
-	implementation := implementations[libraryId]
-
-	isFunctional := true
-
-	if len(implementation.NonVariadicArgs[programId]) == 0 && !implementation.IsVariadic[programId] {
-		isFunctional = false
-	}
-
-	if isFunctional {
-		switch in_prog.LibraryID {
-		default:
-			ev.error = errors.New("unknown LibraryID on " + strconv.Itoa(int(libraryId)) + ":" + strconv.Itoa(int(programId)))
-			return nil
-		}
-	} else {
-		switch in_prog.LibraryID {
-		default:
-			ev.error = errors.New("unknown LibraryID")
-			return nil
-		}
-	}
+	return nil
 }
 
 func (ev *DumpEvaluator) Inspect() string {
