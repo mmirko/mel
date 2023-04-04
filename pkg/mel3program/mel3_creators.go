@@ -6,13 +6,12 @@ import (
 	"github.com/mmirko/mel/pkg/mel"
 )
 
-func CreateGenericCreators(c *mel.MelConfig, ep *mel.EvolutionParameters, impls map[uint16]*Mel3Implementation) map[uint16]Mel3VisitorCreator {
-	switch c.VisitorCreatorSet {
-	case mel.VISDUMP:
+func CreateGenericCreators(o *Mel3Object, ep *mel.EvolutionParameters, impls map[uint16]*Mel3Implementation) map[uint16]Mel3VisitorCreator {
+	if o.DefaultCreator != nil {
 		creators := make(map[uint16]Mel3VisitorCreator)
-		creators[BUILTINS] = DumpCreator
+		creators[BUILTINS] = o.DefaultCreator
 		for libId, _ := range impls {
-			creators[libId] = DumpCreator
+			creators[libId] = o.DefaultCreator
 		}
 		return creators
 	}
@@ -27,7 +26,7 @@ type DumpEvaluator struct {
 }
 
 func (ev *DumpEvaluator) GetName() string {
-	return "basm"
+	return "dump"
 }
 
 func (ev *DumpEvaluator) GetMel3Object() *Mel3Object {

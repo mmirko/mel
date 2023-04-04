@@ -6,8 +6,7 @@ import (
 )
 
 type MelConfig struct {
-	Debug             bool
-	VisitorCreatorSet uint8
+	Debug bool
 }
 
 // The main interface, it states: It is a mel object

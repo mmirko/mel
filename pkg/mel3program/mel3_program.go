@@ -64,6 +64,7 @@ type Mel3Object struct {
 	Config         *mel.MelConfig
 	Implementation map[uint16]*Mel3Implementation
 	VisitorCreator map[uint16]Mel3VisitorCreator
+	DefaultCreator Mel3VisitorCreator
 	Result         *Mel3Program
 	Environment    *interface{}
 }

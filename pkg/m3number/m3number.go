@@ -80,12 +80,12 @@ func (prog *M3numberMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters
 	implementations := make(map[uint16]*mel3program.Mel3Implementation)
 	implementations[MYLIBID] = &Implementation
 
-	if !c.IsGenericVisitorCreator() {
+	if prog.Mel3Object.DefaultCreator == nil {
 		creators := make(map[uint16]mel3program.Mel3VisitorCreator)
 		creators[MYLIBID] = EvaluatorCreator
 		prog.Mel3Init(c, implementations, creators, ep)
 	} else {
-		creators := mel3program.CreateGenericCreators(c, ep, implementations)
+		creators := mel3program.CreateGenericCreators(&prog.Mel3Object, ep, implementations)
 		prog.Mel3Init(c, implementations, creators, ep)
 	}
 
