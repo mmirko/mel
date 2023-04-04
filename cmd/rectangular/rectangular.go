@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/mmirko/mel"
-	"github.com/mmirko/mel/rectangular"
+	"github.com/mmirko/mel/pkg/mel"
+	"github.com/mmirko/mel/pkg/rectangular"
 )
 
 var imageFile = flag.String("imagefile", "", "Target image file")
