@@ -19,6 +19,7 @@ const (
 	LIB_M3NUMBER
 	LIB_LISEVO
 	LIB_ENVFLOAT
+	LIB_M3MELBOND
 )
 
 type ArgType struct {

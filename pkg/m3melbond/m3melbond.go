@@ -1,4 +1,4 @@
-package lisevo
+package m3melbond
 
 import (
 	//"math/rand"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/mmirko/mel/pkg/m3bool"
 	"github.com/mmirko/mel/pkg/m3boolcmp"
-	"github.com/mmirko/mel/pkg/m3dates"
 	"github.com/mmirko/mel/pkg/m3number"
 	"github.com/mmirko/mel/pkg/m3statements"
 	"github.com/mmirko/mel/pkg/m3uint"
@@ -22,7 +21,7 @@ const ()
 const ()
 
 const (
-	MYLIBID = mel3program.LIB_LISEVO
+	MYLIBID = mel3program.LIB_M3MELBOND
 )
 
 // The Mel3 implementation
@@ -33,16 +32,16 @@ var Implementation = mel3program.Mel3Implementation{
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{},
 	IsVariadic:      map[uint16]bool{},
 	VariadicType:    map[uint16]mel3program.ArgType{},
-	ImplName:        "lisevo",
+	ImplName:        "m3melbond",
 }
 
 // The effective Me3li
-type LisevoMe3li struct {
+type M3MelBondMe3li struct {
 	mel3program.Mel3Object
 	libs []string
 }
 
-func (l *LisevoMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs []string) error {
+func (l *M3MelBondMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs []string) error {
 
 	if checked, err := mel3program.LibsCheckAndRequirements(libs); err != nil {
 		return err
@@ -58,7 +57,7 @@ func (l *LisevoMe3li) Init(c *mel.MelConfig, ep *mel.EvolutionParameters, libs [
 // ********* Mel interface
 
 // The Mel entry point for M3uintMe3li
-func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+func (prog *M3MelBondMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
 	implementations := make(map[uint16]*mel3program.Mel3Implementation)
 	implementations[MYLIBID] = &Implementation
 
@@ -76,8 +75,6 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 			implementations[m3boolcmp.MYLIBID] = &m3boolcmp.Implementation
 		case "m3statements":
 			implementations[m3statements.MYLIBID] = &m3statements.Implementation
-		case "m3dates":
-			implementations[m3dates.MYLIBID] = &m3dates.Implementation
 		}
 	}
 
@@ -100,8 +97,6 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 				creators[m3boolcmp.MYLIBID] = m3boolcmp.EvaluatorCreator
 			case "m3statements":
 				creators[m3statements.MYLIBID] = m3statements.EvaluatorCreator
-			case "m3dates":
-				creators[m3dates.MYLIBID] = m3dates.EvaluatorCreator
 			}
 		}
 		prog.Mel3Init(c, implementations, creators, ep)
@@ -112,7 +107,7 @@ func (prog *LisevoMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) 
 
 }
 
-func (prog *LisevoMe3li) MelCopy() mel.Me3li {
+func (prog *M3MelBondMe3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }
