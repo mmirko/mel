@@ -7,15 +7,13 @@ import (
 const (
 	B_IN_INPUT = uint16(0) + iota
 	B_IN_OUTPUTLIST
-	B_IN_COLLAPSE
-	B_IN_ENDCOLLAPSE
-	B_IN_EVOLVE
-	B_IN_ENDEVOLVE
+	B_IN_GROUP
+	B_IN_UNGROUP
 )
 
 func isBuiltin(programName string) bool {
 	switch programName {
-	case "input", "outputlist", "collapse", "endcollapse", "evolve", "endevolve":
+	case "input", "outputlist", "group", "ungroup":
 		return true
 	}
 	return false
@@ -46,14 +44,10 @@ func processBuiltin(implementation map[uint16]*Mel3Implementation, programName s
 
 	result.LibraryID = BUILTINS
 	switch programName {
-	case "collapse":
-		result.ProgramID = B_IN_COLLAPSE
-	case "endcollapse":
-		result.ProgramID = B_IN_ENDCOLLAPSE
-	case "evolve":
-		result.ProgramID = B_IN_EVOLVE
-	case "endevolve":
-		result.ProgramID = B_IN_ENDEVOLVE
+	case "group":
+		result.ProgramID = B_IN_GROUP
+	case "ungroup":
+		result.ProgramID = B_IN_UNGROUP
 	}
 
 	return &result, &argList, nil

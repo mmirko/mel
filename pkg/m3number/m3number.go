@@ -80,10 +80,15 @@ func (prog *M3numberMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters
 	implementations := make(map[uint16]*mel3program.Mel3Implementation)
 	implementations[MYLIBID] = &Implementation
 
-	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
-	creators[MYLIBID] = EvaluatorCreator
+	if !c.IsGenericVisitorCreator() {
+		creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+		creators[MYLIBID] = EvaluatorCreator
+		prog.Mel3Init(c, implementations, creators, ep)
+	} else {
+		creators := mel3program.CreateGenericCreators(c, ep, implementations)
+		prog.Mel3Init(c, implementations, creators, ep)
+	}
 
-	prog.Mel3Init(c, implementations, creators, ep)
 }
 
 func (prog *M3numberMe3li) MelCopy(c *mel.MelConfig) mel.Me3li {
