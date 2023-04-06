@@ -6,14 +6,14 @@ import (
 
 const (
 	B_IN_INPUT = uint16(0) + iota
-	B_IN_OUTPUTLIST
+	B_IN_OUTPUT
 	B_IN_GROUP
 	B_IN_UNGROUP
 )
 
 func isBuiltin(programName string) bool {
 	switch programName {
-	case "input", "outputlist", "group", "ungroup":
+	case "input", "output", "group", "ungroup":
 		return true
 	}
 	return false
@@ -24,34 +24,66 @@ func processBuiltin(implementation map[uint16]*Mel3Implementation, programName s
 	// All the built-in programs are defined here. They process some number of arguments and use the rest as their parameters.
 	// Their "value" parameter is a reference to their structures.
 
-	// TODO: Implement the rest of the built-ins input and outputlist
-
-	// Unary built-ins
-	var result Mel3Program
-	result.NextPrograms = make([]*Mel3Program, 1)
-	argList := ArgumentsTypes{}
-
-	if tempProgr, tempType, err := import_engine(implementation, args[0]); err != nil {
-		return nil, nil, err
-	} else {
-		result.NextPrograms[0] = tempProgr
-
-		// Composition of the argument list
-		for _, itype := range *tempType {
-			argList = append(argList, itype)
-		}
-	}
-
-	result.LibraryID = BUILTINS
 	switch programName {
-	case "group":
-		result.ProgramID = B_IN_GROUP
-	case "ungroup":
-		result.ProgramID = B_IN_UNGROUP
+	case "output", "group", "ungroup":
+
+		// Unary built-ins
+		var result Mel3Program
+		result.NextPrograms = make([]*Mel3Program, 1)
+		argList := ArgumentsTypes{}
+
+		// The last argument is the value of the program
+		nextProg := args[len(args)-1]
+
+		if tempProgr, tempType, err := import_engine(implementation, nextProg); err != nil {
+			return nil, nil, err
+		} else {
+			result.NextPrograms[0] = tempProgr
+
+			// Composition of the argument list
+			for _, itype := range *tempType {
+				argList = append(argList, itype)
+			}
+		}
+
+		result.LibraryID = BUILTINS
+		switch programName {
+		case "group":
+			// Group can have an argument to specify the group name
+			if len(args) > 2 {
+				return nil, nil, fmt.Errorf("Too many arguments for group")
+			} else if len(args) == 2 {
+				result.ProgramValue = args[0]
+			} else {
+				result.ProgramValue = ""
+			}
+			result.ProgramID = B_IN_GROUP
+		case "ungroup":
+			if len(args) > 1 {
+				return nil, nil, fmt.Errorf("Too many arguments for ungroup")
+			}
+			result.ProgramID = B_IN_UNGROUP
+			result.ProgramValue = ""
+		case "output":
+			if len(args) > 2 {
+				return nil, nil, fmt.Errorf("Too many arguments for output")
+			} else if len(args) == 2 {
+				result.ProgramValue = args[0]
+			} else {
+				result.ProgramValue = ""
+			}
+		}
+
+		return &result, &argList, nil
+	case "input":
+		// Input is a special case, it has no arguments
+		var result Mel3Program
+		result.LibraryID = BUILTINS
+		result.ProgramID = B_IN_INPUT
+		result.ProgramValue = ""
+		return &result, &ArgumentsTypes{}, nil
 	}
-
-	return &result, &argList, nil
-
+	return nil, nil, fmt.Errorf("Unknown builtin: %s", programName)
 }
 
 type BuiltInEvaluator struct {
