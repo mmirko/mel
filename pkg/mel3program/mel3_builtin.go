@@ -25,7 +25,7 @@ func processBuiltin(implementation map[uint16]*Mel3Implementation, programName s
 	// Their "value" parameter is a reference to their structures.
 
 	switch programName {
-	case "output", "group", "ungroup":
+	case "output", "group", "ungroup", "input":
 
 		// Unary built-ins
 		var result Mel3Program
@@ -72,16 +72,19 @@ func processBuiltin(implementation map[uint16]*Mel3Implementation, programName s
 			} else {
 				result.ProgramValue = ""
 			}
+			result.ProgramID = B_IN_OUTPUT
+		case "input":
+			if len(args) > 2 {
+				return nil, nil, fmt.Errorf("Too many arguments for input")
+			} else if len(args) == 2 {
+				result.ProgramValue = args[0]
+			} else {
+				result.ProgramValue = ""
+			}
+			result.ProgramID = B_IN_INPUT
 		}
 
 		return &result, &argList, nil
-	case "input":
-		// Input is a special case, it has no arguments
-		var result Mel3Program
-		result.LibraryID = BUILTINS
-		result.ProgramID = B_IN_INPUT
-		result.ProgramValue = ""
-		return &result, &ArgumentsTypes{}, nil
 	}
 	return nil, nil, fmt.Errorf("Unknown builtin: %s", programName)
 }
@@ -126,20 +129,23 @@ func (ev *BuiltInEvaluator) Visit(in_prog *Mel3Program) Mel3Visitor {
 		return checkEv.Visit(in_prog)
 	}
 
-	arg_num := 1
-	evaluators := make([]Mel3Visitor, arg_num)
-	for i, prog := range in_prog.NextPrograms {
-		evaluators[i] = ProgMux(ev, prog)
-		evaluators[i].Visit(prog)
-	}
-	res := evaluators[0].GetResult()
+	switch in_prog.ProgramID {
+	case B_IN_GROUP, B_IN_UNGROUP, B_IN_OUTPUT, B_IN_INPUT:
+		arg_num := 1
+		evaluators := make([]Mel3Visitor, arg_num)
+		for i, prog := range in_prog.NextPrograms {
+			evaluators[i] = ProgMux(ev, prog)
+			evaluators[i].Visit(prog)
+		}
+		res := evaluators[0].GetResult()
 
-	result := new(Mel3Program)
-	result.LibraryID = res.LibraryID
-	result.ProgramID = res.ProgramID
-	result.ProgramValue = res.ProgramValue
-	result.NextPrograms = res.NextPrograms
-	ev.Result = result
+		result := new(Mel3Program)
+		result.LibraryID = res.LibraryID
+		result.ProgramID = res.ProgramID
+		result.ProgramValue = res.ProgramValue
+		result.NextPrograms = res.NextPrograms
+		ev.Result = result
+	}
 	return nil
 }
 
