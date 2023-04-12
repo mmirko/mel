@@ -37,7 +37,7 @@ func main() {
 		if err := l.LoadProgramFromFile(lisevoFile); err != nil {
 			log.Fatal("Error while parsing file:", err)
 		}
-		l.MelDump()
+		l.MelDump(nil)
 	}
 
 }

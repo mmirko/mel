@@ -17,6 +17,9 @@ func TestLisevoEvaluator(t *testing.T) {
 	// c.VisitorCreatorSet = mel.VISDUMP
 	c.Debug = true
 	a.Init(c, ep, []string{"m3uint", "m3statements", "m3uintcmp", "m3bool"})
+	d := new(mel.DumpConfig)
+	d.Numeric = true
+	d.Types = true
 
 	tests := []string{`
 eq(
@@ -43,6 +46,7 @@ multistmt(
 		if a.Inspect() != tests[i+1] {
 			t.Errorf("Expected %s, got %s", tests[i+1], a.Inspect())
 		}
+		a.MelDump(d)
 
 	}
 }

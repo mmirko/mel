@@ -25,7 +25,7 @@ func TestM3boolImporter(t *testing.T) {
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			a.MelDump()
+			a.MelDump(nil)
 		}
 		fmt.Println("---")
 	}

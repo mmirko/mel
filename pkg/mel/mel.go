@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+type DumpConfig struct {
+	Numeric bool
+	Types   bool
+}
+
 type MelConfig struct {
 	Debug bool
 }
@@ -20,7 +25,7 @@ type Me3liStringImport interface {
 }
 
 type Me3liDump interface {
-	MelDump()
+	MelDump(*DumpConfig)
 }
 
 func Init() {

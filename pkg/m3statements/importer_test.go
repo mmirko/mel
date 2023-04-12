@@ -34,7 +34,7 @@ multistmt(
 	for i := 0; i < len(iStrings); i++ {
 		fmt.Println("Importing: " + iStrings[i])
 		a.MelStringImport(iStrings[i])
-		a.MelDump()
+		a.MelDump(nil)
 		fmt.Println("---")
 	}
 

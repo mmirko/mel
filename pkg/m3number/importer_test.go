@@ -36,7 +36,7 @@ add(
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			a.MelDump()
+			a.MelDump(nil)
 		}
 		fmt.Println("<<<")
 	}
