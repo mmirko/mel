@@ -22,6 +22,14 @@ const (
 	LIB_M3MELBOND
 )
 
+type ProgType struct {
+	LibraryID uint16
+	ProgramID uint16
+	Arity     int
+}
+
+type ProgramsTypes []ProgType
+
 type ArgType struct {
 	LibraryID  uint16
 	TypeID     uint16   // Return values are multitype
