@@ -4,6 +4,7 @@ import (
 
 	//m3uint "github.com/mmirko/mel/pkg/m3uint"
 
+	"fmt"
 	"testing"
 
 	"github.com/mmirko/mel/pkg/mel"
@@ -18,6 +19,6 @@ func TestLisevoGenerator(t *testing.T) {
 	c.Debug = true
 	a.Init(c, ep, []string{"m3uint", "m3statements", "m3uintcmp", "m3bool"})
 
-	mel3program.CreateGenerationMatrix(a.Implementation)
-
+	gm := mel3program.CreateGenerationMatrix(a.Implementation)
+	fmt.Println(gm.Init())
 }

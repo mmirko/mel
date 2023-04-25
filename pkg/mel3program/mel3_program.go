@@ -112,6 +112,10 @@ func SameType(t1 ArgType, t2 ArgType) bool {
 	return true
 }
 
+func SameProg(p1 ProgType, p2 ProgType) bool {
+	return p1.LibraryID == p2.LibraryID && p1.ProgramID == p2.ProgramID
+}
+
 func (mo *Mel3Object) Compute() error {
 	prog := mo.StartProgram
 	v := mo.VisitorCreator[prog.LibraryID]
