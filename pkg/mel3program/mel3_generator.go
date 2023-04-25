@@ -52,6 +52,17 @@ func CreateGenerationMatrix(implementation map[uint16]*Mel3Implementation) *Gene
 	return result
 }
 
+func (gm *GenerationMatrix) AddTerminalGenerator(progType ProgType, generator TerminalGenerator) {
+	for i, typ := range gm.TerminalProgramTypes {
+		if SameProg(typ, progType) {
+			gm.TerminalGenerators[i] = generator
+			return
+		}
+	}
+	gm.TerminalProgramTypes = append(gm.TerminalProgramTypes, progType)
+	gm.TerminalGenerators[len(gm.TerminalProgramTypes)-1] = generator
+}
+
 func (gm *GenerationMatrix) Init() error {
 	for i, typ := range gm.Types {
 		found := false
@@ -76,12 +87,10 @@ func (gm *GenerationMatrix) Init() error {
 				if !foundTerm {
 					return errors.New("Type " + typ.String(gm.Impls[typ.LibraryID]) + " has no terminal program")
 				}
-
-				break
 			}
 		}
 		if !found {
-			return errors.New("Type " + typ.String(gm.Impls[typ.LibraryID]) + " has no terminal program")
+			return errors.New("Type " + typ.String(gm.Impls[typ.LibraryID]) + " has no 0 arity program")
 		}
 
 	}

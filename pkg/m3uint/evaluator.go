@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
-	mel3program "github.com/mmirko/mel/pkg/mel3program"
+	"github.com/mmirko/mel/pkg/mel3program"
 )
 
 type Evaluator struct {
