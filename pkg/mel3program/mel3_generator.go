@@ -97,71 +97,18 @@ func (gm *GenerationMatrix) Init() error {
 	return nil
 }
 
-// // Mel dump, it prints out the object
-// func (prog *Mel3Object) String() string {
+func (gm *GenerationMatrix) GenerateTree(outType ArgType, inTypes []ArgType, levelNode *int64, targetNode int64, params *mel.EvolutionParameters) (*Mel3Program, error) {
+	// Compute a desired arity
 
-// 	result := ""
+	// Compute a randomized arity
 
-// 	if prog != nil {
-// 		impl := prog.Implementation
-// 		if impl != nil {
-// 			startprog := prog.StartProgram
-// 			if startprog != nil {
-// 				if tmpResult, err := export_engine(impl, startprog); err == nil {
-// 					result = tmpResult
-// 				} else {
-// 					return result
-// 				}
-// 			} else {
-// 				return result
-// 			}
-// 		} else {
-// 			return result
-// 		}
-// 	} else {
-// 		return result
-// 	}
+	// Match with available programs
 
-// 	return result
-// }
+	// Generate the program
 
-// // Export engine: it recurse over the program and show it
-// func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3Program) (string, error) {
+	// Generate the arguments recursively
 
-// 	result := ""
+	// Return the program
 
-// 	if program == nil {
-// 		return result, errors.New("Empty program failed to export")
-// 	} else {
-
-// 		libraryID := program.LibraryID
-// 		programID := program.ProgramID
-
-// 		impl := implementation[libraryID]
-
-// 		isFunctional := true
-
-// 		if len(impl.NonVariadicArgs[programID]) == 0 && !impl.IsVariadic[programID] {
-// 			isFunctional = false
-// 		}
-
-// 		if isFunctional {
-// 			result = result + impl.ProgramNames[programID] + "("
-// 			for i := range program.NextPrograms {
-// 				if tmpResult, err := export_engine(implementation, program.NextPrograms[i]); err == nil {
-// 					result = result + tmpResult
-// 					if i != len(program.NextPrograms)-1 {
-// 						result = result + ","
-// 					}
-// 				} else {
-// 					return "", err
-// 				}
-// 			}
-// 			result = result + ")"
-// 		} else {
-// 			result = result + impl.ProgramNames[programID] + "(" + program.ProgramValue + ")"
-// 		}
-// 	}
-
-// 	return result, nil
-// }
+	return nil, nil
+}

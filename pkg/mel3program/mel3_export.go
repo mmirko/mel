@@ -14,7 +14,7 @@ func (prog *Mel3Object) String() string {
 		if impl != nil {
 			startprog := prog.StartProgram
 			if startprog != nil {
-				if tmpResult, err := export_engine(impl, startprog); err == nil {
+				if tmpResult, err := exportEngine(impl, startprog); err == nil {
 					result = tmpResult
 				} else {
 					return result
@@ -33,16 +33,16 @@ func (prog *Mel3Object) String() string {
 }
 
 func ProgDump(implementation map[uint16]*Mel3Implementation, program *Mel3Program) (string, error) {
-	return export_engine(implementation, program)
+	return exportEngine(implementation, program)
 }
 
 // Export engine: it recurse over the program and show it
-func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3Program) (string, error) {
+func exportEngine(implementation map[uint16]*Mel3Implementation, program *Mel3Program) (string, error) {
 
 	result := ""
 
 	if program == nil {
-		return result, errors.New("Empty program failed to export")
+		return result, errors.New("empty program failed to export")
 	} else {
 
 		libraryID := program.LibraryID
@@ -59,7 +59,7 @@ func export_engine(implementation map[uint16]*Mel3Implementation, program *Mel3P
 		if isFunctional {
 			result = result + impl.ProgramNames[programID] + "("
 			for i := range program.NextPrograms {
-				if tmpResult, err := export_engine(implementation, program.NextPrograms[i]); err == nil {
+				if tmpResult, err := exportEngine(implementation, program.NextPrograms[i]); err == nil {
 					result = result + tmpResult
 					if i != len(program.NextPrograms)-1 {
 						result = result + ","
