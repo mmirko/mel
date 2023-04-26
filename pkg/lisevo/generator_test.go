@@ -28,4 +28,6 @@ func TestLisevoGenerator(t *testing.T) {
 	gm.AddTerminalGenerator(mel3program.ProgType{LibraryID: m3bool.MYLIBID, ProgramID: m3bool.VAR, Arity: 0}, m3bool.M3BoolVarGenerator)
 	gm.AddTerminalGenerator(mel3program.ProgType{LibraryID: m3statements.MYLIBID, ProgramID: m3statements.NOP, Arity: 0}, m3statements.M3StmtNopGenerator)
 	fmt.Println(gm.Init())
+	level := int64(0)
+	fmt.Println(gm.GenerateTree(mel3program.ArgType{LibraryID: m3uint.MYLIBID, TypeID: m3uint.M3UINTCONST}, nil, &level, 3000, nil))
 }

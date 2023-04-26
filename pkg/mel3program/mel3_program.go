@@ -23,9 +23,10 @@ const (
 )
 
 type ProgType struct {
-	LibraryID uint16
-	ProgramID uint16
-	Arity     int
+	LibraryID   uint16
+	ProgramID   uint16
+	Arity       int
+	ArityFactor int
 }
 
 type ProgramsTypes []ProgType
