@@ -8,8 +8,8 @@ import (
 func M3StmtNopGenerator(ev *mel.EvolutionParameters) (*mel3program.Mel3Program, error) {
 	result := new(mel3program.Mel3Program)
 	result.LibraryID = MYLIBID
-	result.ProgramID = STMT
-	result.ProgramValue = "nop"
+	result.ProgramID = NOP
+	result.ProgramValue = ""
 	result.NextPrograms = nil
 
 	return result, nil

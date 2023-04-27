@@ -136,19 +136,19 @@ func (gm *GenerationMatrix) GenerateTree(outType ArgType, inTypes []ArgType, lev
 			prob := make([]float64, len(gm.Programs[i]))
 			sum := float64(0)
 			arityP := arityPreferred(float64(*levelNode - targetNode))
-			fmt.Println("Arity preferred: ", arityP, "diff", float64(*levelNode-targetNode))
+			fmt.Println("Arity preferred: ", arityP, "diff", float64(*levelNode-targetNode), "level", *levelNode, "target", targetNode)
 			for j, prog := range gm.Programs[i] {
 				if prog.Arity == -1 {
 					// Variadic program
-					prob[j] = typeCNorm(math.Abs(float64(MAXARITY)-arityP)) / float64(prog.ArityFactor)
+					prob[j] = typeCNorm(math.Pow(float64(MAXARITY)-arityP, 2)) / float64(prog.ArityFactor)
 				} else {
-					prob[j] = typeCNorm(math.Abs(float64(prog.Arity)-arityP)) / float64(prog.ArityFactor)
+					prob[j] = typeCNorm(math.Pow(float64(prog.Arity)-arityP, 2)) / float64(prog.ArityFactor)
 				}
 				sum += prob[j]
 			}
 
 			// Normalize the probabilities
-			for j, _ := range prob {
+			for j := range prob {
 				prob[j] /= sum
 			}
 
@@ -158,12 +158,19 @@ func (gm *GenerationMatrix) GenerateTree(outType ArgType, inTypes []ArgType, lev
 			r := rand.Float64()
 			sum = float64(0)
 			selected = gm.Programs[i][len(gm.Programs[i])-1]
+			last := true
 			for j, prog := range gm.Programs[i] {
 				sum += prob[j]
 				if r < sum {
+					fmt.Println("Selected program: ", j)
 					selected = prog
+					last = false
 					break
 				}
+			}
+
+			if last {
+				fmt.Println("Selected program: ", len(gm.Programs[i])-1)
 			}
 
 			found = true
@@ -182,6 +189,7 @@ func (gm *GenerationMatrix) GenerateTree(outType ArgType, inTypes []ArgType, lev
 		// Terminal program
 		for j, progType := range gm.TerminalProgramTypes {
 			if SameProg(progType, selected) {
+				*levelNode++
 				gen := gm.TerminalGenerators[j]
 				if res, err := gen(params); err != nil {
 					return nil, err
