@@ -20,6 +20,7 @@ const (
 	LIB_LISEVO
 	LIB_ENVFLOAT
 	LIB_M3MELBOND
+	LIB_M3BMMATRIX
 )
 
 type ProgType struct {
