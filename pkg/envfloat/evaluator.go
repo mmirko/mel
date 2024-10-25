@@ -71,7 +71,7 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 		isFunctional = false
 	}
 
-	envI := *ev.Environment
+	envI := ev.Environment
 	env := envI.(*EnvFloat)
 	if isFunctional {
 

@@ -30,17 +30,17 @@ func TestEnvFloatEvaluator(t *testing.T) {
 	var envI interface{}
 	envI = env
 
-	a.Mel3Object.Environment = &envI
+	a.Mel3Object.Environment = envI
 
 	for _, iString := range tests {
 		fmt.Println("-----", iString, "-----")
-		fmt.Println(*a.Mel3Object.Environment)
+		fmt.Println(a.Mel3Object.Environment)
 		if err := a.MelStringImport(iString); err != nil {
 			t.Errorf("Error importing: %s", err)
 		}
 		a.Compute()
 		fmt.Println(a.Inspect())
-		fmt.Println(*a.Mel3Object.Environment)
+		fmt.Println(a.Mel3Object.Environment)
 	}
 
 }
