@@ -115,6 +115,10 @@ func (ev *Evaluator) Visit(in_prog *mel3program.Mel3Program) mel3program.Mel3Vis
 							case MULT:
 								opResultN = value0n * value1n
 							case DIV:
+								if value1n == 0 {
+									ev.error = errors.New("division by zero")
+									return nil
+								}
 								opResultN = value0n / value1n
 							}
 
