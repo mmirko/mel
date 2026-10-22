@@ -7,7 +7,7 @@ import (
 	m3dates "github.com/mmirko/mel/pkg/m3dates"
 	m3uint "github.com/mmirko/mel/pkg/m3uint"
 	m3uintcmp "github.com/mmirko/mel/pkg/m3uintcmp"
-	"github.com/mmirko/mel/pkg/mel"
+	mel "github.com/mmirko/mel/pkg/mel"
 	mel3program "github.com/mmirko/mel/pkg/mel3program"
 )
 
@@ -40,14 +40,21 @@ type M3redmonMe3li struct {
 // ********* Mel interface
 
 // The Mel entry point for M3redmonMe3li
-func (prog *M3redmonMe3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3Implementation)
-	impls[MYLIBID] = &Implementation
-	impls[m3bool.MYLIBID] = &m3bool.Implementation
-	impls[m3dates.MYLIBID] = &m3dates.Implementation
-	impls[m3uint.MYLIBID] = &m3uint.Implementation
-	impls[m3uintcmp.MYLIBID] = &m3uintcmp.Implementation
-	prog.Mel3Init(impls, ep)
+func (prog *M3redmonMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := map[uint16]*mel3program.Mel3Implementation{
+		MYLIBID:           &Implementation,
+		m3bool.MYLIBID:    &m3bool.Implementation,
+		m3dates.MYLIBID:   &m3dates.Implementation,
+		m3uint.MYLIBID:    &m3uint.Implementation,
+		m3uintcmp.MYLIBID: &m3uintcmp.Implementation,
+	}
+	creators := map[uint16]mel3program.Mel3VisitorCreator{
+		m3bool.MYLIBID:    m3bool.EvaluatorCreator,
+		m3dates.MYLIBID:   m3dates.EvaluatorCreator,
+		m3uint.MYLIBID:    m3uint.EvaluatorCreator,
+		m3uintcmp.MYLIBID: m3uintcmp.EvaluatorCreator,
+	}
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
 func (prog *M3redmonMe3li) MelCopy() mel.Me3li {

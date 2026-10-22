@@ -2,11 +2,9 @@ package m3redmon
 
 import (
 	"fmt"
-	//m3uint "github.com/mmirko/mel/pkg/m3uint"
 	"testing"
 
-	"github.com/mmirko/mel/pkg/mel"
-	mel3program "github.com/mmirko/mel/pkg/mel3program"
+	mel "github.com/mmirko/mel/pkg/mel"
 )
 
 func TestM3redmonEvaluator(t *testing.T) {
@@ -15,7 +13,8 @@ func TestM3redmonEvaluator(t *testing.T) {
 
 	a := new(M3redmonMe3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	config := new(mel.MelConfig)
+	a.MelInit(config, ep)
 
 	istrings := []string{`
 eq(
@@ -28,23 +27,30 @@ eq(
 	m3uintconst(66)
 )
 `, `gt(diffdays(dateconst(today),dateconst(2019-05-20 16:44:59)),m3uintconst(9))`}
+	expectedResults := []string{"m3boolconst(true)", "m3boolconst(true)"}
 
-	for _, istring := range istrings {
+	for i, istring := range istrings {
 
 		fmt.Println(">>>")
 
 		fmt.Println("\tImporting: " + istring)
-		a.MelStringImport(istring)
+		if err := a.MelStringImport(istring); err != nil {
+			t.Fatalf("MelStringImport(%q): %v", istring, err)
+		}
 
 		fmt.Println("\tEvaluating: " + istring)
 
-		v := new(Evaluator)
-		v.Impl = a.Implementation
-		v.Mux = M3redmonmux
-
-		mel3program.Walk(v, a.StartProgram)
-
-		fmt.Println("\t" + v.Inspect())
+		if err := a.Compute(); err != nil {
+			t.Fatalf("Compute(%q): %v", istring, err)
+		}
+		if a.Result == nil {
+			t.Fatalf("Compute(%q) produced no result", istring)
+		}
+		result := a.Inspect()
+		fmt.Println("\t" + result)
+		if result != expectedResults[i] {
+			t.Errorf("expected %s, got %s", expectedResults[i], result)
+		}
 
 		fmt.Println("<<<")
 
