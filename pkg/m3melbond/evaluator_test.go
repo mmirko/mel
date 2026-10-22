@@ -62,3 +62,19 @@ func TestM3numberTrigLibrary(t *testing.T) {
 		t.Errorf("expected %s, got %s", want, got)
 	}
 }
+
+func TestM3numberTrigInverseLibrary(t *testing.T) {
+	program := new(M3MelBondMe3li)
+	if err := program.Init(&mel.MelConfig{Debug: false}, nil, []string{"m3numbertriginv"}); err != nil {
+		t.Fatalf("Init: %v", err)
+	}
+	if err := program.MelStringImport("asin(m3numberconst(0.5))"); err != nil {
+		t.Fatalf("MelStringImport: %v", err)
+	}
+	if err := program.Compute(); err != nil {
+		t.Fatalf("Compute: %v", err)
+	}
+	if got, want := program.Inspect(), "m3numberconst(5.235988E-01)"; got != want {
+		t.Errorf("expected %s, got %s", want, got)
+	}
+}

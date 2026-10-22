@@ -8,6 +8,7 @@ import (
 	"github.com/mmirko/mel/pkg/m3boolcmp"
 	"github.com/mmirko/mel/pkg/m3number"
 	"github.com/mmirko/mel/pkg/m3numbertrig"
+	"github.com/mmirko/mel/pkg/m3numbertriginv"
 	"github.com/mmirko/mel/pkg/m3statements"
 	"github.com/mmirko/mel/pkg/m3uint"
 	"github.com/mmirko/mel/pkg/m3uintcmp"
@@ -73,6 +74,9 @@ func (prog *M3MelBondMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameter
 		case "m3numbertrig":
 			implementations[m3numbertrig.MYLIBID] = &m3numbertrig.Implementation
 			implementations[m3number.MYLIBID] = &m3number.Implementation
+		case "m3numbertriginv":
+			implementations[m3numbertriginv.MYLIBID] = &m3numbertriginv.Implementation
+			implementations[m3number.MYLIBID] = &m3number.Implementation
 		case "m3bool":
 			implementations[m3bool.MYLIBID] = &m3bool.Implementation
 		case "m3boolcmp":
@@ -97,6 +101,9 @@ func (prog *M3MelBondMe3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameter
 				creators[m3number.MYLIBID] = m3number.EvaluatorCreator
 			case "m3numbertrig":
 				creators[m3numbertrig.MYLIBID] = m3numbertrig.EvaluatorCreator
+				creators[m3number.MYLIBID] = m3number.EvaluatorCreator
+			case "m3numbertriginv":
+				creators[m3numbertriginv.MYLIBID] = m3numbertriginv.EvaluatorCreator
 				creators[m3number.MYLIBID] = m3number.EvaluatorCreator
 			case "m3bool":
 				creators[m3bool.MYLIBID] = m3bool.EvaluatorCreator
