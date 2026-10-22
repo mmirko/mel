@@ -21,6 +21,7 @@ const (
 	LIB_ENVFLOAT
 	LIB_M3MELBOND
 	LIB_M3BMMATRIX
+	LIB_M3NUMBERTRIG
 )
 
 type ProgType struct {
