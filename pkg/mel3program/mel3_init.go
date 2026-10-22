@@ -74,6 +74,7 @@ func LibsCheckAndRequirements(libs []string) ([]string, error) {
 	ExistingLibs["m3statements"] = struct{}{}
 	ExistingLibs["m3dates"] = struct{}{}
 	ExistingLibs["m3numbertrig"] = struct{}{}
+	ExistingLibs["m3numbertriginv"] = struct{}{}
 	ExistingLibs["envfloat"] = struct{}{}
 
 	CheckedLibs := make(map[string]struct{})
@@ -89,6 +90,8 @@ func LibsCheckAndRequirements(libs []string) ([]string, error) {
 				CheckedLibs["m3uint"] = struct{}{}
 			case "m3number":
 			case "m3numbertrig":
+				CheckedLibs["m3number"] = struct{}{}
+			case "m3numbertriginv":
 				CheckedLibs["m3number"] = struct{}{}
 			case "m3bool":
 			case "m3boolcmp":
