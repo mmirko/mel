@@ -1,11 +1,8 @@
 package m3boolcmp
 
 import (
-	//"math/rand"
-	//"fmt"
-
 	m3bool "github.com/mmirko/mel/pkg/m3bool"
-	"github.com/mmirko/mel/pkg/mel"
+	mel "github.com/mmirko/mel/pkg/mel"
 	mel3program "github.com/mmirko/mel/pkg/mel3program"
 )
 
@@ -13,10 +10,6 @@ import (
 const (
 	EQ = uint16(0) + iota
 	NE
-	LT
-	LE
-	GT
-	GE
 )
 
 // Program types
@@ -34,20 +27,20 @@ var Implementation = mel3program.Mel3Implementation{
 	},
 	TypeNames: map[uint16]string{},
 	ProgramTypes: map[uint16]mel3program.ArgumentsTypes{
-		EQ: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
-		NE: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		EQ: {mel3program.ArgType{LibraryID: m3bool.MYLIBID, TypeID: m3bool.BOOL, TensorRapr: []uint64{}}},
+		NE: {mel3program.ArgType{LibraryID: m3bool.MYLIBID, TypeID: m3bool.BOOL, TensorRapr: []uint64{}}},
 	},
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{
-		EQ: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}, mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
-		NE: mel3program.ArgumentsTypes{mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}, mel3program.ArgType{m3bool.MYLIBID, m3bool.BOOL, []uint64{}}},
+		EQ: {mel3program.ArgType{LibraryID: m3bool.MYLIBID, TypeID: m3bool.BOOL, TensorRapr: []uint64{}}, mel3program.ArgType{LibraryID: m3bool.MYLIBID, TypeID: m3bool.BOOL, TensorRapr: []uint64{}}},
+		NE: {mel3program.ArgType{LibraryID: m3bool.MYLIBID, TypeID: m3bool.BOOL, TensorRapr: []uint64{}}, mel3program.ArgType{LibraryID: m3bool.MYLIBID, TypeID: m3bool.BOOL, TensorRapr: []uint64{}}},
 	},
 	IsVariadic: map[uint16]bool{
 		EQ: false,
 		NE: false,
 	},
 	VariadicType: map[uint16]mel3program.ArgType{
-		EQ: mel3program.ArgType{},
-		NE: mel3program.ArgType{},
+		EQ: {},
+		NE: {},
 	},
 	ImplName: "m3boolcmp",
 }
