@@ -36,16 +36,16 @@ var Implementation = mel3program.Mel3Implementation{
 		NUMBER: "number",
 	},
 	ProgramTypes: map[uint16]mel3program.ArgumentsTypes{
-		CONST: mel3program.ArgumentsTypes{mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}},
-		VAR:   mel3program.ArgumentsTypes{mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}},
-		SUM:   mel3program.ArgumentsTypes{mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}},
-		MUL:   mel3program.ArgumentsTypes{mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}},
+		CONST: mel3program.ArgumentsTypes{mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}},
+		VAR:   mel3program.ArgumentsTypes{mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}},
+		SUM:   mel3program.ArgumentsTypes{mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}},
+		MUL:   mel3program.ArgumentsTypes{mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}},
 	},
 	NonVariadicArgs: map[uint16]mel3program.ArgumentsTypes{
 		CONST: mel3program.ArgumentsTypes{},
 		VAR:   mel3program.ArgumentsTypes{},
-		SUM:   mel3program.ArgumentsTypes{mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}, mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}},
-		MUL:   mel3program.ArgumentsTypes{mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}, mel3program.ArgType{MYLIBID, NUMBER, []uint64{}}},
+		SUM:   mel3program.ArgumentsTypes{mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}, mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}},
+		MUL:   mel3program.ArgumentsTypes{mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}, mel3program.ArgType{LibraryID: MYLIBID, TypeID: NUMBER, TensorRapr: []uint64{}}},
 	},
 	IsVariadic: map[uint16]bool{
 		CONST: false,
@@ -70,13 +70,15 @@ type Symbolic_math3_me3li struct {
 // ********* Mel interface
 
 // The Mel entry point for Symbolic_math_me3li
-func (prog *Symbolic_math3_me3li) MelInit(ep *mel.EvolutionParameters) {
-	impls := make(map[uint16]*mel3program.Mel3Implementation)
-	impls[MYLIBID] = &Implementation
-	prog.Mel3Init(impls, ep)
+func (prog *Symbolic_math3_me3li) MelInit(c *mel.MelConfig, ep *mel.EvolutionParameters) {
+	implementations := map[uint16]*mel3program.Mel3Implementation{
+		MYLIBID: &Implementation,
+	}
+	creators := make(map[uint16]mel3program.Mel3VisitorCreator)
+	prog.Mel3Init(c, implementations, creators, ep)
 }
 
-func (prog *Symbolic_math3_me3li) Mel_copy() mel.Me3li {
+func (prog *Symbolic_math3_me3li) MelCopy() mel.Me3li {
 	var result mel.Me3li
 	return result
 }

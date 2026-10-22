@@ -13,7 +13,7 @@ func TestSymbolicMathImporter(t *testing.T) {
 
 	a := new(Symbolic_math3_me3li)
 	var ep *mel.EvolutionParameters
-	a.MelInit(ep)
+	a.MelInit(nil, ep)
 
 	istrings := []string{`
 sum(
